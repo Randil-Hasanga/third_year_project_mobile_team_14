@@ -11,142 +11,112 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(200.0),
-          child: AppBar(
-            backgroundColor: const Color.fromARGB(255, 241, 157, 47),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/DME_image01.png"),
-                  fit: BoxFit.cover,
+      home: SafeArea(
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(250.0),
+            child: AppBar(
+              backgroundColor: const Color.fromARGB(255, 241, 157, 47),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/DME_image01.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
-//**********************************************Body of the mobile App***********************************************************/
-
-        body: Container(
-          color: const Color.fromARGB(255, 241, 157, 47),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 250,
-                  height: 70,
-                ),
-//************************************************button to display content in Sinhala*****************************************/
-                Container(
-                  width: 350,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    color: Colors.orange, // Button background color
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.red,
-                        spreadRadius: 1,
-                        blurRadius:8,
-                        offset: Offset(4,4),
+          // Body of the mobile App
+          body: Container(
+            color: const Color.fromARGB(255, 241, 157, 47),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 350,
+                    height: 70,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange, // Button background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15), // Set button border radius
+                        ),
                       ),
-                    ], // Button border radius
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent, // Make button transparent
-                      elevation: 0, // Remove button shadow
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15), // Set button border radius
-                      ),
-                    ),
-                    child: Text(
-                      "ආයුබොවන් සිංහලෙන් බලන්න",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'AbhayaLibre',
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "ආයුබෝවන් සිංහලෙන් බලන්න",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'AbhayaLibre',
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward),
+                        ],
                       ),
                     ),
                   ),
-                ),
-
- //************************************************button to display content in English*****************************************/               
-                SizedBox(height: 10),
-                Container(
-                  width: 350,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(15),
-                     boxShadow: [
-                      BoxShadow(
-                        color: Colors.red,
-                        spreadRadius: 1,
-                        blurRadius:8,
-                        offset: Offset(4,4),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: 350,
+                    height: 70,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                    ],
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    child: Text(
-                      "English",
-                      style: TextStyle(
-                        fontSize: 20,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "English",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'AbhayaLibre',
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward),
+                        ],
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-
-
-//************************************************button to display content in Tamil****************************************/               
-                Container(
-                  width: 350,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(15),
-                     boxShadow: [
-                      BoxShadow(
-                        color: Colors.red,
-                        spreadRadius: 1,
-                        blurRadius:8,
-                        offset: Offset(4,4),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: 350,
+                    height: 70,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                    ], 
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        
-                      ),
-                    ),
-                    child: Text(
-                      "தமிழில் ஆயுபோவன் பார்க்கவும்",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'AbhayaLibre',
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "தமிழில் ஆயுபோவன் பார்க்கவும்",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontFamily: 'AbhayaLibre',
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward),
+                        ],
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
