@@ -14,6 +14,18 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar:AppBar(
          
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/DME_image01.png"),
+                fit: BoxFit.cover  ),
+            ),
+          ),
+          
+         
+        ),
+
+        body:Center(child: Text("JOB CENTER "),
         ),
       ),
     );
