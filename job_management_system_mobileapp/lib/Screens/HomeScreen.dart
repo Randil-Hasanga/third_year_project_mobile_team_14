@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(250.0),
+          preferredSize: Size.fromHeight(250.0),                                //******************************APP BAR********************* */
           child: AppBar(
             backgroundColor: const Color.fromARGB(255, 241, 157, 47),
             flexibleSpace: Container(
@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                    ),
+                    ),                                            //***********************************Navigate to sinhala************* */
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -73,12 +73,12 @@ class HomeScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                    ),
+                    ),                                                    //***********************************Navigate to Tamil************* */
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "English",
+                          "Ayubowan View in English",
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'AbhayaLibre',
@@ -101,11 +101,11 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    child: Row(
+                    child: Row(                                              //***********************************Navigate to Tamil************* */
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "தமிழில் ஆயுபோவன் பார்க்கவும்",
+                          "வணக்கம் தமிழ் பார்வையில்",
                           style: TextStyle(
                             fontSize: 17,
                             fontFamily: 'AbhayaLibre',
@@ -120,6 +120,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
+        
       ),
     );
   }
