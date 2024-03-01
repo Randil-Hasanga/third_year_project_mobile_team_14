@@ -4,16 +4,19 @@ import 'ForgetPassword.dart'; // Import the ForgetPassword.dart file
 import 'SignUp.dart'; // Import the SignUp.dart file
 
 class LogIn extends StatelessWidget {
+  const LogIn({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false, // Set to false to prevent resizing when keyboard is displayed
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(250.0),
+          preferredSize: const Size.fromHeight(250.0),
           child: AppBar(
             backgroundColor: Colors.transparent, // Set the AppBar color to transparent
             flexibleSpace: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -28,91 +31,110 @@ class LogIn extends StatelessWidget {
             ),
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "LogIn",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+
+
+
+        body: Container(
+           decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color.fromARGB(255, 255, 255, 255), Colors.orange],
+              stops: [0.7, 1.0],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0), // Adjust the padding as needed
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "LogIn",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: TextFormField(
+                const SizedBox(height: 30),
+                TextFormField(
                   decoration: InputDecoration(
                     labelText: "User Name",
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: TextFormField(
+                const SizedBox(height: 20),
+                TextFormField(
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
                 ),
-              ),
-           //   SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to JobSeekerDash screen when Login button is pressed
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => JobSeekerDash()),
-                  );
-                },
-                child: Text(
-                  "LogIn",
-                  style: TextStyle(fontSize: 16),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to JobSeekerDash screen when Login button is pressed
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => JobSeekerDash()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange, // Set the background color of the button to orange
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  ),
+                  child: const Text("LogIn",
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.orange, // Set the background color of the button to orange
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                const SizedBox(height: 20), // Add some space here
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to ForgetPassword screen when "Forget password?" text is tapped
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ForgetPassword()),
+                    );
+                  },
+                  child: const Text(
+                    "Forget password?",
+                    style: TextStyle(color: Colors.blue),
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to ForgetPassword screen when "Forget password?" text is tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ForgetPassword()),
-                  );
-                },
-                child: Text(
-                  "Forget password?",
-                  style: TextStyle(color: Colors.blue),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to SignUp screen when "Sign Up" button is tapped
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUp()),
+                    );
+                  },
+                  child: const Text(
+                    "Sign Up",
+                    style: TextStyle(color: Colors.blue),
+                  ),
                 ),
-              ),
-             // SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to SignUp screen when "Sign Up" button is tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUp()),
-                  );
-                },
-                child: Text(
-                  "Sign Up",
-                  style: TextStyle(color: Colors.blue),
+                 const Spacer(), // Add spacer to push the text to the bottom
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    "Job Center, District Secretariat, Matara",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+            
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/ChooseUser.dart';
 
@@ -11,11 +12,11 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(250.0),                                //******************************APP BAR********************* */
+          preferredSize: const Size.fromHeight(250.0),                                //******************************APP BAR********************* */
           child: AppBar(
             backgroundColor: const Color.fromARGB(255, 241, 157, 47),
             flexibleSpace: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/DME_image01.png"),
                   fit: BoxFit.cover,
@@ -37,12 +38,12 @@ class HomeScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.orange,
+                      backgroundColor: Colors.orange,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),                                            //***********************************Navigate to sinhala************* */
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -57,7 +58,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: 350,
                   height: 70,
@@ -69,12 +70,12 @@ class HomeScreen extends StatelessWidget {
                         );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.orange,
+                      backgroundColor: Colors.orange,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),                                                    //***********************************Navigate to Tamil************* */
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -89,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: 350,
                   height: 70,
@@ -101,7 +102,7 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    child: Row(                                              //***********************************Navigate to Tamil************* */
+                    child: const Row(                                              //***********************************Navigate to Tamil************* */
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(

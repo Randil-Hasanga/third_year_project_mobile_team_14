@@ -1,8 +1,12 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'LogIn.dart'; // Import the LogIn.dart file
 
 class ChooseUser extends StatefulWidget {
+  const ChooseUser({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ChooseUserState createState() => _ChooseUserState();
 }
 
@@ -12,11 +16,11 @@ class _ChooseUserState extends State<ChooseUser> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(250.0),
+          preferredSize: const Size.fromHeight(250.0),
           child: AppBar(
             backgroundColor: Colors.transparent, // Set the AppBar color to transparent
             flexibleSpace: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -32,11 +36,11 @@ class _ChooseUserState extends State<ChooseUser> {
           ),
         ),
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [const Color.fromARGB(255, 255, 255, 255), Colors.orange],
+              colors: [Color.fromARGB(255, 255, 255, 255), Colors.orange],
               stops: [0.7, 1.0],
             ),
           ),
@@ -55,7 +59,7 @@ class _ChooseUserState extends State<ChooseUser> {
                     );
                   },
                 ),
-                SizedBox(height: 75),
+                const SizedBox(height: 75),
                 UserButton(
                   icon: Icons.search,
                   text: "Job Seeker",
@@ -67,8 +71,8 @@ class _ChooseUserState extends State<ChooseUser> {
                     );
                   },
                 ),
-                SizedBox(height: 250),
-                Text(
+                const SizedBox(height: 300),
+                const Text(
                   "Job Center, District Secretariat, Matara",
                   style: TextStyle(
                     fontSize: 18,
@@ -107,7 +111,7 @@ class UserButton extends StatelessWidget {
             icon,
             size: 40,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(text),
         ],
       ),
