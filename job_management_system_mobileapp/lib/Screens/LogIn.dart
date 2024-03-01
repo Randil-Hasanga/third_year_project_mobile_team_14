@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'JobSeekerDash.dart'; // Import the JobSeekerDash.dart file
 import 'ForgetPassword.dart'; // Import the ForgetPassword.dart file
@@ -82,7 +83,7 @@ class LogIn extends StatelessWidget {
                     // Navigate to JobSeekerDash screen when Login button is pressed
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => JobSeekerDash()),
+                      MaterialPageRoute(builder: (context) => const JobSeekerDash()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -99,7 +100,7 @@ class LogIn extends StatelessWidget {
                     // Navigate to ForgetPassword screen when "Forget password?" text is tapped
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ForgetPassword()),
+                      MaterialPageRoute(builder: (context) => const ForgetPassword()),
                     );
                   },
                   child: const Text(
@@ -113,7 +114,7 @@ class LogIn extends StatelessWidget {
                     // Navigate to SignUp screen when "Sign Up" button is tapped
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUp()),
+                      MaterialPageRoute(builder: (context) => const SignUp()),
                     );
                   },
                   child: const Text(

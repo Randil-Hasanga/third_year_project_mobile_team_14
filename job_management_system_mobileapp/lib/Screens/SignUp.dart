@@ -1,8 +1,9 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'JobSeekerDash.dart'; // Import the JobSeekerDash.dart file
 
 class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,19 +85,18 @@ class SignUp extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-             
-              const SizedBox(height: 20),
-
-
-             ElevatedButton(
+              ElevatedButton(
                 onPressed: () {
-                  
-     
-               },
-              style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange, // Set the background color to orange
-  ),
-              child: const Text("Sign Up"),
+                  // Navigate to JobSeekerDash screen when "Sign Up" button is pressed
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => JobSeekerDash()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange, // Set the background color to orange
+                ),
+                child: const Text("Sign Up"),
               ),
             ],
           ),

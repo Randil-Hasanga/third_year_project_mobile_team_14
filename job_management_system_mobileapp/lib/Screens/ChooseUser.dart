@@ -71,7 +71,7 @@ class _ChooseUserState extends State<ChooseUser> {
                     );
                   },
                 ),
-                const SizedBox(height: 300),
+                const SizedBox(height: 200),
                 const Text(
                   "Job Center, District Secretariat, Matara",
                   style: TextStyle(
