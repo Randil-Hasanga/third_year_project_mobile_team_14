@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class JobSeekerDash extends StatelessWidget {
+class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Job Seeker Dashboard'),
+        title: Text('Sign Up'),
       ),
       body: Center(
-        child: Text('Welcome to Job Seeker Dashboard!'),
+        child: Text('Join us! Sign up to get started.'),
       ),
     );
   }
