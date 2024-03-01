@@ -1,11 +1,10 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
-import 'JobSeekerDash.dart'; // Import the JobSeekerDash.dart file
+import 'JobProviderDash.dart'; // Import the JobProviderDash.dart file
 import 'ForgetPassword.dart'; // Import the ForgetPassword.dart file
 import 'SignUp.dart'; // Import the SignUp.dart file
 
 class LogIn extends StatelessWidget {
-  const LogIn({super.key});
+  const LogIn({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +31,8 @@ class LogIn extends StatelessWidget {
             ),
           ),
         ),
-
-
-
         body: Container(
-           decoration: const BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -80,10 +76,11 @@ class LogIn extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to JobSeekerDash screen when Login button is pressed
+                    // Add logic to validate user credentials and navigate accordingly
+                    // For now, navigating to JobProviderDash
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const JobSeekerDash()),
+                      MaterialPageRoute(builder: (context) => const JobProviderDash()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -122,7 +119,7 @@ class LogIn extends StatelessWidget {
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),
-                 const Spacer(), // Add spacer to push the text to the bottom
+                const Spacer(), // Add spacer to push the text to the bottom
                 const Padding(
                   padding: EdgeInsets.only(bottom: 20),
                   child: Text(
@@ -135,7 +132,6 @@ class LogIn extends StatelessWidget {
                 ),
               ],
             ),
-            
           ),
         ),
       ),

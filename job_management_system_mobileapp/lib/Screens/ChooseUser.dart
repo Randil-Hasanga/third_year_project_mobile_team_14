@@ -1,16 +1,9 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'LogIn.dart'; // Import the LogIn.dart file
 
-class ChooseUser extends StatefulWidget {
-  const ChooseUser({super.key});
+class ChooseUser extends StatelessWidget {
+  const ChooseUser({Key? key});
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _ChooseUserState createState() => _ChooseUserState();
-}
-
-class _ChooseUserState extends State<ChooseUser> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,7 +48,7 @@ class _ChooseUserState extends State<ChooseUser> {
                     // Navigate to LogIn screen when Job Provider button is pressed
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LogIn()),
+                      MaterialPageRoute(builder: (context) => const LogIn()),
                     );
                   },
                 ),
@@ -67,7 +60,7 @@ class _ChooseUserState extends State<ChooseUser> {
                     // Navigate to LogIn screen when Job Seeker button is pressed
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LogIn()),
+                      MaterialPageRoute(builder: (context) => const LogIn()),
                     );
                   },
                 ),
