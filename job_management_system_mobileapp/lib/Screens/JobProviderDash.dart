@@ -9,8 +9,8 @@ class JobProviderDash extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Job Provider Dashboard'),
       ),
-      body: Center(
-        child: const Text('Welcome to Job Provider Dashboard'),
+      body: const Center(
+        child: Text('Welcome to Job Provider Dashboard'),
       ),
     );
   }

@@ -24,7 +24,7 @@ class JobSeekerDash extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Greet user
-              Text(
+              const Text(
                 'Hii User Name',
                 style: TextStyle(fontSize: 24),
               ),
@@ -58,7 +58,7 @@ class JobSeekerDash extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Featured Jobs',
                     style: TextStyle(
                       fontSize: 20,
@@ -69,7 +69,7 @@ class JobSeekerDash extends StatelessWidget {
                     onPressed: () {
                       // Add action to navigate to all featured jobs
                     },
-                    child: Text(
+                    child: const Text(
                       'see all..',
                       style: TextStyle(color: Colors.orange),
                     ),
@@ -85,7 +85,7 @@ class JobSeekerDash extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Recent Jobs',
                     style: TextStyle(
                       fontSize: 20,
@@ -96,7 +96,7 @@ class JobSeekerDash extends StatelessWidget {
                     onPressed: () {
                       // Add action to navigate to all recent jobs
                     },
-                    child: Text(
+                    child: const Text(
                       'see all..',
                       style: TextStyle(color: Colors.orange),
                     ),
@@ -111,24 +111,24 @@ class JobSeekerDash extends StatelessWidget {
         ),
       ),
   bottomNavigationBar: BottomAppBar(
-  color: Color.fromARGB(255, 221, 140, 10), // Set the background color to orange
+  color: const Color.fromARGB(255, 221, 140, 10), // Set the background color to orange
   child: Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       IconButton(
-        icon: Icon(Icons.home, color: Colors.deepOrange), // Set the icon color to dark orange
+        icon: const Icon(Icons.home, color: Colors.deepOrange), // Set the icon color to dark orange
         onPressed: () {
           // Add action to navigate to home screen
         },
       ),
       IconButton(
-        icon: Icon(Icons.settings, color: Colors.deepOrange), // Set the icon color to dark orange
+        icon: const Icon(Icons.settings, color: Colors.deepOrange), // Set the icon color to dark orange
         onPressed: () {
           // Add action to navigate to settings screen
         },
       ),
       IconButton(
-        icon: Icon(Icons.notifications, color: Colors.deepOrange), // Set the icon color to dark orange
+        icon: const Icon(Icons.notifications, color: Colors.deepOrange), // Set the icon color to dark orange
         onPressed: () {
           // Add action to navigate to notifications screen
         },
