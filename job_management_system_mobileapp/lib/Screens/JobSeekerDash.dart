@@ -141,6 +141,7 @@ class JobSeekerDash extends StatelessWidget {
       ),
     ],
   ),
+  
 ),
 
     );
