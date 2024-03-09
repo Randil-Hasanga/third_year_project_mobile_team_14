@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "352414474958",
+    "project_id": "jobcenter-app-74ca3",
+    "storage_bucket": "jobcenter-app-74ca3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352414474958:android:c2ba32237d7a426a71669f",
+        "android_client_info": {
+          "package_name": "com.example.job_management_system_mobileapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDOxIb5AjVh9rJo2oURQQOsiXOd6h_ikk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
