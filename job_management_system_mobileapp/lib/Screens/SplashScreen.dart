@@ -1,6 +1,8 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:job_management_system_mobileapp/Screens/HomeScreen.dart';
+
+import 'LogIn.dart';
+
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -22,7 +24,7 @@ class SplashScreen extends StatelessWidget {
           ),
         ],
       ),
-      nextScreen: HomeScreen(),
+      nextScreen: LogIn(),
       backgroundColor: Colors.orange,
     );
   }
