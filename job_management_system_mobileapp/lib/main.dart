@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:job_management_system_mobileapp/Screens/HomeScreen.dart';
-import 'package:job_management_system_mobileapp/Screens/SplashScreen.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'firebase_options.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+    return MaterialApp(
+      title: 'Flutter Login UI',
+      theme: ThemeData(
+        primarySwatch: Colors.yellow,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        textTheme: GoogleFonts.poppinsTextTheme(),
+      ),
+      
+      // routes: {
+      //   'login' :(context) => LoginPage(),
+      // },
+      initialRoute: 'login',
     );
   }
 }
+
+
