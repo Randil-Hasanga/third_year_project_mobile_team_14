@@ -41,7 +41,7 @@ class LogInPage extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(60), topRight: Radius.circular(60))
                 ),
                 child: Padding(
@@ -66,12 +66,20 @@ class LogInPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border(bottom: BorderSide(color: Colors.grey.shade200))
                               ),
-                              child: const TextField(
-                                decoration: InputDecoration(
-                                    hintText: "Enter Email",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none
-                                ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.email, color: Colors.grey,),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          hintText: "Enter Email",
+                                          hintStyle: TextStyle(color: Colors.grey),
+                                          border: InputBorder.none
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Container(
@@ -79,13 +87,21 @@ class LogInPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border(bottom: BorderSide(color: Colors.grey.shade200))
                               ),
-                              child: const TextField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                    hintText: "Enter Password",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none
-                                ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.lock, color: Colors.grey,),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: TextField(
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                          hintText: "Enter Password",
+                                          hintStyle: TextStyle(color: Colors.grey),
+                                          border: InputBorder.none
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -117,7 +133,7 @@ class LogInPage extends StatelessWidget {
                           );
                         },
                         height: 50,
-                        color: const Color.fromARGB(255, 255, 255, 255),
+                        color: Color.fromARGB(255, 255, 255, 255),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
