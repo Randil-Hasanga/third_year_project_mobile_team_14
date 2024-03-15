@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
-import 'package:job_management_system_mobileapp/Screens/SignUp.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
 
-class LogInPage extends StatelessWidget {
-  const LogInPage({Key? key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text("Sign Up"),
+      ),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -32,9 +40,9 @@ class LogInPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    FadeInUp(duration: const Duration(milliseconds: 1000), child: const Text("Login", style: TextStyle(color: Colors.white, fontSize: 40),)),
+                    FadeInUp(duration: const Duration(milliseconds: 1000), child: const Text("Sign Up", style: TextStyle(color: Colors.white, fontSize: 40),)),
                     const SizedBox(height: 10,),
-                    FadeInUp(duration: const Duration(milliseconds: 1300), child: const Text("Welcome Back", style: TextStyle(color: Colors.white, fontSize: 18),)),
+                    FadeInUp(duration: const Duration(milliseconds: 1300), child: const Text("Choose Account", style: TextStyle(color: Colors.white, fontSize: 18),)),
                   ],
                 ),
               ),
@@ -48,7 +56,7 @@ class LogInPage extends StatelessWidget {
                   padding: const EdgeInsets.all(30),
                   child: Column(
                     children: <Widget>[
-                      const SizedBox(height: 60,),
+                      const SizedBox(height: 20,),
                       FadeInUp(duration: const Duration(milliseconds: 1400), child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -68,7 +76,20 @@ class LogInPage extends StatelessWidget {
                               ),
                               child: const TextField(
                                 decoration: InputDecoration(
-                                    hintText: "Enter Email",
+                                    hintText: "User Name",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                              ),
+                              child: const TextField(
+                                decoration: InputDecoration(
+                                    hintText: "Email",
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none
                                 ),
@@ -82,7 +103,21 @@ class LogInPage extends StatelessWidget {
                               child: const TextField(
                                 obscureText: true,
                                 decoration: InputDecoration(
-                                    hintText: "Enter Password",
+                                    hintText: "Password",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                              ),
+                              child: const TextField(
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                    hintText: "Re-enter Password",
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none
                                 ),
@@ -94,9 +129,11 @@ class LogInPage extends StatelessWidget {
                       const SizedBox(height: 40,),
                       MaterialButton(
                         onPressed: () {
+                          // Implement your sign up logic here
+                          // For demonstration purposes, let's navigate to the job seeker page
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const JobSeekerPage()),
+                            MaterialPageRoute(builder: (context) => JobSeekerPage()),
                           );
                         },
                         height: 50,
@@ -105,29 +142,13 @@ class LogInPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: const Center(
-                          child: Text("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                        ),
-                      ),
-                      const SizedBox(height: 20,),
-                      MaterialButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SignUpPage()),
-                          );
-                        },
-                        height: 50,
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: const Center(
-                          child: Text("Sign Up", style: TextStyle(color: Colors.grey),),
+                          child: Text("Sign Up", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
                         ),
                       ),
                       const SizedBox(height: 20,),
                       GestureDetector(
                         onTap: () {
+                          // Navigate to the forgot password page
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
