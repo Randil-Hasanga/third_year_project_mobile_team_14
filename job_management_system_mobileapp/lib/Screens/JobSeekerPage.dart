@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/Jobs.dart';
 import 'package:job_management_system_mobileapp/Screens/CVCreation.dart';
 import 'package:job_management_system_mobileapp/Screens/FeedBackJobSeeker.dart';
@@ -139,14 +140,18 @@ class JobSeekerPage extends StatelessWidget {
                             style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           TextButton(
-                            onPressed: () {
-                              // Add your logic to navigate to see all featured jobs
-                            },
-                            child: const Text(
-                              "See All",
-                              style: TextStyle(color: Color.fromARGB(255, 255, 145, 0), fontSize: 16),
-                            ),
-                          ),
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Jobs()),
+    );
+  },
+  child: const Text(
+    "See All",
+    style: TextStyle(color: Color.fromARGB(255, 255, 145, 0), fontSize: 16),
+  ),
+),
+
                         ],
                       ),
                       SizedBox(
@@ -276,63 +281,67 @@ class JobSeekerPage extends StatelessWidget {
               ),
             ),
             ListTile(
+  leading: Icon(Icons.search), // Icon for finding jobs
   title: const Text('Find Jobs'),
   onTap: () {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context)=>const Jobs()),
-      // Navigate to the Jobs.dart page
     );
   },
 ),
 
-            ListTile(
-              title: const Text('Create CV'),
-               onTap: () {
+ListTile(
+  leading: Icon(Icons.create), // Icon for creating CV
+  title: const Text('Create CV'),
+  onTap: () {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context)=>const CVCreation()),
-      // Navigate to the Jobs.dart page
     );
   },
-            ),
-            
-             ListTile(
-              title: const Text('Give feedbacks'),
-              onTap: () {
+),
+
+ListTile(
+  leading: Icon(Icons.feedback), // Icon for giving feedback
+  title: const Text('Give Feedbacks'),
+  onTap: () {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context)=>const FeedBackJobSeeker()),
-      
     );
-  
-                // FeedBackJobSeeker
-              },
-            ),
-             ListTile(
-              title: const Text('Notifications'),
-              onTap: () {
+  },
+),
+
+ListTile(
+  leading: Icon(Icons.notifications), // Icon for notifications
+  title: const Text('Notifications'),
+  onTap: () {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()),
-      
     );
-  
-                // FeedBackJobSeeker
-             },
-            ),
-             ListTile(
-              title: const Text('Profile settings'),
-              onTap: () {
+  },
+),
+
+ListTile(
+  leading: Icon(Icons.settings), // Icon for profile settings
+  title: const Text('Profile Settings'),
+  onTap: () {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()),
-      
     );
-  
-                // FeedBackJobSeeker
-             },
-            ),
+  },
+),
+ListTile(
+            leading: Icon(Icons.logout), // Icon for logout
+            title: const Text('Logout'),
+            onTap: () {
+              // Perform logout action
+            },
+          ),
+
           ],
         ),
       ),
@@ -347,25 +356,25 @@ class JobSeekerPage extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.home),
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>JobSeekerPage()));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const JobSeekerPage()));
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>JobSeekerPage()));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()));
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.notifications),
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>JobSeekerPage()));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.chat),
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>JobSeekerPage()));
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const Chattings()));
                 },
               ),
             ],
