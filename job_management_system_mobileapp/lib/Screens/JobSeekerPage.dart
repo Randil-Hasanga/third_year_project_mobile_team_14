@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:job_management_system_mobileapp/Screens/Jobs.dart';
+import 'package:job_management_system_mobileapp/Screens/CVCreation.dart';
+import 'package:job_management_system_mobileapp/Screens/FeedBackJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/ProfileJobSeeker.dart';
+
 
 class JobSeekerPage extends StatelessWidget {
   const JobSeekerPage({Key? key}) : super(key: key);
@@ -7,30 +13,53 @@ class JobSeekerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.orange.shade900,
         actions: <Widget>[
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
+          PopupMenuButton<String>(
+            onSelected: (String language) {
+              // Handle language selection here
+              switch (language) {
+                case 'English':
+                  // Change app language to English
+                  break;
+                case 'සිංහල':
+                  // Change app language to Sinhala
+                  break;
+                case 'தமிழ்':
+                  // Change app language to Tamil
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'English',
+                child: Text('English'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'සිංහල',
+                child: Text('සිංහල'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'தமிழ்',
+                child: Text('தமிழ்'),
+              ),
+            ],
           ),
         ],
       ),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            colors: [
-              Colors.orange.shade900,
-              Colors.orange.shade800,
-              Colors.orange.shade400
-            ],
-          ),
-        ),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.orange.shade900,
+                    Colors.orange.shade800,
+                    Colors.orange.shade400,
+                  ],
+                ),
+              ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +72,7 @@ class JobSeekerPage extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: AssetImage('assets/profile_picture.jpg'),
+                      backgroundImage: AssetImage('assets/Default.png'),
                     ),
                     SizedBox(width: 10),
                     Column(
@@ -247,16 +276,62 @@ class JobSeekerPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: const Text('Find Jobs'),
-              onTap: () {
-                // Navigate to find jobs page
-              },
-            ),
+  title: const Text('Find Jobs'),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const Jobs()),
+      // Navigate to the Jobs.dart page
+    );
+  },
+),
+
             ListTile(
               title: const Text('Create CV'),
+               onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const CVCreation()),
+      // Navigate to the Jobs.dart page
+    );
+  },
+            ),
+            
+             ListTile(
+              title: const Text('Give feedbacks'),
               onTap: () {
-                // Navigate to create CV page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const FeedBackJobSeeker()),
+      
+    );
+  
+                // FeedBackJobSeeker
               },
+            ),
+             ListTile(
+              title: const Text('Notifications'),
+              onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()),
+      
+    );
+  
+                // FeedBackJobSeeker
+             },
+            ),
+             ListTile(
+              title: const Text('Profile settings'),
+              onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()),
+      
+    );
+  
+                // FeedBackJobSeeker
+             },
             ),
           ],
         ),

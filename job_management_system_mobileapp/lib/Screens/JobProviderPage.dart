@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:job_management_system_mobileapp/Screens/CVJobProvider.dart'; 
+import 'package:job_management_system_mobileapp/Screens/CVCreation.dart';
+ 
 
 class JobProviderPage extends StatelessWidget {
   const JobProviderPage({Key? key}) : super(key: key);
@@ -7,6 +8,41 @@ class JobProviderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.orange.shade900,
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: (String language) {
+              // Handle language selection here
+              switch (language) {
+                case 'English':
+                  // Change app language to English
+                  break;
+                case 'සිංහල':
+                  // Change app language to Sinhala
+                  break;
+                case 'தமிழ்':
+                  // Change app language to Tamil
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'English',
+                child: Text('English'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'සිංහල',
+                child: Text('සිංහල'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'தமிழ்',
+                child: Text('தமிழ்'),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -23,7 +59,7 @@ class JobProviderPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(height: 80,),
+              const SizedBox(height: 2,),
               const Padding(
                 padding: EdgeInsets.all(20),
                 child: Row(
@@ -31,7 +67,7 @@ class JobProviderPage extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: AssetImage('assets/profile_picture.jpg'),
+                      backgroundImage: AssetImage('assets/Default.png'),
                     ),
                     SizedBox(width: 10),
                     Column(
@@ -435,7 +471,7 @@ SizedBox(
             // Profile Icon
             const CircleAvatar(
               radius: 30,
-              backgroundImage: AssetImage('assets/profile_picture.jpg'),
+              backgroundImage: AssetImage('assets/Default.png'),
             ),
             const SizedBox(height: 8),
             // Job Seeker Name
@@ -468,6 +504,80 @@ SizedBox(
               ),
             ],
           ),
+        ),
+      ),
+       drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.orange.shade900,
+                    Colors.orange.shade800,
+                    Colors.orange.shade400,
+                  ],
+                ),
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/profile_picture.jpg'),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Job Seeker',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                  Text(
+                    'John Doe',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Create Vacancy'),
+              onTap: () {
+                // Navigate to find jobs page
+              },
+            ),
+            ListTile(
+              title: const Text('Schedule Interveiws'),
+              onTap: () {
+                // Navigate to create CV page
+              },
+            ),
+             ListTile(
+              title: const Text('See JobSeekers'),
+              onTap: () {
+                // Navigate to create CV page
+              },
+            ),
+             ListTile(
+              title: const Text('See CV'),
+              onTap: () {
+                // Navigate to create CV page
+              },
+            ),
+            ListTile(
+              title: const Text('Give feedbacks'),
+              onTap: () {
+                // Navigate to create CV page
+              },
+            ),
+            ListTile(
+              title: const Text('Profile Setting'),
+              onTap: () {
+                // Navigate to create CV page
+              },
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
