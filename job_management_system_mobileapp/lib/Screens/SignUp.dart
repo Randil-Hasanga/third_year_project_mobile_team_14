@@ -8,6 +8,7 @@ class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SignUpPageState createState() => _SignUpPageState();
 }
 

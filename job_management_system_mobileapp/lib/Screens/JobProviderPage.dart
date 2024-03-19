@@ -1,9 +1,10 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/CVCreation.dart';
  
 
 class JobProviderPage extends StatelessWidget {
-  const JobProviderPage({Key? key}) : super(key: key);
+  const JobProviderPage({super.key});
 
   @override
   Widget build(BuildContext context) {

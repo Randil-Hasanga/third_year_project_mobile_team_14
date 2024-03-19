@@ -1,13 +1,16 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/Jobs.dart';
 import 'package:job_management_system_mobileapp/Screens/CVCreation.dart';
-import 'package:job_management_system_mobileapp/Screens/FeedBackJobSeeker.dart';
+// import 'package:job_management_system_mobileapp/Screens/FeedBackJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/ProfileJobSeeker.dart';
 
 
 class JobSeekerPage extends StatelessWidget {
+  // ignore: use_super_parameters
   const JobSeekerPage({Key? key}) : super(key: key);
 
   @override
@@ -72,15 +75,15 @@ class JobSeekerPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CircleAvatar(
-                      radius: 30,
+                      radius: 40,
                       backgroundImage: AssetImage('assets/Default.png'),
                     ),
                     SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Job Seeker", style: TextStyle(color: Colors.white, fontSize: 40)),
-                        Text("John Doe", style: TextStyle(color: Colors.white, fontSize: 20)),
+                        Text("Deshani Bandara", style: TextStyle(color: Colors.white, fontSize: 30)),
+                        Text("BICT(HONS)", style: TextStyle(color: Colors.white, fontSize: 20)),
                       ],
                     ),
                   ],
@@ -265,23 +268,23 @@ class JobSeekerPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   CircleAvatar(
-                    radius: 30,
+                    radius: 35,
                     backgroundImage: AssetImage('assets/profile_picture.jpg'),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Job Seeker',
+                    'Deshani Bandara',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
                   Text(
-                    'John Doe',
+                    'BICT(HONS)',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
               ),
             ),
             ListTile(
-  leading: Icon(Icons.search), // Icon for finding jobs
+  leading: const Icon(Icons.search,color: Color.fromARGB(255, 255, 137, 2)), // Icon for finding jobs
   title: const Text('Find Jobs'),
   onTap: () {
     Navigator.push(
@@ -292,7 +295,7 @@ class JobSeekerPage extends StatelessWidget {
 ),
 
 ListTile(
-  leading: Icon(Icons.create), // Icon for creating CV
+  leading: const Icon(Icons.create,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
   title: const Text('Create CV'),
   onTap: () {
     Navigator.push(
@@ -302,19 +305,10 @@ ListTile(
   },
 ),
 
-ListTile(
-  leading: Icon(Icons.feedback), // Icon for giving feedback
-  title: const Text('Give Feedbacks'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const FeedBackJobSeeker()),
-    );
-  },
-),
+
 
 ListTile(
-  leading: Icon(Icons.notifications), // Icon for notifications
+  leading: const Icon(Icons.notifications,color: Color.fromARGB(255, 255, 137, 2)), // Icon for notifications
   title: const Text('Notifications'),
   onTap: () {
     Navigator.push(
@@ -325,7 +319,7 @@ ListTile(
 ),
 
 ListTile(
-  leading: Icon(Icons.settings), // Icon for profile settings
+  leading: const Icon(Icons.settings,color: Color.fromARGB(255, 255, 137, 2)), // Icon for profile settings
   title: const Text('Profile Settings'),
   onTap: () {
     Navigator.push(
@@ -335,7 +329,7 @@ ListTile(
   },
 ),
 ListTile(
-            leading: Icon(Icons.logout), // Icon for logout
+            leading: const Icon(Icons.logout,color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
             title: const Text('Logout'),
             onTap: () {
               // Perform logout action
@@ -344,9 +338,24 @@ ListTile(
 
           ],
         ),
+
+// ListTile(
+//   leading: const Icon(Icons.feedback,color: Color.fromARGB(255, 255, 137, 2)), // Icon for giving feedback
+//   title: const Text('Give Feedbacks'),
+//   onTap: () {
+//     Navigator.push(
+//       context,
+//       MaterialPageRoute(builder: (context)=>const FeedBackJobSeeker()),
+//     );
+//   },
+// ),
+
+
+
+
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
+        color:   Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -354,25 +363,26 @@ ListTile(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home),
+                icon: const Icon(Icons.home,color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context)=>const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()));
-                },
-              ),
+  icon: const Icon(Icons.settings, color: Color.fromARGB(255, 255, 255, 255)), // Change the color here
+  onPressed: () {
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()));
+  },
+),
+
               IconButton(
-                icon: const Icon(Icons.notifications),
+                icon: const Icon(Icons.notifications,color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat),
+                icon: const Icon(Icons.chat,color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context)=>const Chattings()));
                 },
@@ -381,13 +391,13 @@ ListTile(
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your logic for the floating action button here
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Add your logic for the floating action button here
+      //   },
+      //  child: const Icon(Icons.add,color: Color.fromARGB(255, 2, 71, 36)),
+      // ),
     );
   }
 }

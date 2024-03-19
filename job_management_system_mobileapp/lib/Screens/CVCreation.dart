@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CVCreation extends StatelessWidget {
+  // ignore: use_super_parameters
   const CVCreation({Key? key}) : super(key: key);
 
   @override
