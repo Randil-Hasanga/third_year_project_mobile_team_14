@@ -1,6 +1,7 @@
 import "package:animated_splash_screen/animated_splash_screen.dart";
 import "package:flutter/material.dart";
 import "package:job_management_system_mobileapp/Screens/LogInPage.dart";
+import "package:job_management_system_mobileapp/Screens/onboardScreen.dart";
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -20,7 +21,7 @@ class SplashScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ],
       ),
-      nextScreen: const LogInPage(),
+      nextScreen: OnboardScreen(),
       splashIconSize: 400,
       backgroundColor: Colors.orange.shade900,
     );
