@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
       splash: Column(
         children: [
           Image.asset(
-            "assets/logo.png",
+            "assets/Logo.png",
             height: MediaQuery.of(context).size.width / 2.5,
             width: MediaQuery.of(context).size.width / 2.5,
           ),
