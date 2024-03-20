@@ -18,12 +18,13 @@ class SplashScreen extends StatelessWidget {
           ),
           //SizedBox(height: 20),
           const Text("Job Management System",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.orange)),
+              
         ],
       ),
-      nextScreen: OnboardScreen(),
+      nextScreen: const OnboardScreen(),
       splashIconSize: 400,
-      backgroundColor: Colors.orange.shade900,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
     );
   }
 }

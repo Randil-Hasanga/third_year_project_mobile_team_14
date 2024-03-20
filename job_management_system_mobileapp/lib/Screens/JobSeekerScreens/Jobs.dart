@@ -138,7 +138,7 @@ class _JobsState extends State<Jobs> {
                       });
                       filterJobs(searchController.text);
                     },
-                    selectedColor: Color.fromARGB(255, 236, 168, 84),
+                    selectedColor: const Color.fromARGB(255, 236, 168, 84),
                     backgroundColor: selectedFilters.contains(filterLabel) ? Colors.orange : Colors.grey.shade300,
                     checkmarkColor: Colors.white,
                     labelStyle: TextStyle(color: selectedFilters.contains(filterLabel) ? Colors.white : Colors.black),

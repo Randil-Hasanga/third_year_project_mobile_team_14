@@ -91,22 +91,22 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 height: 2,
               ),
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 40,
+                    const CircleAvatar(
+                      radius: 30,
                       backgroundImage: AssetImage('assets/Default.png'),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text("$_userName",
                             style:
-                                TextStyle(color: Colors.white, fontSize: 30)),
-                        Text("BICT(HONS)",
+                                const TextStyle(color: Colors.white, fontSize: 30)),
+                        const Text("BICT(HONS)",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)),
                       ],
@@ -314,14 +314,14 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 35,
                     backgroundImage: AssetImage('assets/profile_picture.jpg'),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     '$_userName',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                   
                 ],

@@ -11,91 +11,210 @@ class _CVCreationState extends State<CVCreation> {
   // Define variables to hold CV information
   String name = '';
   String email = '';
-  String phone = '';
+  String mobileTel = '';
+  String homeTel = '';
   String address = '';
+  String district = '';
+  String divisionalSecretariat = '';
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Number of tabs
+      length: 4, // Number of tabs
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('CV Creation'),
-          bottom: TabBar(
+          backgroundColor: const Color.fromARGB(255, 255, 136, 0),
+          title: const Text('Create your CV'),
+          bottom: const TabBar(
             tabs: [
-              Tab(text: 'Personal Information'),
-              Tab(text: 'Education & Experience'),
+              Tab(text: 'Personal Info'),
+              Tab(text: 'Educational'),
+              Tab(text: 'Skills'),
+              Tab(text: 'Job Expectation'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            // First tab content: Personal Information
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Full Name'),
-                    onChanged: (value) {
-                      setState(() {
-                        name = value;
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Email'),
-                    onChanged: (value) {
-                      setState(() {
-                        email = value;
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Phone'),
-                    onChanged: (value) {
-                      setState(() {
-                        phone = value;
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Address'),
-                    onChanged: (value) {
-                      setState(() {
-                        address = value;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Submit the CV data
-                      // You can add logic here to save the CV data
-                      // For example, send it to a server or store it locally
-                    },
-                    child: Text('Submit'),
-                  ),
-                ],
+            // Personal Info Tab
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      value: 'Mr',
+                      onChanged: (value) {},
+                      items: <String>['Dr', 'Miss', 'Mr', 'Mrs', 'Prof']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Title'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: 'Male',
+                      onChanged: (value) {},
+                      items: <String>['Male', 'Female']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Gender'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: 'Full Time',
+                      onChanged: (value) {},
+                      items: <String>['Part Time', 'Full Time']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Job Type'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: 'Government',
+                      onChanged: (value) {},
+                      items: <String>[
+                        'Government',
+                        'Private',
+                        'Semi Government'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration:
+                          const InputDecoration(labelText: 'Working Sector'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: 'Unmarried',
+                      onChanged: (value) {},
+                      items: <String>['Married', 'Unmarried']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration:
+                          const InputDecoration(labelText: 'Marital Status'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: 'Employed',
+                      onChanged: (value) {},
+                      items: <String>['Employed', 'Not Employed']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                          labelText: 'Current Job Status'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Name With Initials *'),
+                    ),
+                    TextFormField(
+                      decoration:
+                          const InputDecoration(labelText: 'Full Name *'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Nationality (Eg: Srilanka)'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'NIC'),
+                    ),
+                    TextFormField(
+                      decoration:
+                          const InputDecoration(labelText: 'Driving License'),
+                    ),
+                    const SizedBox(height: 20),
+                    Text('Select Date of Birth:'), // Placeholder for Calendar
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Religion'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Age'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Email Address'),
+                    ),
+                    TextFormField(
+                      decoration:
+                          const InputDecoration(labelText: 'Tel (Mobile)'),
+                    ),
+                    TextFormField(
+                      decoration:
+                          const InputDecoration(labelText: 'Tel (Home)'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Address'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'District'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Divisional Secretariat'),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Text('Are you a person with special needs?'),
+                        Radio(value: true, groupValue: null, onChanged: null),
+                        const Text('Yes'),
+                        Radio(value: false, groupValue: null, onChanged: null),
+                        const Text('No'),
+                      ],
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Minimum Salary Expectation (LKR)'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Save'),
+                    ),
+                  ],
+                ),
               ),
             ),
-
-            // Second tab content: Education & Experience
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Add form fields for education and experience
-                  Text('Education & Experience'),
-                  // Add more form fields as needed
-                ],
-              ),
+            // Educational Tab
+            Center(
+              child: Text('Educational Tab Placeholder'),
+            ),
+            // Skills Tab
+            Center(
+              child: Text('Skills Tab Placeholder'),
+            ),
+            // Job Expectation Tab
+            Center(
+              child: Text('Job Expectation Tab Placeholder'),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: CVCreation(),
+  ));
 }

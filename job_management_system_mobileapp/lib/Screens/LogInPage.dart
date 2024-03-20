@@ -115,7 +115,7 @@ class _LogInPageState extends State<LogInPage> {
                   children: <Widget>[
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: "Enter Email",
+                        labelText: "Email",
                         prefixIcon: Icon(Icons.email),
                         filled: true,
                         fillColor: const Color.fromARGB(255, 245, 245, 245),
@@ -151,7 +151,7 @@ class _LogInPageState extends State<LogInPage> {
                     TextFormField(
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: "Enter Password",
+                        labelText: "Password",
                         prefixIcon: Icon(Icons.lock),
                         filled: true,
                         fillColor: Colors.grey.shade100,
@@ -271,8 +271,8 @@ class _LogInPageState extends State<LogInPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Invalid email or password"),
+        const SnackBar(
+          content: Text("Invalid email or password",selectionColor:Color.fromARGB(255, 230, 255, 2) ,),
         ),
       );
     }

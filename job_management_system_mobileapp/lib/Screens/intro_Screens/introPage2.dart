@@ -25,7 +25,7 @@ class _IntroPage2State extends State<IntroPage2> {
 
             const Text(
               'Find your team here!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color.fromARGB(255, 255, 128, 0)),
             ),
           ],
         ),
