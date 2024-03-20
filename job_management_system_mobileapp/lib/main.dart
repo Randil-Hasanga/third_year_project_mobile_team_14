@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Job Management System',
       theme: ThemeData(
         useMaterial3: true,
@@ -50,5 +51,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
