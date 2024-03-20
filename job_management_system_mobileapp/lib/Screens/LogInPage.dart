@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/SignUp.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
@@ -16,6 +17,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
+  bool _isLoading = false;
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   String? _email, _password;
   FirebaseService? _firebaseService;
@@ -147,7 +149,6 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
-                      
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: "Enter Password",
@@ -179,19 +180,25 @@ class _LogInPageState extends State<LogInPage> {
                 ),
               ),
               const SizedBox(height: 40),
-              MaterialButton(
-                onPressed: _loginUser,
-                height: 50,
-                color: Colors.orange[900],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: const Center(
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+              Container(
+                width: double.infinity,
+                child: MaterialButton(
+                  onPressed: _isLoading ? null : _loginUser,
+                  height: 50,
+                  color: Colors.orange[900],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
                   ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors
+                              .orange), // make the progress indicator white to make it visible on the orange button
+                        )
+                      : const Text(
+                          "Login",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -235,14 +242,33 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   void _loginUser() async {
+    setState(
+      () {
+        _isLoading = true; // Set to true when login starts
+      },
+    );
     _loginFormKey.currentState!.save();
-    bool _result = await _firebaseService!.loginUser(email: _email!, password: _password!);
+    bool _result =
+        await _firebaseService!.loginUser(email: _email!, password: _password!);
+
+    setState(
+      () {
+        _isLoading = false; // Set to false when login ends
+      },
+    );
 
     if (_result) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => JobSeekerPage()),
-      );
+      if (_firebaseService!.currentUser!['type'] == 'seeker') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => JobSeekerPage()),
+        );
+      } else if (_firebaseService!.currentUser!['type'] == 'provider') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => JobProviderPage()),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
