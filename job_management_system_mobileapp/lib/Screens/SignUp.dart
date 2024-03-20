@@ -1,8 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key});
@@ -13,10 +16,24 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  bool _isLoading = false;
   bool _isJobProvider = false;
+  String? _accountType = 'seeker';
+  final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
+  String? _userName, _email, _password, _reEnterPassword;
+
+  FirebaseService? _firebaseService;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print(_accountType);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -76,24 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         duration: const Duration(milliseconds: 1400),
                         child: Column(
                           children: <Widget>[
-                            _buildTextFieldWithIcon(
-                              hintText: "Username",
-                              icon: Icons.person,
-                            ),
-                            _buildTextFieldWithIcon(
-                              hintText: "Email",
-                              icon: Icons.email,
-                            ),
-                            _buildTextFieldWithIcon(
-                              hintText: "Password",
-                              icon: Icons.lock,
-                              isObscure: true,
-                            ),
-                            _buildTextFieldWithIcon(
-                              hintText: "Re-enter Password",
-                              icon: Icons.lock,
-                              isObscure: true,
-                            ),
+                            _signUpForm(),
                             const SizedBox(height: 20),
                             _buildAccountTypeSwitch(),
                           ],
@@ -102,18 +102,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       const SizedBox(height: 40),
                       _buildButton(
                         text: 'Sign Up',
-                        onPressed: () {
-                          // Implement your sign up logic here
-                          // For demonstration purposes, navigate to the appropriate page based on the selected account type
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => _isJobProvider
-                                  ? const JobProviderPage()
-                                  : const JobSeekerPage(),
-                            ),
-                          );
-                        },
                         color: Colors.orange.shade900,
                       ),
                       const SizedBox(height: 20),
@@ -131,7 +119,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           duration: const Duration(milliseconds: 1500),
                           child: const Text(
                             "Forgot Password?",
-                            style: TextStyle(color: Color.fromARGB(255, 255, 170, 0)),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 255, 170, 0)),
                           ),
                         ),
                       ),
@@ -148,22 +137,26 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildAccountTypeSwitch() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        
-       Text(
-  _isJobProvider ? 'Job Provider' : 'Job Seeker',
-  style: const TextStyle(
-    color: Color.fromARGB(255, 36, 114, 8),
-    fontSize: 18, // Adjust the font size as needed
-  ),
-),
-
+        Text(
+          _isJobProvider ? 'Job Provider' : 'Job Seeker',
+          style: const TextStyle(
+            color: Color.fromARGB(255, 255, 123, 0),
+            fontSize: 18, // Adjust the font size as needed
+          ),
+        ),
         Switch(
           value: _isJobProvider,
           onChanged: (value) {
             setState(() {
-              _isJobProvider = value;
+              if (value) {
+                _accountType = 'provider';
+                _isJobProvider = value;
+              } else {
+                _accountType = 'seeker';
+                _isJobProvider = value;
+              }
             });
           },
           activeColor: Color.fromARGB(255, 26, 130, 74),
@@ -172,11 +165,48 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildTextFieldWithIcon({
-    required String hintText,
-    required IconData icon,
-    bool isObscure = false,
+  Widget _buildButton({
+    required String text,
+    required Color color,
   }) {
+    return Container(
+      width: double.infinity,
+      child: MaterialButton(
+        onPressed: _isLoading ? null : _registerUser,
+        height: 50,
+        color: Colors.orange[900],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: _isLoading
+            ? const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors
+                    .orange), // make the progress indicator white to make it visible on the orange button
+              )
+            : const Text(
+                "Sign Up",
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+      ),
+    );
+  }
+
+  Widget _signUpForm() {
+    return Form(
+      key: _signUpFormKey,
+      child: Column(
+        children: [
+          _userNameTextField(),
+          _emailTextField(),
+          _passwordTextField(),
+          _reEnterPasswordTextField(),
+        ],
+      ),
+    );
+  }
+
+  Widget _userNameTextField() {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -185,16 +215,20 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Row(
         children: [
           Icon(
-            icon,
+            Icons.person,
             color: const Color.fromARGB(255, 255, 115, 1),
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: TextField(
-              obscureText: isObscure,
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: const TextStyle(color: Colors.grey),
+            child: TextFormField(
+              onSaved: (_value) {
+                setState(() {
+                  _userName = _value;
+                });
+              },
+              decoration: const InputDecoration(
+                hintText: "Username",
+                hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
               ),
             ),
@@ -204,24 +238,166 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildButton({
-    required String text,
-    required VoidCallback onPressed,
-    required Color color,
-  }) {
-    return MaterialButton(
-      onPressed: onPressed,
-      height: 50,
-      color: color,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
+  Widget _emailTextField() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
       ),
-      child: const Center(
-        child: Text(
-          "Sign Up",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.email,
+            color: const Color.fromARGB(255, 255, 115, 1),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextFormField(
+              onSaved: (_value) {
+                setState(() {
+                  _email = _value;
+                });
+              },
+              decoration: const InputDecoration(
+                hintText: "Email",
+                hintStyle: TextStyle(color: Colors.grey),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _passwordTextField() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.lock,
+            color: const Color.fromARGB(255, 255, 115, 1),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextFormField(
+              onSaved: (_value) {
+                setState(() {
+                  _password = _value;
+                });
+              },
+              obscureText: true,
+              decoration: const InputDecoration(
+                hintText: "Password",
+                hintStyle: TextStyle(color: Colors.grey),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _reEnterPasswordTextField() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.lock,
+            color: const Color.fromARGB(255, 255, 115, 1),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextFormField(
+              onSaved: (_value) {
+                setState(() {
+                  _reEnterPassword = _value;
+                });
+              },
+              obscureText: true,
+              decoration: const InputDecoration(
+                hintText: "Re-enter Password",
+                hintStyle: TextStyle(color: Colors.grey),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _registerUser() async {
+    setState(
+      () {
+        _isLoading = true; // Set to true when login starts
+      },
+    );
+    _signUpFormKey.currentState!.save();
+    if (_password == _reEnterPassword) {
+      if (_accountType != null) {
+        bool _isRegistered = await _firebaseService!.registerUser(
+          email: _email!,
+          password: _password!,
+          userName: _userName!,
+          accountType: _accountType!,
+        );
+        setState(
+          () {
+            _isLoading = false; // Set to true when login starts
+          },
+        );
+        if (_isRegistered) {
+          Navigator.pushNamed(context, 'login');
+          setState(
+            () {
+              _isLoading = false; // Set to true when login starts
+            },
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to register user'),
+            ),
+          );
+          setState(
+            () {
+              _isLoading = false; // Set to true when login starts
+            },
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select an account type'),
+          ),
+        );
+        setState(
+          () {
+            _isLoading = false; // Set to true when login starts
+          },
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match'),
+        ),
+      );
+      setState(
+        () {
+          _isLoading = false; // Set to true when login starts
+        },
+      );
+    }
   }
 }

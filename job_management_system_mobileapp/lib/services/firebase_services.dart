@@ -44,4 +44,33 @@ class FirebaseService {
       return null;
     }
   }
+
+  Future<bool> registerUser(
+      {required String email,
+      required String password,
+      required String userName,
+      required String accountType}) async {
+    try {
+      UserCredential _userCredentials = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      if (_userCredentials != null) {
+        await _db.collection(USER_COLLECTION).doc(_userCredentials.user!.uid).set({
+          'uid': _userCredentials.user!.uid,
+          'username': userName,
+          'email': email,
+          'type': accountType,
+          'profile_pic': ''
+        });
+
+        //currentUser = await _getUserData(uid: _userCredentials.user!.uid);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

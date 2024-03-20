@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
+import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/splash_screen.dart';
 import 'package:job_management_system_mobileapp/firebase_options.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
         'splash': (context) => SplashScreen(),
         'fogot_pwd': (context) => ForgotPasswordPage(),
         // 'register': (context) => RegisterPage(),
-        // 'login': (context) => LoginPage(),
+        'login': (context) => LogInPage(),
         // 'home': (context) => HomePage(),
         // 'profile': (context) => ProfilePage(),
       },
