@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ProfileJobSeeker extends StatefulWidget {
+  // ignore: use_super_parameters
   const ProfileJobSeeker({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfileJobSeekerState createState() => _ProfileJobSeekerState();
 }
 
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   // Variable to hold the selected image file
   // Add your logic to handle image selection and update this variable
@@ -77,40 +79,40 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 // For example:
                 // _selectImage();
               },
-              child: CircleAvatar(
+              child: const CircleAvatar(
                 radius: 50,
                 // Use _selectedImage here if it's selected, otherwise use a placeholder
                 // backgroundImage: _selectedImage != null ? FileImage(_selectedImage!) : AssetImage('assets/Default.png'),
                 backgroundImage: AssetImage('assets/Default.png'),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _usernameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Username',
               ),
             ),
             TextFormField(
               controller: _emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
               ),
             ),
             TextFormField(
               controller: _phoneNumberController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Phone Number',
               ),
             ),
             TextFormField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -122,7 +124,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                     _phoneNumberController.clear();
                     _passwordController.clear();
                   },
-                  child: Text('Clear'),
+                  child: const Text('Clear'),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -130,7 +132,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                     // You can access the data using the controller's text properties
                     // For example: _usernameController.text, _emailController.text, etc.
                   },
-                  child: Text('Submit'),
+                  child: const Text('Submit'),
                 ),
               ],
             ),

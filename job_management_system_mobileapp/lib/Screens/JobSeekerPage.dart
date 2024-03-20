@@ -2,11 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
-import 'package:job_management_system_mobileapp/Screens/Jobs.dart';
-import 'package:job_management_system_mobileapp/Screens/CVCreation.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Jobs.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
+import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 // import 'package:job_management_system_mobileapp/Screens/FeedBackJobSeeker.dart';
-import 'package:job_management_system_mobileapp/Screens/NotificationsJobSeeker.dart';
-import 'package:job_management_system_mobileapp/Screens/ProfileJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
 
 class JobSeekerPage extends StatelessWidget {
@@ -331,9 +332,11 @@ ListTile(
 ListTile(
             leading: const Icon(Icons.logout,color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
             title: const Text('Logout'),
-            onTap: () {
-              // Perform logout action
-            },
+            onTap: () {Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const LogInPage()),
+            );
+    },
           ),
 
           ],

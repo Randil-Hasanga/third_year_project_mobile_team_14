@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
-import 'package:job_management_system_mobileapp/Screens/NotificationsJobSeeker.dart';
-import 'package:job_management_system_mobileapp/Screens/ProfileJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
 class Jobs extends StatefulWidget {
   const Jobs({Key? key}) : super(key: key);

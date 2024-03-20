@@ -1,6 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:job_management_system_mobileapp/Screens/CVCreation.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
  
 
 class JobProviderPage extends StatelessWidget {
@@ -70,12 +70,12 @@ class JobProviderPage extends StatelessWidget {
                       radius: 30,
                       backgroundImage: AssetImage('assets/Default.png'),
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Job Provider", style: TextStyle(color: Colors.white, fontSize: 40)),
-                        Text("Jane Doe", style: TextStyle(color: Colors.white, fontSize: 20)),
+                        Text("Dinuka Sandeepa", style: TextStyle(color: Colors.white, fontSize: 40)),
+                        Text("Software Engineer", style: TextStyle(color: Colors.white, fontSize: 20)),
                       ],
                     ),
                   ],
@@ -350,12 +350,12 @@ SizedBox(
             // Profile Icon
             const CircleAvatar(
               radius: 30,
-              backgroundImage: AssetImage('assets/profile_picture.jpg'),
+              backgroundImage: AssetImage('assets/Default.jpg'),
             ),
             const SizedBox(height: 8),
             // Job Seeker Name
             const Text(
-              "John Doe",
+              "Dinuka Sandeepa",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -528,61 +528,81 @@ SizedBox(
                 children: <Widget>[
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/profile_picture.jpg'),
+                    backgroundImage: AssetImage('assets/Default.jpg'),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 15),
                   Text(
-                    'Job Seeker',
+                    'Dinuka Sandeepa',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
                   Text(
-                    'John Doe',
+                    'Software Engineer',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.create,color: Color.fromARGB(255, 255, 137, 2)),
               title: const Text('Create Vacancy'),
               onTap: () {
                 // Navigate to find jobs page
               },
             ),
+          
             ListTile(
-              title: const Text('Schedule Interveiws'),
+              leading: const Icon(Icons.schedule,color: Color.fromARGB(255, 255, 137, 2)),
+             title: const Text('Schedule Interveiws'),
               onTap: () {
                 // Navigate to create CV page
               },
             ),
-             ListTile(
-              title: const Text('See JobSeekers'),
+             ListTile( 
+              leading: const Icon(Icons.person_2,color: Color.fromARGB(255, 255, 137, 2)),
+            title: const Text('See JobSeekers'),
               onTap: () {
                 // Navigate to create CV page
               },
             ),
-             ListTile(
-              title: const Text('See CV'),
+             ListTile( 
+              leading: const Icon(Icons.description,color: Color.fromARGB(255, 255, 137, 2)),
+             title: const Text('See CV'),
               onTap: () {
                 // Navigate to create CV page
               },
             ),
             ListTile(
+              leading: const Icon(Icons.comment,color: Color.fromARGB(255, 255, 137, 2)),
+             
               title: const Text('Give feedbacks'),
               onTap: () {
                 // Navigate to create CV page
               },
             ),
-            ListTile(
+             ListTile(
+              leading: const Icon(Icons.settings,color: Color.fromARGB(255, 255, 137, 2)),
+             
               title: const Text('Profile Setting'),
+              onTap: () {
+                // Navigate to create CV page
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.power_settings_new,color: Color.fromARGB(255, 255, 137, 2)),
+             
+              title: const Text('Log out'),
               onTap: () {
                 // Navigate to create CV page
               },
             ),
           ],
         ),
+        
+
+        
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
+        color:  Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -590,25 +610,25 @@ SizedBox(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home),
+                icon: const Icon(Icons.home,color: Colors.white,),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context)=>JobProviderPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings),
+                icon: const Icon(Icons.settings,color: Colors.white,),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context)=>JobProviderPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications),
+                icon: const Icon(Icons.notifications,color: Colors.white,),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context)=>JobProviderPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat),
+                icon: const Icon(Icons.chat,color: Colors.white,),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context)=>JobProviderPage()));
                 },
@@ -617,13 +637,13 @@ SizedBox(
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your logic for the floating action button here
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Add your logic for the floating action button here
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
