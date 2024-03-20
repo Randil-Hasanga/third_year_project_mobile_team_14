@@ -268,7 +268,15 @@ class _CVCreationState extends State<CVCreation> {
                 ),
               ),
             ),
-            // Educational Tab
+
+            
+
+
+
+
+
+    // Educational Tab************************************************************************************
+
 SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -433,17 +441,241 @@ SingleChildScrollView(
                 ),
               ),
             ),
-            // Skills Tab
-            Center(
-              child: Text('Skills Tab Placeholder'),
+ // Skills Tab***************************************************************************************
+            
+ SingleChildScrollView(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Job Experience:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Job Experience fields
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Year of job experience'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Current Job Position'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Date of join'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Current Employee Name'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Responsibilities'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Special Skills'),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Basic Skills:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Basic Skills fields
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Computer Skills'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Other Special Skills'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Achievements'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Extra Curricular Achieves'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Fields of Training Requirements'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Area preferred to start Employment'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Career Guidance Requirements'),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Language Skills:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Language Skills fields
+                        _buildLanguageSkillsField('English'),
+                        _buildLanguageSkillsField('Tamil'),
+                        _buildLanguageSkillsField('Sinhala'),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Save'),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                ),
+ ),
+
+// Job Expectation Tab**************************************************************************
+            SingleChildScrollView(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Objectives and References:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Objectives and References fields
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Career Objective'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Referee [1]'),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Referee [2]'),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Preferred Jobs:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Preferred Jobs fields
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Enter Preferred Jobs'),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Select Preferred Districts to Work:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Select Preferred Districts to Work field
+                        DropdownButtonFormField<String>(
+                          items: <String>[
+                            'Matara',
+                            'Galle',
+                            'Kaluthara',
+                            // Add all districts
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (value) {},
+                          decoration: InputDecoration(labelText: 'Select District'),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Text('Save'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Text('CV'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+        ),],
+        ),
+      ),
+    );
+  }
+  
+ Widget _buildLanguageSkillsField(String language) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(language),
+        Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: DropdownButtonFormField<String>(
+                value: 'Basic',
+                onChanged: (value) {},
+                items: <String>['Basic', 'Good', 'Fluent']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: InputDecoration(labelText: 'Speaking'),
+              ),
             ),
-            // Job Expectation Tab
-            Center(
-              child: Text('Job Expectation Tab Placeholder'),
+            Expanded(
+              flex: 1,
+              child: DropdownButtonFormField<String>(
+                value: 'Basic',
+                onChanged: (value) {},
+                items: <String>['Basic', 'Good', 'Fluent']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: InputDecoration(labelText: 'Reading'),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: DropdownButtonFormField<String>(
+                value: 'Basic',
+                onChanged: (value) {},
+                items: <String>['Basic', 'Good', 'Fluent']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: InputDecoration(labelText: 'Writing'),
+              ),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }
