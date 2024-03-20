@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
 class CVCreation extends StatefulWidget {
   const CVCreation({Key? key}) : super(key: key);
@@ -9,13 +13,30 @@ class CVCreation extends StatefulWidget {
 
 class _CVCreationState extends State<CVCreation> {
   // Define variables to hold CV information
-  String name = '';
+ String name = '';
   String email = '';
   String mobileTel = '';
   String homeTel = '';
   String address = '';
   String district = '';
   String divisionalSecretariat = '';
+  String gceOLYear = '';
+  String gceOLIndexNo = '';
+  String gceOLMedium = '';
+  String gceOLSchool = '';
+  String gceOLAttempt = '';
+  bool gceOLPassedExam = false;
+  String gceALYear = '';
+  String gceALIndexNo = '';
+  String gceALMedium = '';
+  String gceALSchool = '';
+  String gceALAttempt = '';
+  bool gceALPassedExam = false;
+  String professionalQualificationName = '';
+  String professionalInstituteName = '';
+  String professionalDuration = '';
+    String selectedEducationalLevel = 'Below O/L';
+  String selectedProfessionalLevel = 'NVQ1';
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +54,60 @@ class _CVCreationState extends State<CVCreation> {
               Tab(text: 'Job Expectation'),
             ],
           ),
+        ), bottomNavigationBar: BottomAppBar(
+        color: Colors.orange.shade800,
+        shape: const CircularNotchedRectangle(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.home,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.settings,
+                    color: Color.fromARGB(
+                        255, 255, 255, 255)), // Change the color here
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileJobSeeker()));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.notifications,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.chat,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Chattings()));
+                },
+              ),
+            ],
+          ),
         ),
+      ),
         body: TabBarView(
           children: [
             // Personal Info Tab
@@ -141,7 +215,7 @@ class _CVCreationState extends State<CVCreation> {
                           const InputDecoration(labelText: 'Driving License'),
                     ),
                     const SizedBox(height: 20),
-                    Text('Select Date of Birth:'), // Placeholder for Calendar
+                    const Text('Select Date of Birth:'), // Placeholder for Calendar
                     const SizedBox(height: 20),
                     TextFormField(
                       decoration: const InputDecoration(labelText: 'Religion'),
@@ -195,8 +269,169 @@ class _CVCreationState extends State<CVCreation> {
               ),
             ),
             // Educational Tab
-            Center(
-              child: Text('Educational Tab Placeholder'),
+SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Highest Qualification Levels Section
+                    const Text(
+                      'Highest Qualification Levels:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Educational Dropdown
+                    DropdownButtonFormField<String>(
+              value: selectedEducationalLevel,
+              onChanged: (value) {
+                setState(() {
+                  selectedEducationalLevel = value!;
+                });
+              },
+              items: <String>[
+                'Below O/L',
+                'Passed O/L',
+                'Passed A/L',
+                'Graduate',
+                'Post Graduate Diploma'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: const InputDecoration(labelText: 'Educational Qualification Level'),
+            ),
+            const SizedBox(height: 20),
+            // Professional Qualification Dropdown
+            DropdownButtonFormField<String>(
+              value: selectedProfessionalLevel,
+              onChanged: (value) {
+                setState(() {
+                  selectedProfessionalLevel = value!;
+                });
+              },
+              items: <String>[
+                'NVQ1',
+                'NVQ2',
+                'NVQ3',
+                'NVQ4',
+                'NVQ5',
+                'NVQ6',
+                'NVQ7'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: const InputDecoration(labelText: 'Professional Qualification Level'),
+            ),
+                    const SizedBox(height: 20),
+                    // Educational Qualification Section
+                    const Text(
+                      'Educational Qualification:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // GCE O/L Exam Section
+                    const Text(
+                      'GCE O/L Exam:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Year'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Index No'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Medium'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'School'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Attempt'),
+                    ),
+                    Row(
+                      children: [
+                        Text('Did you pass the Exam?'),
+                        Checkbox(
+                          value: gceOLPassedExam,
+                          onChanged: (value) {},
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // GCE A/L Exam Section
+                    const Text(
+                      'GCE A/L Exam:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Year'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Index No'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Medium'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'School'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Attempt'),
+                    ),
+                    Row(
+                      children: [
+                        Text('Did you pass the Exam?'),
+                        Checkbox(
+                          value: gceALPassedExam,
+                          onChanged: (value) {},
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Professional Qualifications Section
+                    const Text(
+                      'Professional Qualifications:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Qualification Name'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Institute Name'),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Duration'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Save'),
+                    ),
+                  ],
+                ),
+              ),
             ),
             // Skills Tab
             Center(
