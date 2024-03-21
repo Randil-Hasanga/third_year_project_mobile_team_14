@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
@@ -5,6 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
+import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
+import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -18,17 +22,20 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   bool _isLoading = false;
   bool _isJobProvider = false;
-  String? _accountType = 'seeker';
+  int? OTP;
+  String _accountType = 'seeker';
   final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
   String? _userName, _email, _password, _reEnterPassword;
 
   FirebaseService? _firebaseService;
+  EmailService? _emailService;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _emailService = GetIt.instance.get<EmailService>();
   }
 
   @override
@@ -172,7 +179,9 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       width: double.infinity,
       child: MaterialButton(
-        onPressed: _isLoading ? null : _registerUser,
+        onPressed: () {
+          _validateAndSave();
+        },
         height: 50,
         color: Colors.orange[900],
         shape: RoundedRectangleBorder(
@@ -223,8 +232,15 @@ class _SignUpPageState extends State<SignUpPage> {
             child: TextFormField(
               onSaved: (_value) {
                 setState(() {
-                  _userName = _value;
+                  _userName = _value!;
                 });
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Username cannot be empty';
+                }
+                // You can add additional validation here if needed, like checking if it matches the password
+                return null;
               },
               decoration: const InputDecoration(
                 hintText: "Username",
@@ -255,8 +271,15 @@ class _SignUpPageState extends State<SignUpPage> {
             child: TextFormField(
               onSaved: (_value) {
                 setState(() {
-                  _email = _value;
+                  _email = _value!;
                 });
+              },
+              validator: (_value) {
+                bool _result = _value!.contains(
+                  RegExp(
+                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"),
+                );
+                return _result ? null : "Please enter a valid email";
               },
               decoration: const InputDecoration(
                 hintText: "Email",
@@ -278,18 +301,21 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.lock,
-            color: const Color.fromARGB(255, 255, 115, 1),
+            color: Color.fromARGB(255, 255, 115, 1),
           ),
           const SizedBox(width: 10),
           Expanded(
             child: TextFormField(
               onSaved: (_value) {
                 setState(() {
-                  _password = _value;
+                  _password = _value!;
                 });
               },
+              validator: (_value) => _value!.length >= 8
+                          ? null
+                          : "Please enter password greater than 8 characters",
               obscureText: true,
               decoration: const InputDecoration(
                 hintText: "Password",
@@ -311,18 +337,21 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.lock,
-            color: const Color.fromARGB(255, 255, 115, 1),
+            color: Color.fromARGB(255, 255, 115, 1),
           ),
           const SizedBox(width: 10),
           Expanded(
             child: TextFormField(
               onSaved: (_value) {
                 setState(() {
-                  _reEnterPassword = _value;
+                  _reEnterPassword = _value!;
                 });
               },
+              validator: (_value) => _value!.length >= 8
+                          ? null
+                          : "Please enter password greater than 8 characters",
               obscureText: true,
               decoration: const InputDecoration(
                 hintText: "Re-enter Password",
@@ -336,68 +365,33 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void _registerUser() async {
-    setState(
-      () {
-        _isLoading = true; // Set to true when login starts
-      },
-    );
-    _signUpFormKey.currentState!.save();
-    if (_password == _reEnterPassword) {
-      if (_accountType != null) {
-        bool _isRegistered = await _firebaseService!.registerUser(
-          email: _email!,
-          password: _password!,
-          userName: _userName!,
-          accountType: _accountType!,
-        );
-        setState(
-          () {
-            _isLoading = false; // Set to true when login starts
-          },
-        );
-        if (_isRegistered) {
-          Navigator.pushNamed(context, 'login');
-          setState(
-            () {
-              _isLoading = false; // Set to true when login starts
-            },
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to register user'),
-            ),
-          );
-          setState(
-            () {
-              _isLoading = false; // Set to true when login starts
-            },
-          );
-        }
-      } else {
+  void _validateAndSave() async {
+    if (_signUpFormKey.currentState!.validate()) {
+      _signUpFormKey.currentState!.save();
+
+      if (_password != _reEnterPassword) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please select an account type'),
+            content: Text(
+              "Password does not match",
+              selectionColor: Color.fromARGB(255, 230, 255, 2),
+            ),
           ),
         );
-        setState(
-          () {
-            _isLoading = false; // Set to true when login starts
-          },
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EnterOTP(
+                userName: _userName!,
+                email: _email!,
+                password: _password!,
+                confirmPassword: _reEnterPassword!,
+                accountType: _accountType),
+          ),
         );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwords do not match'),
-        ),
-      );
-      setState(
-        () {
-          _isLoading = false; // Set to true when login starts
-        },
-      );
     }
-  }
+    print(_userName);
+  } // write codes tp generate random otp
 }
