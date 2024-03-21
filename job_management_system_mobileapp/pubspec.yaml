@@ -33,7 +33,7 @@ dependencies:
   flutter:
     sdk: flutter
   
-  file_picker: ^6.2.0
+  file_picker: ^8.0.0+1
   firebase_core: ^2.25.5
   firebase_auth: ^4.17.8
   firebase_analytics: ^10.8.9
