@@ -4,9 +4,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(vacancies());
+}
 
 class vacancies extends StatelessWidget {
-  const vacancies({Key? key}) : super(key: key);
+  vacancies({super.key});
+
+  final _companyNameController = TextEditingController();
+  final _jobPositionController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _salaryController = TextEditingController();
+  final _locationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +71,7 @@ class vacancies extends StatelessWidget {
             ),
           ),
         ),
-        body: const SingleChildScrollView(
+        body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.all(20.0),
@@ -66,33 +80,58 @@ class vacancies extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
+                    controller: _companyNameController,
                     decoration: InputDecoration(
-                        hintText: 'Company Name', border: OutlineInputBorder()),
+                        labelText: 'Company Name',
+                        hintText: 'Company Name',
+                        border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 20),
                   TextField(
+                    controller: _jobPositionController,
                     decoration: InputDecoration(
-                        hintText: 'Job Position', border: OutlineInputBorder()),
+                        labelText: 'Job Position',
+                        hintText: 'Job Position',
+                        border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 20),
                   TextField(
+                    controller: _descriptionController,
                     decoration: InputDecoration(
-                        hintText: 'Description', border: OutlineInputBorder()),
+                        labelText: 'Description',
+                        hintText: 'Description',
+                        border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 20),
                   TextField(
+                    controller: _salaryController,
                     decoration: InputDecoration(
-                        hintText: 'Salary', border: OutlineInputBorder()),
+                        labelText: 'Salary',
+                        hintText: 'Salary',
+                        border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 20),
                   TextField(
+                    controller: _locationController,
                     decoration: InputDecoration(
-                        hintText: 'Location', border: OutlineInputBorder()),
+                        labelText: 'Location',
+                        hintText: 'Location',
+                        border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: null,
-                    child: Text('Submit'),
+                    onPressed: () {
+                      CollectionReference vacancies =
+                          FirebaseFirestore.instance.collection('vacancy');
+                      vacancies.add({
+                        'company_name': _companyNameController.text,
+                        'job_position': _jobPositionController.text,
+                        'description': _descriptionController.text,
+                        'salary': _salaryController.text,
+                        'location': _locationController.text,
+                      });
+                    },
+                    child: Text('Add Vacancy'),
                   )
                 ]),
           ),

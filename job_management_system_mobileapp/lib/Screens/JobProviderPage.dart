@@ -8,6 +8,10 @@ class JobProviderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    // You can adjust this factor according to your preference
+    double fontSize = screenWidth * 0.04; // Example factor
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
@@ -257,7 +261,7 @@ class JobProviderPage extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        height: 200, // Adjust the height as needed
+                        height: 230, // Adjust the height as needed
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
@@ -268,36 +272,39 @@ class JobProviderPage extends StatelessWidget {
                                 color: Colors.grey.shade200,
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Profile Icon
-                                  const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: AssetImage(
-                                        'assets/profile_picture.jpg'),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Skills
-                                  const Text(
-                                    "Skills: Skill 1, Skill 2, Skill 3",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Preferred Working Section
-                                  const Text(
-                                    "Preferred Working: Location, Remote",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // View CV Button
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Add your logic to view the CV of the job seeker
-                                    },
-                                    child: const Text("View CV"),
-                                  ),
-                                ],
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Profile Icon
+                                    const CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: AssetImage(
+                                          'assets/profile_picture.jpg'),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    // Skills
+                                    const Text(
+                                      "Skills: Skill 1, Skill 2, Skill 3",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    // Preferred Working Section
+                                    const Text(
+                                      "Preferred Working: Location, Remote",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    // View CV Button
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        // Add your logic to view the CV of the job seeker
+                                      },
+                                      child: const Text("View CV"),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Container(
