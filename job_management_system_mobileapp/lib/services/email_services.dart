@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emailjs/emailjs.dart';
 import 'package:flutter/material.dart';
 
@@ -31,5 +32,25 @@ class EmailService {
     } catch (error) {
       print(error.toString());
     }
+  }
+  //get collection of vacancy
+  final CollectionReference vacancyCollection =
+      FirebaseFirestore.instance.collection('vacancy');
+
+  //create add new vacancy
+  Future<void> addVacancy(String companyName, String jobPosition,
+      String description, String salary, String location) {
+    return vacancyCollection.add({
+      'company_name': companyName,
+      'job_position': jobPosition,
+      'description': description,
+      'salary': salary,
+      'location': location,
+    });
+  }
+
+  //delete vacancy
+  Future<void> deleteVacancy(String vId) {
+    return vacancyCollection.doc(vId).delete();
   }
 }

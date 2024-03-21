@@ -6,7 +6,7 @@ import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
-class JobProviderPage extends StatelessWidget {
+class JobProviderPage extends StatefulWidget {
   JobProviderPage({super.key});
 
   final FirebaseService firebaseService = FirebaseService();
