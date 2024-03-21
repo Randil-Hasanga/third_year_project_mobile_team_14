@@ -37,8 +37,8 @@ class FirebaseService {
   Future<Map?> _getUserData({required String uid}) async {
     DocumentSnapshot _doc =
         await _db.collection(USER_COLLECTION).doc(uid).get();
-    
-    if(_doc.exists){
+
+    if (_doc.exists) {
       return _doc.data() as Map;
     } else {
       return null;
@@ -51,11 +51,14 @@ class FirebaseService {
       required String userName,
       required String accountType}) async {
     try {
-      UserCredential _userCredentials = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential _userCredentials = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       if (_userCredentials != null) {
-        await _db.collection(USER_COLLECTION).doc(_userCredentials.user!.uid).set({
+        await _db
+            .collection(USER_COLLECTION)
+            .doc(_userCredentials.user!.uid)
+            .set({
           'uid': _userCredentials.user!.uid,
           'username': userName,
           'email': email,
@@ -72,5 +75,26 @@ class FirebaseService {
       print(e);
       return false;
     }
+  }
+
+  //get collection of vacancy
+  final CollectionReference vacancyCollection =
+      FirebaseFirestore.instance.collection('vacancy');
+
+  //create add new vacancy
+  Future<void> addVacancy(String companyName, String jobPosition,
+      String description, String salary, String location) {
+    return vacancyCollection.add({
+      'company_name': companyName,
+      'job_position': jobPosition,
+      'description': description,
+      'salary': salary,
+      'location': location,
+    });
+  }
+
+  //delete vacancy
+  Future<void> deleteVacancy(String vId) {
+    return vacancyCollection.doc(vId).delete();
   }
 }

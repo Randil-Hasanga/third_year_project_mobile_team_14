@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class JobProviderPage extends StatelessWidget {
-  const JobProviderPage({super.key});
+  JobProviderPage({super.key});
+
+  final FirebaseService firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +175,7 @@ class JobProviderPage extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        height: 150,
+                        height: 160,
                         child: StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
                               .collection('vacancy')
@@ -222,7 +225,7 @@ class JobProviderPage extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10),
+                                      SizedBox(height: 6),
                                       Row(
                                         children: [
                                           const Icon(Icons.work),
@@ -236,7 +239,7 @@ class JobProviderPage extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10),
+                                      SizedBox(height: 6),
                                       /* Text(
                                         companyName = (vacancyData as Map<
                                                 String, dynamic>)['salary']
@@ -256,6 +259,22 @@ class JobProviderPage extends StatelessWidget {
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              //add edit logic
+                                            },
+                                            icon: const Icon(Icons.edit),
+                                          ),
+                                          IconButton(
+                                            onPressed: () => FirebaseService()
+                                                .deleteVacancy(snapshot
+                                                    .data!.docs[index].id),
+                                            icon: const Icon(Icons.delete),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 );
