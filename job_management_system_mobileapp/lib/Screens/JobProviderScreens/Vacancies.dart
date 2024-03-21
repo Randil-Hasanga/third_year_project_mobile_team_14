@@ -6,6 +6,7 @@ import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,8 @@ Future<void> main() async {
 
 class vacancies extends StatelessWidget {
   vacancies({super.key});
+
+  final FirebaseService firebaseService = FirebaseService();
 
   final _companyNameController = TextEditingController();
   final _jobPositionController = TextEditingController();
@@ -43,7 +46,7 @@ class vacancies extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const JobProviderPage()));
+                            builder: (context) => JobProviderPage()));
                   },
                 ),
                 IconButton(
@@ -121,15 +124,18 @@ class vacancies extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      CollectionReference collref =
-                          FirebaseFirestore.instance.collection('vacancy');
-                      collref.add({
-                        'company_name': _companyNameController.text,
-                        'job_position': _jobPositionController.text,
-                        'description': _descriptionController.text,
-                        'salary': _salaryController.text,
-                        'location': _locationController.text,
-                      });
+                      FirebaseService().addVacancy(
+                          _companyNameController.text,
+                          _jobPositionController.text,
+                          _descriptionController.text,
+                          _salaryController.text,
+                          _locationController.text);
+
+                      _companyNameController.clear();
+                      _jobPositionController.clear();
+                      _descriptionController.clear();
+                      _salaryController.clear();
+                      _locationController.clear();
                     },
                     child: const Text('Add Vacancy'),
                   )

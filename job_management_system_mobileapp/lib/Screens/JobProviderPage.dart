@@ -6,8 +6,10 @@ import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
-class JobProviderPage extends StatefulWidget {
-  const JobProviderPage({super.key});
+class JobProviderPage extends StatelessWidget {
+  JobProviderPage({super.key});
+
+  final FirebaseService firebaseService = FirebaseService();
 
   @override
   State<JobProviderPage> createState() => _JobProviderPageState();
@@ -191,7 +193,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                         ],
                       ),
                       SizedBox(
-                        height: 150,
+                        height: 160,
                         child: StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
                               .collection('vacancy')
@@ -241,7 +243,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10),
+                                      SizedBox(height: 6),
                                       Row(
                                         children: [
                                           const Icon(Icons.work),
@@ -255,7 +257,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10),
+                                      SizedBox(height: 6),
                                       /* Text(
                                         companyName = (vacancyData as Map<
                                                 String, dynamic>)['salary']
@@ -275,6 +277,22 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              //add edit logic
+                                            },
+                                            icon: const Icon(Icons.edit),
+                                          ),
+                                          IconButton(
+                                            onPressed: () => FirebaseService()
+                                                .deleteVacancy(snapshot
+                                                    .data!.docs[index].id),
+                                            icon: const Icon(Icons.delete),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 );
