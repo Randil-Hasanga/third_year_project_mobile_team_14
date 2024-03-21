@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +12,24 @@ class JobProviderPage extends StatelessWidget {
   final FirebaseService firebaseService = FirebaseService();
 
   @override
+  State<JobProviderPage> createState() => _JobProviderPageState();
+}
+
+class _JobProviderPageState extends State<JobProviderPage> {
+
+  FirebaseService? _firebaseService;
+  String? _userName;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+
+  }
+  @override
   Widget build(BuildContext context) {
+    _userName = _firebaseService!.currentUser!['username'];
     double screenWidth = MediaQuery.of(context).size.width;
     // You can adjust this factor according to your preference
     double fontSize = screenWidth * 0.04; // Example factor
@@ -71,7 +89,7 @@ class JobProviderPage extends StatelessWidget {
               const SizedBox(
                 height: 2,
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(20),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +102,7 @@ class JobProviderPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Dinuka Sandeepa",
+                        Text("$_userName",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 30)),
                         Text("Software Engineer",
@@ -443,9 +461,9 @@ class JobProviderPage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   // Job Seeker Name
-                                  const Text(
-                                    "Dinuka Sandeepa",
-                                    style: TextStyle(
+                                  Text(
+                                    "$_userName",
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -626,19 +644,19 @@ class JobProviderPage extends StatelessWidget {
                   ],
                 ),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 30,
                     backgroundImage: AssetImage('assets/Default.jpg'),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
-                    'Dinuka Sandeepa',
+                    '$_userName',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
-                  Text(
+                  const Text(
                     'Software Engineer',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
