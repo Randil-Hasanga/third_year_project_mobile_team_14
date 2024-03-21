@@ -323,63 +323,69 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                     '$_userName',
                     style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
-                  
                 ],
               ),
             ),
             ListTile(
-  leading: const Icon(Icons.search,color: Color.fromARGB(255, 255, 137, 2)), // Icon for finding jobs
-  title: const Text('Find Jobs'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const Jobs()),
-    );
-  },
-),
-
-ListTile(
-  leading: const Icon(Icons.create,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-  title: const Text('Create CV'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const CVCreation()),
-    );
-  },
-),
-
-
-
-ListTile(
-  leading: const Icon(Icons.notifications,color: Color.fromARGB(255, 255, 137, 2)), // Icon for notifications
-  title: const Text('Notifications'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()),
-    );
-  },
-),
-
-ListTile(
-  leading: const Icon(Icons.settings,color: Color.fromARGB(255, 255, 137, 2)), // Icon for profile settings
-  title: const Text('Profile Settings'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()),
-    );
-  },
-),
-ListTile(
-            leading: const Icon(Icons.logout,color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
-            title: const Text('Logout'),
-            onTap: () {
-              // Perform logout action
-            },
-          ),
-
+              leading: const Icon(Icons.search,
+                  color: Color.fromARGB(
+                      255, 255, 137, 2)), // Icon for finding jobs
+              title: const Text('Find Jobs'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Jobs()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.create,
+                  color:
+                      Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+              title: const Text('Create CV'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CVCreation()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.notifications,
+                  color: Color.fromARGB(
+                      255, 255, 137, 2)), // Icon for notifications
+              title: const Text('Notifications'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationsJobSeeker()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings,
+                  color: Color.fromARGB(
+                      255, 255, 137, 2)), // Icon for profile settings
+              title: const Text('Profile Settings'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileJobSeeker()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout,
+                  color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LogInPage()));
+                // Perform logout action
+              },
+            ),
           ],
         ),
 
