@@ -41,10 +41,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: 'splash',
       routes: {
-        'splash': (context) => SplashScreen(),
-        'fogot_pwd': (context) => ForgotPasswordPage(),
+        'splash': (context) => const SplashScreen(),
+        'fogot_pwd': (context) => const ForgotPasswordPage(),
         // 'register': (context) => RegisterPage(),
-        'login': (context) => LogInPage(),
+        'login': (context) =>  const LogInPage(),
         // 'home': (context) => HomePage(),
         // 'profile': (context) => ProfilePage(),
       },

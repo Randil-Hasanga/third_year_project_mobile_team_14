@@ -26,7 +26,7 @@ class _IntroPage3State extends State<IntroPage3> {
 
             const Text(
               'Generate your Cv here!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color.fromARGB(255, 255, 128, 0)),
             ),
           ],
         ),

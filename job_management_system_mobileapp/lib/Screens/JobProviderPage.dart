@@ -1,8 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
-import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
+
+ 
 
 class JobProviderPage extends StatelessWidget {
   const JobProviderPage({super.key});
@@ -77,12 +76,8 @@ class JobProviderPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Dinuka Sandeepa",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 30)),
-                        Text("Software Engineer",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
+                        Text("Dinuka Sandeepa", style: TextStyle(color: Colors.white, fontSize: 30)),
+                        Text("Software Engineer", style: TextStyle(color: Colors.white, fontSize: 20)),
                       ],
                     ),
                   ],
