@@ -1,7 +1,8 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-
- 
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
+import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class JobProviderPage extends StatelessWidget {
   const JobProviderPage({super.key});
@@ -80,8 +81,12 @@ class JobProviderPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Dinuka Sandeepa", style: TextStyle(color: Colors.white, fontSize: 30)),
-                        Text("Software Engineer", style: TextStyle(color: Colors.white, fontSize: 20)),
+                        Text("Dinuka Sandeepa",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 30)),
+                        Text("Software Engineer",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20)),
                       ],
                     ),
                   ],
@@ -168,72 +173,95 @@ class JobProviderPage extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 150,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: List.generate(
-                            10,
-                            (index) => Container(
-                              margin: const EdgeInsets.all(8),
-                              width: 250,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Job $index",
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          const Text(
-                            "Scheduled interviews",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // Add your logic to navigate to see all scheduled interviews
-                            },
-                            child: const Text(
-                              "See All",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 145, 0),
-                                  fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 150,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: List.generate(
-                            5,
-                            (index) => Container(
-                              margin: const EdgeInsets.all(8),
-                              width: 250,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Vacancy $index",
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            ),
-                          ),
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('vacancy')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator(); // Show loading indicator while fetching data
+                            }
+
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                var vacancyData =
+                                    snapshot.data?.docs[index].data();
+                                String companyName = '';
+
+                                if (vacancyData != null) {
+                                  companyName = (vacancyData as Map<String,
+                                      dynamic>)['company_name'] as String;
+                                }
+                                return Container(
+                                  margin: const EdgeInsets.all(8),
+                                  width: 250,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.business),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            companyName = (vacancyData as Map<
+                                                    String,
+                                                    dynamic>)['company_name']
+                                                as String, // Assuming 'company_name' is a field in your Firestore document
+                                            style:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.work),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            companyName =
+                                                (vacancyData)['job_position']
+                                                    as String,
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      /* Text(
+                                        companyName = (vacancyData as Map<
+                                                String, dynamic>)['salary']
+                                            as String, 
+                                        style: const TextStyle(fontSize: 8),
+                                      ),*/
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.location_on),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            companyName =
+                                                (vacancyData)['location']
+                                                    as String,
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 20),

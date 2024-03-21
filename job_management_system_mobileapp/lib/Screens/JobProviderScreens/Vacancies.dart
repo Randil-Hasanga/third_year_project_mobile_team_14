@@ -121,9 +121,9 @@ class vacancies extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      CollectionReference vacancies =
+                      CollectionReference collref =
                           FirebaseFirestore.instance.collection('vacancy');
-                      vacancies.add({
+                      collref.add({
                         'company_name': _companyNameController.text,
                         'job_position': _jobPositionController.text,
                         'description': _descriptionController.text,
@@ -131,7 +131,7 @@ class vacancies extends StatelessWidget {
                         'location': _locationController.text,
                       });
                     },
-                    child: Text('Add Vacancy'),
+                    child: const Text('Add Vacancy'),
                   )
                 ]),
           ),
