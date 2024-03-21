@@ -175,6 +175,9 @@ class _LogInPageState extends State<LogInPage> {
                           _password = _value;
                         });
                       },
+                      validator: (_value) => _value!.length >= 8
+                          ? null
+                          : "Please enter password greater than 8 characters",
                     ),
                   ],
                 ),
@@ -274,7 +277,10 @@ class _LogInPageState extends State<LogInPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Invalid email or password",selectionColor:Color.fromARGB(255, 230, 255, 2) ,),
+          content: Text(
+            "Invalid email or password",
+            selectionColor: Color.fromARGB(255, 230, 255, 2),
+          ),
         ),
       );
     }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+
 
 class NotificationsJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
@@ -76,88 +76,6 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
           ),
         ),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.orange,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/Default.png'),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Deshani Bandara',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'johndoe@gmail.com',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const JobSeekerPage(),
-                  ),
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileJobSeeker(),
-                  ),
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Notifications'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-           ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.chat),
-              title: const Text('Chattings'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Chattings(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
       body: ListView.builder(
         itemCount: _notifications.length,
         itemBuilder: (context, index) {
@@ -180,8 +98,7 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
             ),
           );
         },
-        child: const Icon(Icons.work),
+      
       ),
-    );
-  }
+    );}
 }
