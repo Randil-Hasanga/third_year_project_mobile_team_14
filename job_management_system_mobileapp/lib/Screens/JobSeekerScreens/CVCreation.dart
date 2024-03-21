@@ -44,17 +44,23 @@ class _CVCreationState extends State<CVCreation> {
       length: 4, // Number of tabs
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 255, 136, 0),
-          title: const Text('Create your CV'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Personal Info'),
-              Tab(text: 'Educational'),
-              Tab(text: 'Skills'),
-              Tab(text: 'Job Expectation'),
-            ],
-          ),
-        ), bottomNavigationBar: BottomAppBar(
+  backgroundColor: Colors.orange.shade800,
+  title: const Text(
+    'Create your CV Here',
+    style: TextStyle(color: Colors.white),
+  ),
+  bottom: const TabBar(
+    labelColor: Colors.white, // Set the tab text color here
+    tabs: [
+      Tab(text: 'Personal Info'),
+      Tab(text: 'Educational'),
+      Tab(text: 'Skills'),
+      Tab(text: 'Job Expectation'),
+    ],
+  ),
+),
+
+        bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
         child: Padding(
@@ -246,13 +252,13 @@ class _CVCreationState extends State<CVCreation> {
                           labelText: 'Divisional Secretariat'),
                     ),
                     const SizedBox(height: 20),
-                    Row(
+                    const Row(
                       children: [
                         Text('Are you a person with special needs?'),
                         Radio(value: true, groupValue: null, onChanged: null),
-                        const Text('Yes'),
+                        Text('Yes'),
                         Radio(value: false, groupValue: null, onChanged: null),
-                        const Text('No'),
+                        Text('No'),
                       ],
                     ),
                     TextFormField(
@@ -374,7 +380,7 @@ SingleChildScrollView(
                     ),
                     Row(
                       children: [
-                        Text('Did you pass the Exam?'),
+                        const Text('Did you pass the Exam?'),
                         Checkbox(
                           value: gceOLPassedExam,
                           onChanged: (value) {},
@@ -407,7 +413,7 @@ SingleChildScrollView(
                     ),
                     Row(
                       children: [
-                        Text('Did you pass the Exam?'),
+                        const Text('Did you pass the Exam?'),
                         Checkbox(
                           value: gceALPassedExam,
                           onChanged: (value) {},
@@ -450,81 +456,81 @@ SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Job Experience:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Job Experience fields
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Year of job experience'),
+                          decoration: const InputDecoration(labelText: 'Year of job experience'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Current Job Position'),
+                          decoration: const InputDecoration(labelText: 'Current Job Position'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Date of join'),
+                          decoration: const InputDecoration(labelText: 'Date of join'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Current Employee Name'),
+                          decoration: const InputDecoration(labelText: 'Current Employee Name'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Responsibilities'),
+                          decoration: const InputDecoration(labelText: 'Responsibilities'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Special Skills'),
+                          decoration: const InputDecoration(labelText: 'Special Skills'),
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'Basic Skills:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Basic Skills fields
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Computer Skills'),
+                          decoration: const InputDecoration(labelText: 'Computer Skills'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Other Special Skills'),
+                          decoration: const InputDecoration(labelText: 'Other Special Skills'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Achievements'),
+                          decoration: const InputDecoration(labelText: 'Achievements'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Extra Curricular Achieves'),
+                          decoration: const InputDecoration(labelText: 'Extra Curricular Achieves'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Fields of Training Requirements'),
+                          decoration: const InputDecoration(labelText: 'Fields of Training Requirements'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Area preferred to start Employment'),
+                          decoration: const InputDecoration(labelText: 'Area preferred to start Employment'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Career Guidance Requirements'),
+                          decoration: const InputDecoration(labelText: 'Career Guidance Requirements'),
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'Language Skills:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Language Skills fields
                         _buildLanguageSkillsField('English'),
                         _buildLanguageSkillsField('Tamil'),
                         _buildLanguageSkillsField('Sinhala'),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {},
-                          child: Text('Save'),
+                          child: const Text('Save'),
                         ),
                         
                       ],
@@ -541,46 +547,46 @@ SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Objectives and References:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Objectives and References fields
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Career Objective'),
+                          decoration: const InputDecoration(labelText: 'Career Objective'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Referee [1]'),
+                          decoration: const InputDecoration(labelText: 'Referee [1]'),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Referee [2]'),
+                          decoration: const InputDecoration(labelText: 'Referee [2]'),
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'Preferred Jobs:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Preferred Jobs fields
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Enter Preferred Jobs'),
+                          decoration: const InputDecoration(labelText: 'Enter Preferred Jobs'),
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'Select Preferred Districts to Work:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Select Preferred Districts to Work field
                         DropdownButtonFormField<String>(
                           items: <String>[
@@ -595,19 +601,19 @@ SingleChildScrollView(
                             );
                           }).toList(),
                           onChanged: (value) {},
-                          decoration: InputDecoration(labelText: 'Select District'),
+                          decoration: const InputDecoration(labelText: 'Select District'),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton(
                               onPressed: () {},
-                              child: Text('Save'),
+                              child: const Text('Save'),
                             ),
                             ElevatedButton(
                               onPressed: () {},
-                              child: Text('CV'),
+                              child: const Text('CV'),
                             ),
                           ],
                         ),
@@ -640,7 +646,7 @@ SingleChildScrollView(
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: InputDecoration(labelText: 'Speaking'),
+                decoration: const InputDecoration(labelText: 'Speaking'),
               ),
             ),
             Expanded(
@@ -655,7 +661,7 @@ SingleChildScrollView(
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: InputDecoration(labelText: 'Reading'),
+                decoration: const InputDecoration(labelText: 'Reading'),
               ),
             ),
             Expanded(
@@ -670,7 +676,7 @@ SingleChildScrollView(
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: InputDecoration(labelText: 'Writing'),
+                decoration: const InputDecoration(labelText: 'Writing'),
               ),
             ),
           ],
@@ -681,7 +687,7 @@ SingleChildScrollView(
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: CVCreation(),
   ));
 }
