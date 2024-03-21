@@ -682,8 +682,12 @@ class JobProviderPage extends StatelessWidget {
               title: const Text('Log out'),
               onTap: () {
                 // Navigate to create CV page
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LogInPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LogInPage(),
+                  ),
+                );
               },
             ),
           ],
