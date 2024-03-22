@@ -16,7 +16,6 @@ class JobProviderPage extends StatefulWidget {
 }
 
 class _JobProviderPageState extends State<JobProviderPage> {
-
   FirebaseService? _firebaseService;
   String? _userName;
 
@@ -25,8 +24,8 @@ class _JobProviderPageState extends State<JobProviderPage> {
     // TODO: implement initState
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
-
   }
+
   @override
   Widget build(BuildContext context) {
     _userName = _firebaseService!.currentUser!['username'];
@@ -201,7 +200,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return CircularProgressIndicator(); // Show loading indicator while fetching data
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              ); // Show loading indicator while fetching data
                             }
 
                             if (snapshot.hasError) {
