@@ -112,25 +112,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: Colors.orange.shade900,
                       ),
                       const SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {
-                          // Navigate to the forgot password page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordPage(),
-                            ),
-                          );
-                        },
-                        child: FadeInUp(
-                          duration: const Duration(milliseconds: 1500),
-                          child: const Text(
-                            "Forgot Password?",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 170, 0)),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
