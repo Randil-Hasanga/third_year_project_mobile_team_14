@@ -14,12 +14,13 @@ class EnterOTP extends StatefulWidget {
   String password;
   String confirmPassword;
   String accountType;
-  EnterOTP(
-      {required this.userName,
-      required this.email,
-      required this.password,
-      required this.confirmPassword,
-      required this.accountType});
+  EnterOTP({
+    required this.userName,
+    required this.email,
+    required this.password,
+    required this.confirmPassword,
+    required this.accountType,
+  });
 
   @override
   State<EnterOTP> createState() => _EnterOTPState();
@@ -49,7 +50,7 @@ class _EnterOTPState extends State<EnterOTP> {
     _accountType = widget.accountType;
 
     generateOTP(6);
-    _emailService!.sendEmail(_email!,_userName!, otp!);
+    _emailService!.sendEmail(_email!, _userName!, otp!);
   }
 
   void generateOTP(int length) {
