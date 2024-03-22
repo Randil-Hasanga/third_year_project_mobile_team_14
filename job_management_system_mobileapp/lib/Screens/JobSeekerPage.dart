@@ -5,11 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Jobs.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
-import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
-// import 'package:job_management_system_mobileapp/Screens/FeedBackJobSeeker.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Help.dart';
+
 
 class JobSeekerPage extends StatefulWidget {
   // ignore: use_super_parameters
@@ -136,7 +137,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: const [
                             BoxShadow(
-                              color: Color.fromRGBO(225, 95, 27, .3),
+                              color: Color.fromRGBO(168, 166, 165, 0.298),
                               blurRadius: 20,
                               offset: Offset(0, 10),
                             ),
@@ -163,7 +164,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               },
                               icon: const Icon(
                                 Icons.filter_list,
-                                color: Colors.grey,
+                                color: Color.fromARGB(255, 158, 158, 158),
                               ),
                             ),
                           ],
@@ -323,82 +324,74 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                     '$_userName',
                     style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
+                  
                 ],
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.search,
-                  color: Color.fromARGB(
-                      255, 255, 137, 2)), // Icon for finding jobs
-              title: const Text('Find Jobs'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Jobs()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.create,
-                  color:
-                      Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-              title: const Text('Create CV'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CVCreation()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications,
-                  color: Color.fromARGB(
-                      255, 255, 137, 2)), // Icon for notifications
-              title: const Text('Notifications'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const NotificationsJobSeeker()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings,
-                  color: Color.fromARGB(
-                      255, 255, 137, 2)), // Icon for profile settings
-              title: const Text('Profile Settings'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileJobSeeker()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout,
-                  color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
-              title: const Text('Logout'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LogInPage()));
-                // Perform logout action
-              },
-            ),
+  leading: const Icon(Icons.search,color: Color.fromARGB(255, 255, 137, 2)), // Icon for finding jobs
+  title: const Text('Find Jobs'),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const Jobs()),
+    );
+  },
+),
+
+ListTile(
+  leading: const Icon(Icons.create,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+  title: const Text('Create CV'),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const CVCreation()),
+    );
+  },
+),
+
+
+ListTile(
+  leading: const Icon(Icons.notifications,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+  title: const Text('Notifications'),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()),
+    );
+  },
+),
+ListTile(
+  leading: const Icon(Icons.settings,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+  title: const Text('Profile Settings'),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()),
+    );
+  },
+),
+const ListTile(
+  leading: Icon(Icons.help,color: Color.fromARGB(255, 255, 137, 2)),
+title: Text("Help"),
+// onTap: (){Navigator.push(context,MaterialPageRoute(builder: const Help()),);},
+),
+
+ListTile(
+            leading: const Icon(Icons.logout,color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
+            title: const Text('Logout'),
+            onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>const LogInPage()),
+    );
+  },
+),
+
           ],
         ),
 
-// ListTile(
-//   leading: const Icon(Icons.feedback,color: Color.fromARGB(255, 255, 137, 2)), // Icon for giving feedback
-//   title: const Text('Give Feedbacks'),
-//   onTap: () {
-//     Navigator.push(
-//       context,
-//       MaterialPageRoute(builder: (context)=>const FeedBackJobSeeker()),
-//     );
-//   },
-// ),
+
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,

@@ -4,8 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get_it/get_it.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
+
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/services/email_services.dart';
@@ -111,7 +110,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         text: 'Sign Up',
                         color: Colors.orange.shade900,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height:125),
+                    const Text("Job Center, Matara"),
                     ],
                   ),
                 ),

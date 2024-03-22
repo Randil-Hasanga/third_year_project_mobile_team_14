@@ -235,8 +235,10 @@ class _LogInPageState extends State<LogInPage> {
                     "Forgot Password?",
                     style: TextStyle(color: Color.fromARGB(255, 255, 153, 0)),
                   ),
+                  
                 ),
-              ),
+              ),const SizedBox(height: 150),
+              const Text("Job Center, Matara"),
             ],
           ),
         ),
