@@ -45,11 +45,13 @@ class FirebaseService {
     }
   }
 
-  Future<bool> registerUser(
-      {required String email,
-      required String password,
-      required String userName,
-      required String accountType}) async {
+  Future<bool> registerUser({
+    required String email,
+    required String password,
+    required String userName,
+    required String accountType,
+    required bool pending,
+  }) async {
     try {
       UserCredential _userCredentials = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -63,7 +65,8 @@ class FirebaseService {
           'username': userName,
           'email': email,
           'type': accountType,
-          'profile_pic': ''
+          'profile_pic': '',
+          'pending': pending,
         });
 
         //currentUser = await _getUserData(uid: _userCredentials.user!.uid);
