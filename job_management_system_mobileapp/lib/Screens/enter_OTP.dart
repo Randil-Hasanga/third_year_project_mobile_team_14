@@ -33,6 +33,7 @@ class _EnterOTPState extends State<EnterOTP> {
   EnterOTP? _enterOTP;
 
   String? _userName, _email, _password, _accountType;
+  late bool _pending;
 
   bool _isLoading = false;
   String? otp;
@@ -144,11 +145,22 @@ class _EnterOTPState extends State<EnterOTP> {
         },
       );
 
+      if (_accountType == 'provider') {
+        setState(() {
+          _pending = true;
+        });
+      } else {
+        setState(() {
+          _pending = false;
+        });
+      }
+
       bool _isRegistered = await _firebaseService!.registerUser(
         email: _email!,
         password: _password!,
         userName: _userName!,
         accountType: _accountType!,
+        pending: _pending,
       );
       setState(
         () {
