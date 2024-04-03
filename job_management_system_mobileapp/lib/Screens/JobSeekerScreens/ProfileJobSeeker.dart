@@ -254,6 +254,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Nationality',
+                hintText: 'Nationality',
+                border: OutlineInputBorder(),
               ),
               value: _nationality,
               onChanged: (String? value) {
@@ -296,6 +298,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'District',
+                hintText: 'District',
+                border: OutlineInputBorder(),
               ),
               value: _district,
               onChanged: (String? value){
@@ -314,6 +318,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               controller: _emailController,
               decoration: const InputDecoration(
                 labelText: 'E-mail Add',
+                hintText: 'E-mail Add',
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
