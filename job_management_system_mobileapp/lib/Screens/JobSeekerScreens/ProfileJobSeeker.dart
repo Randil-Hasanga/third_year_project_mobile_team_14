@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class ProfileJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
@@ -28,6 +30,12 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   bool? _specialNeed;
   String? _district;
   String? _divisionalSecretariat;
+
+  @override
+  void initState(){
+    super.initState();
+    //_firebaseService = GetIt.instance.get<FirebaseService>();
+  }
 
   @override
   void dispose() {
@@ -140,17 +148,23 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               controller: _fullNameController,
               decoration: const InputDecoration(
                 labelText: 'Full Name',
+                hintText: 'Full name',
+                border: OutlineInputBorder(),
               ),
             ),
             TextFormField(
               controller: _addressController,
               decoration: const InputDecoration(
                 labelText: 'Address',
+                hintText: 'Address',
+                 border: OutlineInputBorder(),
               ),
             ),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Gender',
+                hintText: 'Gender',
+                border: OutlineInputBorder(),
               ),
               value: _gender,
               onChanged: (String? value) {
@@ -169,6 +183,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               controller: _nicController,
               decoration: const InputDecoration(
                 labelText: 'NIC',
+                hintText: 'NIC',
+                border: OutlineInputBorder(),
               ),
             ),
             InkWell(
@@ -188,6 +204,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               child: InputDecorator(
                 decoration: const InputDecoration(
                   labelText: 'Date of Birth',
+                  hintText: 'Date of Birth',
+                  border:OutlineInputBorder(),
                 ),
                 child: _dateOfBirth == null
                     ? const Text('Select date')
@@ -198,6 +216,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Religion',
+                hintText: 'Religion',
+                border: OutlineInputBorder(),
               ),
               value: _religion,
               onChanged: (String? value) {
@@ -215,6 +235,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Marital Status',
+                hintText: 'Marital Status',
+                border: OutlineInputBorder(),
               ),
               value: _maritalStatus,
               onChanged: (String? value) {
