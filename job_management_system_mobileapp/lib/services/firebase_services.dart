@@ -67,6 +67,7 @@ class FirebaseService {
           'type': accountType,
           'profile_pic': '',
           'pending': pending,
+          'disabled': false,
         });
 
         //currentUser = await _getUserData(uid: _userCredentials.user!.uid);
