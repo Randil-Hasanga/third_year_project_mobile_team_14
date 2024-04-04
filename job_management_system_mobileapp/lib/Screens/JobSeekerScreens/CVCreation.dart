@@ -86,7 +86,7 @@ class _CVCreationState extends State<CVCreation> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfileJobSeeker()));
+                          builder: (context) =>ProfileJobSeeker()));
                 },
               ),
               IconButton(

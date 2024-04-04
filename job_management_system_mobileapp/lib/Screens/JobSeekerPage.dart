@@ -367,7 +367,7 @@ ListTile(
   onTap: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()),
+      MaterialPageRoute(builder: (context)=>ProfileJobSeeker()),
     );
   },
 ),
@@ -419,7 +419,7 @@ ListTile(
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfileJobSeeker()));
+                          builder: (context) =>ProfileJobSeeker()));
                 },
               ),
               IconButton(

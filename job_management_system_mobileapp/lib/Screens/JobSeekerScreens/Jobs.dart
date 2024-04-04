@@ -72,7 +72,7 @@ class _JobsState extends State<Jobs> {
               IconButton(
                 icon: const Icon(Icons.settings,color: Colors.white,),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileJobSeeker()));
                 },
               ),
               IconButton(

@@ -1,14 +1,27 @@
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(ProfileJobSeeker());
+}
+
 class ProfileJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
-  const ProfileJobSeeker({Key? key}) : super(key: key);
+  ProfileJobSeeker({Key? key}) : super(key: key);
+
+    final FirebaseService firebaseService = FirebaseService();
+
 
   @override
   _ProfileJobSeekerState createState() => _ProfileJobSeekerState();
@@ -22,6 +35,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _nicController = TextEditingController();
+  late FirebaseService _firebaseService;
   DateTime? _dateOfBirth;
   String? _gender;
   String? _religion;
@@ -31,10 +45,13 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   String? _district;
   String? _divisionalSecretariat;
 
-  @override
-  void initState(){
+
+  
+
+@override
+  void initState() {
     super.initState();
-    //_firebaseService = GetIt.instance.get<FirebaseService>();
+    _firebaseService = widget.firebaseService; // Initialize _firebaseService
   }
 
   @override
@@ -106,7 +123,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
              IconButton(
                 icon: const Icon(Icons.settings,color: Colors.white,),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const ProfileJobSeeker()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileJobSeeker()));
                 },
               ),
               IconButton(
@@ -152,6 +169,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 border: OutlineInputBorder(),
               ),
             ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _addressController,
               decoration: const InputDecoration(
@@ -160,6 +178,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                  border: OutlineInputBorder(),
               ),
             ),
+            const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Gender',
@@ -179,6 +198,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       ))
                   .toList(),
             ),
+
+              const SizedBox(height: 20),
             TextFormField(
               controller: _nicController,
               decoration: const InputDecoration(
@@ -187,6 +208,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 border: OutlineInputBorder(),
               ),
             ),
+              const SizedBox(height: 20),
             InkWell(
               onTap: () async {
                 final DateTime? pickedDate = await showDatePicker(
@@ -213,6 +235,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                         '${_dateOfBirth!.day}/${_dateOfBirth!.month}/${_dateOfBirth!.year}'),
               ),
             ),
+              const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Religion',
@@ -232,6 +255,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       ))
                   .toList(),
             ),
+              const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Marital Status',
@@ -251,6 +275,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       ))
                   .toList(),
             ),
+              const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'Nationality',
@@ -270,6 +295,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       ))
                   .toList(),
             ),
+              const SizedBox(height: 20),
             Row(
               children: [
                 const Text('Are you a person with special need?'),
@@ -295,6 +321,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 const Text('No'),
               ],
             ),
+
+              const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: 'District',
@@ -314,6 +342,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       ))
                   .toList(),
             ),
+              const SizedBox(height: 20),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -323,6 +352,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               ),
             ),
             const SizedBox(height: 20),
+
+           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -347,18 +378,68 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   child: const Text('Clear'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Submit the profile data
-                    // You can access the data using the controller's text properties
-                    // For example: _usernameController.text, _emailController.text, etc.
-                  },
-                  child: const Text('Submit'),
-                ),
+  onPressed: () {
+    FirebaseService().submitProfileData(
+      fullName: _fullNameController.text,
+      address: _addressController.text,
+      gender: _gender!,
+      nic: _nicController.text,
+      dateOfBirth: _dateOfBirth!,
+      religion: _religion!,
+      maritalStatus: _maritalStatus!,
+      nationality: _nationality!,
+      specialNeed: _specialNeed!,
+      district: _district!,
+      email: _emailController.text,
+    );
+  },
+  child: const Text('Submit'),
+),
+
               ],
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+// ignore: camel_case_types
+class _firebaseService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> submitProfileData({
+    required String fullName,
+    required String address,
+    required String gender,
+    required String nic,
+    required DateTime dateOfBirth,
+    required String religion,
+    required String maritalStatus,
+    required String nationality,
+    required bool specialNeed,
+    required String district,
+    required String email,
+  }) async {
+    try {
+      await _firestore.collection('profiles').add({
+        'fullName': fullName,
+        'address': address,
+        'gender': gender,
+        'nic': nic,
+        'dateOfBirth': dateOfBirth,
+        'religion': religion,
+        'maritalStatus': maritalStatus,
+        'nationality': nationality,
+        'specialNeed': specialNeed,
+        'district': district,
+        'email': email,
+      });
+      // Profile data submitted successfully
+    } catch (e) {
+      // Error occurred while submitting profile data
+      print('Error: $e');
+    }
   }
 }

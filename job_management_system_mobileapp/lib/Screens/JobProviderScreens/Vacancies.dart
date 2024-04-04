@@ -65,7 +65,7 @@ class vacancies extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ProfileJobSeeker()));
+                            builder: (context) => ProfileJobSeeker()));
                   },
                 ),
                 IconButton(

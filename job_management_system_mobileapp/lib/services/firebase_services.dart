@@ -100,4 +100,6 @@ class FirebaseService {
   Future<void> deleteVacancy(String vId) {
     return vacancyCollection.doc(vId).delete();
   }
+
+  void submitProfileData({required String fullName, required String address, required String gender, required String nic, required DateTime dateOfBirth, required String religion, required String maritalStatus, required String nationality, required bool specialNeed, required String district, required String email}) {}
 }
