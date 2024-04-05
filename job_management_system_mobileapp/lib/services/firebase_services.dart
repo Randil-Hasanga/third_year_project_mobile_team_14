@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -102,5 +103,21 @@ class FirebaseService {
     return vacancyCollection.doc(vId).delete();
   }
 
-  void submitProfileData({required String fullName, required String address, required String gender, required String nic, required DateTime dateOfBirth, required String religion, required String maritalStatus, required String nationality, required bool specialNeed, required String district, required String email}) {}
+ 
+
+
+  // Add job seeker profile
+  Future<void> addJobSeekerProfile({
+    required String fullName,
+    required String email,
+  }) async {
+    try {
+      await _db.collection('jobseekerprofile').add({
+        'fullname': fullName,
+        'email': email,
+      });
+    } catch (error) {
+      throw Exception('Failed to add job seeker profile');
+    }
+  }
 }
