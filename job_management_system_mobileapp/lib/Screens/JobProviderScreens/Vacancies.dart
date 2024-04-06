@@ -7,6 +7,7 @@ import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -30,6 +31,7 @@ class vacancies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     void showAlert() {
       QuickAlert.show(
         context: context,
@@ -39,7 +41,11 @@ class vacancies extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Create Vacancy'), // Set the title of the app bar
+          title: Text(DemoLocalization.of(context)
+                                .getTranslatedValue('create_vacancy')!,style: TextStyle(
+                                color: Colors.black,
+                                fontSize: screenWidth! * 0.04,
+                                fontWeight: FontWeight.bold),), // Set the title of the app bar
           backgroundColor: const Color.fromARGB(255, 255, 136, 0),
         ),
         bottomNavigationBar: BottomAppBar(
