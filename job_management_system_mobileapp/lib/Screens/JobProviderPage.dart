@@ -58,6 +58,8 @@ class _JobProviderPageState extends State<JobProviderPage> {
     }
     MyApp.setLocale(context, _temp);
   }
+ // DemoLocalization.of(context)
+ //                               .getTranslatedValue('my_vacancies')!,
 
   @override
   Widget build(BuildContext context) {
@@ -480,7 +482,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                   const CircleAvatar(
                                     radius: 30,
                                     backgroundImage:
-                                        AssetImage('assets/Default.jpg'),
+                                        AssetImage('assets/Default.png'),
                                   ),
                                   const SizedBox(height: 8),
                                   // Job Seeker Name

@@ -7,10 +7,11 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Jobs.da
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
+import 'package:job_management_system_mobileapp/classes/language.dart';
+import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
+import 'package:job_management_system_mobileapp/main.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Help.dart';
-
 
 class JobSeekerPage extends StatefulWidget {
   // ignore: use_super_parameters
@@ -23,6 +24,7 @@ class JobSeekerPage extends StatefulWidget {
 class _JobSeekerPageState extends State<JobSeekerPage> {
   FirebaseService? _firebaseService;
   String? _userName;
+  double? _deviceWidth;
 
   @override
   void initState() {
@@ -31,43 +33,64 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
+  void _changeLanguage(Language? language) {
+    print(language!.name);
+
+    Locale _temp;
+
+    switch (language.languageCode) {
+      case 'en':
+        {
+          _temp = Locale(language.languageCode, 'US');
+          break;
+        }
+      case 'si':
+        {
+          _temp = Locale(language.languageCode, 'LK');
+          break;
+        }
+      case 'ta':
+        {
+          _temp = Locale(language.languageCode, 'LK');
+          break;
+        }
+      default:
+        {
+          _temp = Locale(language.languageCode, 'US');
+          break;
+        }
+    }
+    MyApp.setLocale(context, _temp);
+  }
+
   @override
   Widget build(BuildContext context) {
     _userName = _firebaseService!.currentUser!['username'];
+    _deviceWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
+  return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
         actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: (String language) {
-              // Handle language selection here
-              switch (language) {
-                case 'English':
-                  // Change app language to English
-                  break;
-                case 'සිංහල':
-                  // Change app language to Sinhala
-                  break;
-                case 'தமிழ்':
-                  // Change app language to Tamil
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'English',
-                child: Text('English'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DropdownButton(
+              icon: Icon(
+                Icons.language,
+                color: Colors.black,
               ),
-              const PopupMenuItem<String>(
-                value: 'සිංහල',
-                child: Text('සිංහල'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'தமிழ்',
-                child: Text('தமிழ்'),
-              ),
-            ],
+              underline: SizedBox(),
+              items: Language.languageList()
+                  .map<DropdownMenuItem<Language>>((lang) => DropdownMenuItem(
+                      value: lang,
+                      child: Row(
+                        children: <Widget>[Text(lang.name)],
+                      )))
+                  .toList(),
+              onChanged: (Language? language) {
+                _changeLanguage(language);
+              },
+            ),
           ),
         ],
       ),
@@ -92,7 +115,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 height: 2,
               ),
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -105,8 +128,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text("$_userName",
-                            style:
-                                const TextStyle(color: Colors.white, fontSize: 30)),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 30)),
                         const Text("BICT(HONS)",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)),
@@ -124,7 +147,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                       topRight: Radius.circular(60)),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(30),
+                  padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.05),
                   child: Column(
                     children: <Widget>[
                       const SizedBox(
@@ -174,11 +197,12 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text(
-                            "Featured Jobs",
+                          Text(
+                            DemoLocalization.of(context)
+                                .getTranslatedValue('featured_jobs')!,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 20,
+                                fontSize: _deviceWidth! * 0.04,
                                 fontWeight: FontWeight.bold),
                           ),
                           TextButton(
@@ -188,11 +212,12 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                 MaterialPageRoute(builder: (context) => Jobs()),
                               );
                             },
-                            child: const Text(
-                              "See All",
+                            child: Text(
+                             DemoLocalization.of(context)
+                                .getTranslatedValue('see_all')!,
                               style: TextStyle(
                                   color: Color.fromARGB(255, 255, 145, 0),
-                                  fontSize: 16),
+                                  fontSize: _deviceWidth! * 0.03),
                             ),
                           ),
                         ],
@@ -224,22 +249,24 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text(
-                            "Recent Jobs",
+                          Text(
+                            DemoLocalization.of(context)
+                                .getTranslatedValue('recent_jobs')!,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 20,
+                                fontSize: _deviceWidth! * 0.04,
                                 fontWeight: FontWeight.bold),
                           ),
                           TextButton(
                             onPressed: () {
                               // Add your logic to navigate to see all recent jobs
                             },
-                            child: const Text(
-                              "See All",
+                            child:Text(
+                              DemoLocalization.of(context)
+                                .getTranslatedValue('see_all')!,
                               style: TextStyle(
                                   color: Color.fromARGB(255, 243, 117, 33),
-                                  fontSize: 16),
+                                  fontSize: _deviceWidth! * 0.03),
                             ),
                           ),
                         ],
@@ -324,74 +351,77 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                     '$_userName',
                     style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
-                  
                 ],
               ),
             ),
             ListTile(
-  leading: const Icon(Icons.search,color: Color.fromARGB(255, 255, 137, 2)), // Icon for finding jobs
-  title: const Text('Find Jobs'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const Jobs()),
-    );
-  },
-),
-
-ListTile(
-  leading: const Icon(Icons.create,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-  title: const Text('Create CV'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const CVCreation()),
-    );
-  },
-),
-
-
-ListTile(
-  leading: const Icon(Icons.notifications,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-  title: const Text('Notifications'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()),
-    );
-  },
-),
-ListTile(
-  leading: const Icon(Icons.settings,color: Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-  title: const Text('Profile Settings'),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>ProfileJobSeeker()),
-    );
-  },
-),
-const ListTile(
-  leading: Icon(Icons.help,color: Color.fromARGB(255, 255, 137, 2)),
-title: Text("Help"),
+              leading: const Icon(Icons.search,
+                  color: Color.fromARGB(
+                      255, 255, 137, 2)), // Icon for finding jobs
+              title: const Text('Find Jobs'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Jobs()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.create,
+                  color:
+                      Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+              title: const Text('Create CV'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CVCreation()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.notifications,
+                  color:
+                      Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+              title: const Text('Notifications'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationsJobSeeker()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings,
+                  color:
+                      Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+              title: const Text('Profile Settings'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileJobSeeker()),
+                );
+              },
+            ),
+            const ListTile(
+              leading:
+                  Icon(Icons.help, color: Color.fromARGB(255, 255, 137, 2)),
+              title: Text("Help"),
 // onTap: (){Navigator.push(context,MaterialPageRoute(builder: const Help()),);},
-),
-
-ListTile(
-            leading: const Icon(Icons.logout,color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
-            title: const Text('Logout'),
-            onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>const LogInPage()),
-    );
-  },
-),
-
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout,
+                  color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LogInPage()),
+                );
+              },
+            ),
           ],
         ),
-
-
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
@@ -419,7 +449,7 @@ ListTile(
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>ProfileJobSeeker()));
+                          builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(

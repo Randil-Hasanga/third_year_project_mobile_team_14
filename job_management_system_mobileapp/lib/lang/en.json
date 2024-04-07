@@ -1,7 +1,11 @@
-{
+{   
     "job_providers" : "Job Providers",
     "job_seekers" : "Job Seekers",
     "my_vacancies" : "My Vacancies",
     "suggested_seekers" : "Suggested Seekers",
-    "create_vacancy" : "Create Vacancy"
+    "create_vacancy" : "Create Vacancy",
+
+    "featured_jobs" : "Featured Jobs",
+    "recent_jobs" : "Recent Jobs",
+    "see_all" : "See All"
 }
