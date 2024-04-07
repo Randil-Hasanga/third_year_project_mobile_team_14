@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -781,10 +782,8 @@ class _JobProviderPageState extends State<JobProviderPage> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => JobProviderPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ChatPage()));
                 },
               ),
             ],
