@@ -4,8 +4,10 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/rendering.dart';
 
 const String USER_COLLECTION = 'users';
+const String POSTS_COLLECTION = 'posts';
 
 class FirebaseService {
   FirebaseService();
@@ -102,47 +104,25 @@ class FirebaseService {
     return vacancyCollection.doc(vId).delete();
   }
 
-  void submitProfileData(
-      {required String fullName,
-      required String address,
-      required String gender,
-      required String nic,
-      required DateTime dateOfBirth,
-      required String religion,
-      required String maritalStatus,
-      required String nationality,
-      required bool specialNeed,
-      required String district,
-      required String email}) {}
+ 
 
-  //get stream of job seekers
-  Stream<List<Map<String, dynamic>>> getJobSeekerStream() {
-    return _db.collection(USER_COLLECTION).snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final jobSeeker = doc.data();
-        return jobSeeker;
-      }).toList();
-    });
+
+  // Add job seeker profile
+  Future<void> addJobSeekerProfile({
+    required String fullName,
+    required String email,
+    required String address,
+    required String? gender
+  }) async {
+    try {
+      await _db.collection('jobseekerprofile').add({
+        'fullname': fullName,
+        'email': email,
+        'address':address,
+        'gender':gender,
+      });
+    } catch (error) {
+      throw Exception('Failed to add job seeker profile');
+    }
   }
-
-  //get the job seeker list
-  /* Future<List<Map<String, dynamic>>?> getJobSeekersData() async {
-  QuerySnapshot<Map<String, dynamic>>? _querySnapshot = await _db
-      .collection(USER_COLLECTION)
-      .where('type', isEqualTo: 'seeker')
-            .get();
-
-  List<Map<String, dynamic>> jobSeekers = [];
-
-  for (QueryDocumentSnapshot<Map<String, dynamic>> doc
-      in _querySnapshot.docs) {
-    jobSeekers.add(doc.data());
-  }
-
-  if (jobSeekers.isNotEmpty) {
-    return jobSeekers;
-  } else {
-    return null;
-  }
-}*/
 }
