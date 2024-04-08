@@ -24,9 +24,10 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   double? _deviceWidth, _deviceHeight;
   final GlobalKey<FormState> _companyDetailsFormKey = GlobalKey<FormState>();
 
-  String? _companyName, _selectedDistrict, _selectedCountry;
+  String? _companyName, _selectedDistrict, _selectedCountry, _selectedIndustry;
   XFile? selectedImage;
   final TextEditingController _districtController = TextEditingController();
+  final TextEditingController _industryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -205,6 +206,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         child: Column(
           children: [
             _districtTextField(),
+           // _industryTextField(),
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
@@ -334,6 +336,62 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     );
   }
 
+  // Widget _industryTextField() {
+  //   return SingleChildScrollView(
+  //     child: Autocomplete<String>(
+  //       optionsBuilder: (TextEditingValue textEditingValue) {
+  //         if (textEditingValue.text == '') {
+  //           return const Iterable<String>.empty();
+  //         } else {
+  //           return industries.where((element) {
+  //             return element
+  //                 .toLowerCase()
+  //                 .contains(textEditingValue.text.toLowerCase());
+  //           });
+  //         }
+  //       },
+  //       fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+  //         _industryController: controller;
+  //         controller;
+  //         return TextField(
+  //           maxLines: 6,
+  //           minLines: 3,
+  //           controller: controller,
+  //           focusNode: focusNode,
+  //           onEditingComplete: onEditingComplete,
+  //           decoration: InputDecoration(
+  //             alignLabelWithHint: true,
+  //             border: OutlineInputBorder(),
+  //             label: Text("Industry"),
+  //           ),
+  //         );
+  //       },
+  //       onSelected: (String item) {
+  //         // if (!industries.any(
+  //         //     (district) => district.toLowerCase() == item.toLowerCase())) {
+  //         //   ScaffoldMessenger.of(context).showSnackBar(
+  //         //     const SnackBar(
+  //         //       content: Text(
+  //         //         "Insert Valid District",
+  //         //         textAlign: TextAlign.center,
+  //         //         selectionColor: Color.fromARGB(255, 230, 255, 2),
+  //         //       ),
+  //         //     ),
+  //         //   );
+  //         // }
+  //         List<String> parts = item.split("-");
+  //         String englishIndustry = parts[1]; // Extract English word
+  //         setState(() {
+  //           _selectedIndustry = englishIndustry;
+  //         });
+  //         _industryController.text = _selectedIndustry!;
+  //         _industryController.selection = TextSelection.fromPosition(TextPosition(offset: _industryController.text.length));
+  //         print(_selectedIndustry);
+  //       },
+  //     ),
+  //   );
+  // }
+
   static const List<String> sriLankanDistricts = [
     'Ampara - අම්පාර - அம்பாறை',
     'Anuradhapura - අනුරාධපුර - அனுராதபுர',
@@ -361,4 +419,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     'Trincomalee - ත්‍රිකුණාමලය - திருகோணமலை',
     'Vavuniya - වවුනියා - வவுனியா',
   ];
+
+  // static const List<String> industries = [
+  //   "1. -Agriculture, Animal Husbandry and Forestry\n   -කෘෂිකර්මය, සත්ව පාලනය සහ වන වගාව\n   -விவசாயம், விலங்கு பராமரிப்பு மற்றும்\n     வனவியல்",
+  // ];
 }
