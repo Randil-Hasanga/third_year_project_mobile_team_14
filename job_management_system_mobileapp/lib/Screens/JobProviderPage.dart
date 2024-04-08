@@ -734,9 +734,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
             ListTile(
               leading: const Icon(Icons.settings,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('Profile Setting'),
+              title: const Text('Edit Company Information'),
               onTap: () {
-                // Navigate to create CV page
+                Navigator.pushNamed(context, 'editProviderProfile');
               },
             ),
             ListTile(

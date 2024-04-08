@@ -5,6 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/Screens/splash_screen.dart';
@@ -83,6 +85,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       debugShowCheckedModeBanner: false,
+
       title: 'Job Management System',
       theme: ThemeData(
         useMaterial3: true,
@@ -95,7 +98,7 @@ class _MyAppState extends State<MyApp> {
         // 'register': (context) => RegisterPage(),
         'login': (context) => const LogInPage(),
         // 'home': (context) => HomePage(),
-        // 'profile': (context) => ProfilePage(),
+        'editProviderProfile': (context) => JobProviderProfile(),
       },
     );
   }

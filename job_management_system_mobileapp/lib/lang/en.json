@@ -7,5 +7,8 @@
 
     "featured_jobs" : "Featured Jobs",
     "recent_jobs" : "Recent Jobs",
-    "see_all" : "See All"
+    "see_all" : "See All",
+    "edit_profile" : "Company Information",
+    "company_name" : "Company Name",
+    "company_address" : "Address"
 }
