@@ -1,6 +1,7 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
@@ -8,6 +9,7 @@ import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/Screens/splash_screen.dart';
 import 'package:job_management_system_mobileapp/firebase_options.dart';
+import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
@@ -32,12 +34,54 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  static void setLocale(BuildContext context, Locale locale){
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.setLocale(locale);
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  Locale? _locale;
+
+  void setLocale(Locale locale){
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('si', 'LK'),
+        Locale('ta', 'LK'),
+      ],
+      locale: _locale,
+      localizationsDelegates: [
+        DemoLocalization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      localeListResolutionCallback: (locales, supportedLocales) {
+        for (var locale in supportedLocales) {
+          for (var preferredLocale in locales!) {
+            if (locale.languageCode == preferredLocale.languageCode) {
+              return locale;
+            }
+          }
+        }
+        // If no match is found return the first supported locale
+        return supportedLocales.first;
+      },
       debugShowCheckedModeBanner: false,
       title: 'Job Management System',
       theme: ThemeData(
@@ -49,10 +93,9 @@ class MyApp extends StatelessWidget {
         'splash': (context) => const SplashScreen(),
         'fogot_pwd': (context) => const ForgotPasswordPage(),
         // 'register': (context) => RegisterPage(),
-        'login': (context) =>  const LogInPage(),
+        'login': (context) => const LogInPage(),
         // 'home': (context) => HomePage(),
         // 'profile': (context) => ProfilePage(),
-        
       },
     );
   }

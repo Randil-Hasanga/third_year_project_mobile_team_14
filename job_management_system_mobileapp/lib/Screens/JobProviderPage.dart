@@ -2,8 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_management_system_mobileapp/classes/language.dart';
+import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
+import 'package:job_management_system_mobileapp/main.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class JobProviderPage extends StatefulWidget {
@@ -26,6 +30,38 @@ class _JobProviderPageState extends State<JobProviderPage> {
     _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
+  void _changeLanguage(Language? language) {
+    print(language!.name);
+
+    Locale _temp;
+
+    switch (language.languageCode) {
+      case 'en':
+        {
+          _temp = Locale(language.languageCode, 'US');
+          break;
+        }
+      case 'si':
+        {
+          _temp = Locale(language.languageCode, 'LK');
+          break;
+        }
+      case 'ta':
+        {
+          _temp = Locale(language.languageCode, 'LK');
+          break;
+        }
+      default:
+        {
+          _temp = Locale(language.languageCode, 'US');
+          break;
+        }
+    }
+    MyApp.setLocale(context, _temp);
+  }
+ // DemoLocalization.of(context)
+ //                               .getTranslatedValue('my_vacancies')!,
+
   @override
   Widget build(BuildContext context) {
     _userName = _firebaseService!.currentUser!['username'];
@@ -34,41 +70,28 @@ class _JobProviderPageState extends State<JobProviderPage> {
     double fontSize = screenWidth * 0.04; // Example factor
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange.shade900,
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: (String language) {
-              // Handle language selection here
-              switch (language) {
-                case 'English':
-                  // Change app language to English
-                  break;
-                case 'සිංහල':
-                  // Change app language to Sinhala
-                  break;
-                case 'தமிழ்':
-                  // Change app language to Tamil
-                  break;
-              }
+      appBar: AppBar(backgroundColor: Colors.orange.shade900, actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: DropdownButton(
+            icon: Icon(
+              Icons.language,
+              color: Colors.black,
+            ),
+            underline: SizedBox(),
+            items: Language.languageList()
+                .map<DropdownMenuItem<Language>>((lang) => DropdownMenuItem(
+                    value: lang,
+                    child: Row(
+                      children: <Widget>[Text(lang.name)],
+                    )))
+                .toList(),
+            onChanged: (Language? language) {
+              _changeLanguage(language);
             },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'English',
-                child: Text('English'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'සිංහල',
-                child: Text('සිංහල'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'தமிழ்',
-                child: Text('தமிழ்'),
-              ),
-            ],
           ),
-        ],
-      ),
+        ),
+      ]),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -171,11 +194,12 @@ class _JobProviderPageState extends State<JobProviderPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text(
-                            "My vacancies",
+                          Text(
+                            DemoLocalization.of(context)
+                                .getTranslatedValue('my_vacancies')!,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 20,
+                                fontSize: screenWidth! * 0.04,
                                 fontWeight: FontWeight.bold),
                           ),
                           TextButton(
@@ -306,11 +330,12 @@ class _JobProviderPageState extends State<JobProviderPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text(
-                            "Suggested Seekers",
+                          Text(
+                            DemoLocalization.of(context)
+                                .getTranslatedValue('suggested_seekers')!,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 20,
+                                fontSize: screenWidth! * 0.04,
                                 fontWeight: FontWeight.bold),
                           ),
                           TextButton(
@@ -458,7 +483,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                   const CircleAvatar(
                                     radius: 30,
                                     backgroundImage:
-                                        AssetImage('assets/Default.jpg'),
+                                        AssetImage('assets/Default.png'),
                                   ),
                                   const SizedBox(height: 8),
                                   // Job Seeker Name
@@ -781,10 +806,8 @@ class _JobProviderPageState extends State<JobProviderPage> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => JobProviderPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ChatPage()));
                 },
               ),
             ],
