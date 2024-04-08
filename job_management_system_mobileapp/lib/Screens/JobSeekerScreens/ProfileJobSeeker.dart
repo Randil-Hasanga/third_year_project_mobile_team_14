@@ -11,8 +11,7 @@ Future<void> main() async {
 
 class ProfileJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
-  ProfileJobSeeker({Key? key}) :
-   super(key: key);
+  ProfileJobSeeker({Key? key}) : super(key: key);
 
   final FirebaseService firebaseService = FirebaseService();
 

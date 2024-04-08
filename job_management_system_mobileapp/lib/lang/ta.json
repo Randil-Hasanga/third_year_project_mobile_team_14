@@ -7,5 +7,8 @@
 
     "featured_jobs" : "சிறப்பு வேலைகள்",
     "recent_jobs" : "சமீபத்திய வேலைகள்",
-    "see_all" : "அனைத்தையும் பார்"
+    "see_all" : "அனைத்தையும் பார்",
+    "edit_profile" : "நிறுவன தகவல்",
+    "company_name" : "கம்பனி பெயர்",
+    "company_address" : "முகவரி"
 }

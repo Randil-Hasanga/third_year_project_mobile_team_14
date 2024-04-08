@@ -1,21 +1,12 @@
-import 'dart:ffi';
-//import 'dart:js';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:quickalert/quickalert.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(vacancies());
-}
 
 class vacancies extends StatelessWidget {
   vacancies({super.key});
