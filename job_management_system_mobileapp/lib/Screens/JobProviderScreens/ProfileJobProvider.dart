@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,8 +24,9 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   final FirebaseService firebaseService = FirebaseService();
   double? _deviceWidth, _deviceHeight;
   final GlobalKey<FormState> _companyDetailsFormKey = GlobalKey<FormState>();
+  ScrollController _industryScrollController = ScrollController();
 
-  String? _companyName, _selectedDistrict, _selectedCountry, _selectedIndustry;
+  String? _companyName, _selectedDistrict,_selectedIndFull, _selectedCountry, _selectedIndustry;
   XFile? selectedImage;
   final TextEditingController _districtController = TextEditingController();
   final TextEditingController _industryController = TextEditingController();
@@ -206,7 +208,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         child: Column(
           children: [
             _districtTextField(),
-           // _industryTextField(),
+            // _industryTextField(),
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
@@ -218,6 +220,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
+            _industryListView(),
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
@@ -336,58 +339,119 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     );
   }
 
-  // Widget _industryTextField() {
-  //   return SingleChildScrollView(
-  //     child: Autocomplete<String>(
-  //       optionsBuilder: (TextEditingValue textEditingValue) {
-  //         if (textEditingValue.text == '') {
-  //           return const Iterable<String>.empty();
-  //         } else {
-  //           return industries.where((element) {
-  //             return element
-  //                 .toLowerCase()
-  //                 .contains(textEditingValue.text.toLowerCase());
-  //           });
-  //         }
-  //       },
-  //       fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-  //         _industryController: controller;
-  //         controller;
-  //         return TextField(
-  //           maxLines: 6,
-  //           minLines: 3,
-  //           controller: controller,
-  //           focusNode: focusNode,
-  //           onEditingComplete: onEditingComplete,
-  //           decoration: InputDecoration(
-  //             alignLabelWithHint: true,
-  //             border: OutlineInputBorder(),
-  //             label: Text("Industry"),
+  Widget _industryListView() {
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 3,
+              offset: Offset(0, 0),
+            )
+          ],
+          color: Color.fromARGB(232, 255, 202, 185),
+          borderRadius: BorderRadius.circular(10)),
+      child: ExpansionTile(
+        title: Text("Industry"),
+        children: [
+          ListView.builder(
+              itemCount: industries.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return _industryListViewBuilder(industries[index], index);
+              }),
+        ],
+      ),
+    );
+  }
+
+  Widget _industryListViewBuilder(String industry, int index) {
+    bool isSelected = _selectedIndFull == industry;
+    return Padding(
+      padding: EdgeInsets.all(_deviceWidth! * 0.02),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedIndFull = industry;
+            List<String> englishParts =
+                industry.split(RegExp(r'[\u0D80-\u0DFF]+'));
+            String englishPart =
+                englishParts[0].replaceAll('\u2022', '').trim();
+
+            _selectedIndustry = englishPart;
+          });
+
+          print(_selectedIndustry);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                  offset: Offset(0, 0),
+                )
+              ],
+              color: isSelected ? Color.fromARGB(255, 201, 255, 203) : Color.fromARGB(232, 255, 246, 243),
+              borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: EdgeInsets.all(_deviceWidth! * 0.02),
+            child: Text(industry,style: TextStyle(fontWeight: FontWeight.w500),),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Widget _industryListView() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         color: Color.fromARGB(232, 255, 223, 211),
+  //         borderRadius: BorderRadius.circular(10)),
+  //     child: Padding(
+  //       padding: EdgeInsets.all(_deviceWidth! * 0.02),
+  //       child: Column(
+  //         children: [
+  //           Row(
+  //             children: [Text("Industry")],
   //           ),
-  //         );
-  //       },
-  //       onSelected: (String item) {
-  //         // if (!industries.any(
-  //         //     (district) => district.toLowerCase() == item.toLowerCase())) {
-  //         //   ScaffoldMessenger.of(context).showSnackBar(
-  //         //     const SnackBar(
-  //         //       content: Text(
-  //         //         "Insert Valid District",
-  //         //         textAlign: TextAlign.center,
-  //         //         selectionColor: Color.fromARGB(255, 230, 255, 2),
-  //         //       ),
-  //         //     ),
-  //         //   );
-  //         // }
-  //         List<String> parts = item.split("-");
-  //         String englishIndustry = parts[1]; // Extract English word
-  //         setState(() {
-  //           _selectedIndustry = englishIndustry;
-  //         });
-  //         _industryController.text = _selectedIndustry!;
-  //         _industryController.selection = TextSelection.fromPosition(TextPosition(offset: _industryController.text.length));
-  //         print(_selectedIndustry);
-  //       },
+  //           SizedBox(
+  //             height: _deviceHeight! * 0.005,
+  //           ),
+  //           Scrollbar(
+  //             controller: _industryScrollController,
+  // child: ListView.builder(
+  //     itemCount: industries.length,
+  //     shrinkWrap: true,
+  //     scrollDirection: Axis.vertical,
+  //     itemBuilder: (context, index) {
+  //       return _industryListViewBuilder(industries[index]);
+  //     }),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // Widget _industryListViewBuilder(String industry) {
+  //   return GestureDetector(
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //           boxShadow: const [
+  //             BoxShadow(
+  //               color: Colors.black12,
+  //               blurRadius: 5,
+  //               offset: Offset(0, 0),
+  //             )
+  //           ],
+  //           color: Color.fromARGB(232, 255, 246, 243),
+  //           borderRadius: BorderRadius.circular(10)),
+  //       child: Padding(
+  //         padding: EdgeInsets.all(_deviceWidth! * 0.02),
+  //         child: Text(industry),
+  //       ),
   //     ),
   //   );
   // }
@@ -420,7 +484,9 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     'Vavuniya - වවුනියා - வவுனியா',
   ];
 
-  // static const List<String> industries = [
-  //   "1. -Agriculture, Animal Husbandry and Forestry\n   -කෘෂිකර්මය, සත්ව පාලනය සහ වන වගාව\n   -விவசாயம், விலங்கு பராமரிப்பு மற்றும்\n     வனவியல்",
-  // ];
+  static const List<String> industries = [
+    "\u2022Agriculture, Animal Husbandry and Forestry\n\u2022කෘෂිකර්මය, සත්ව පාලනය සහ වන වගාව\n\u2022விவசாயம், விலங்கு பராமரிப்பு மற்றும் வனவியல்",
+    "\u2022Agriculture, Animal Husbandry and Forestry",
+    "\u2022Agriculture, Animal Husbandry and Forestr",
+  ];
 }
