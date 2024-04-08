@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/rendering.dart';
 
 const String USER_COLLECTION = 'users';
 const String POSTS_COLLECTION = 'posts';
@@ -110,11 +111,15 @@ class FirebaseService {
   Future<void> addJobSeekerProfile({
     required String fullName,
     required String email,
+    required String address,
+    required String? gender
   }) async {
     try {
       await _db.collection('jobseekerprofile').add({
         'fullname': fullName,
         'email': email,
+        'address':address,
+        'gender':gender,
       });
     } catch (error) {
       throw Exception('Failed to add job seeker profile');

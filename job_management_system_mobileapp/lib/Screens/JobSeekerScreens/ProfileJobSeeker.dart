@@ -23,6 +23,9 @@ class ProfileJobSeeker extends StatefulWidget {
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _addressController=TextEditingController();
+  String? _selectedGender;
+
   late FirebaseService _firebaseService;
 
   @override
@@ -96,6 +99,21 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 border: OutlineInputBorder(),
               ),
             ),
+
+            const SizedBox(height: 20,),
+           TextFormField(
+  controller: _addressController,
+  maxLines: 2, // Set to null or any number greater than 1 for multiple lines
+  decoration: const InputDecoration(
+    labelText: 'Address',
+    hintText: 'Address',
+    border: OutlineInputBorder(),
+  ),
+),
+ const SizedBox(height: 20,),
+
+
+
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -105,6 +123,10 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                     // Clear all text fields
                     _fullNameController.clear();
                     _emailController.clear();
+                    _addressController.clear();
+                    setState(() {
+                      _selectedGender=null;
+                    });
                   },
                   child: const Text('Clear'),
                 ),
@@ -113,6 +135,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     _firebaseService.addJobSeekerProfile(
       fullName: _fullNameController.text,
       email: _emailController.text,
+      address:_addressController.text,
+      gender: _selectedGender,
     );
   },
   child: const Text('Submit'),
