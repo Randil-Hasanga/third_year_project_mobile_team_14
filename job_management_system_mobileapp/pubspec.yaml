@@ -55,6 +55,10 @@ dependencies:
   google_fonts: ^6.2.0
   animations: ^2.0.11
   smooth_page_indicator: ^1.1.0
+  image_picker: ^1.0.7
+  flutter_image_compress: ^2.2.0
+  path_provider: ^2.1.2
+  flutter_typeahead: ^5.2.0
 
 dev_dependencies:
   flutter_test:

@@ -7,5 +7,18 @@
 
     "featured_jobs" : "Featured Jobs",
     "recent_jobs" : "Recent Jobs",
-    "see_all" : "See All"
+    "see_all" : "See All",
+    "edit_profile" : "Company Information",
+    "company_name" : "Company Name",
+    "company_address" : "Address",
+    "membership_number" : "Membership Number",
+    "agent_name" : "Name of Agency Representative",
+    "agent_position" : "Designation of Agency Representative",
+    "telephone_number" : "Telephone Number",
+    "mobile_number" : "Mobile Number",
+    "fax_number" : "Fax Number",
+    "email" : "Email",
+    "industry" : "Industry",
+    "org_type" : "Organization Type"
 }
+

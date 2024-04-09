@@ -7,5 +7,17 @@
 
     "featured_jobs" : "විශේෂ රැකියා",
     "recent_jobs" : "මෑත රැකියා",
-    "see_all" : "සියල්ල බලන්න"
+    "see_all" : "සියල්ල බලන්න",
+    "edit_profile" : "ව්‍යාපාර තොරතුරු",
+    "company_name" : "ව්‍යාපාර නාමය",
+    "company_address" : "ලිපිනය",
+    "membership_number" : "සාමාජික අංකය",
+    "agent_name" : "ආයතන නියෝජිතයාගේ නම",
+    "agent_position" : "ආයතන නියෝජිතයාගේ තනතුර",
+    "telephone_number" : "දුරකථන අංකය",
+    "mobile_number" : "ජංගම දුරකථන අංකය",
+    "fax_number" : "ෆැක්ස් අංකය",
+    "email" : "විද්‍යුත් තැපෑල",
+    "industry" : "කර්මාන්ත ක්‍ෂේත්‍රය",
+    "org_type" : "ආයතනික වර්ගය"
 }

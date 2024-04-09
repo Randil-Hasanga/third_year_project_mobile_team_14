@@ -7,5 +7,17 @@
 
     "featured_jobs" : "சிறப்பு வேலைகள்",
     "recent_jobs" : "சமீபத்திய வேலைகள்",
-    "see_all" : "அனைத்தையும் பார்"
+    "see_all" : "அனைத்தையும் பார்",
+    "edit_profile" : "நிறுவன தகவல்",
+    "company_name" : "கம்பனி பெயர்",
+    "company_address" : "முகவரி",
+    "membership_number" : "அங்கத்தவர் இலக்கம்",
+    "agent_name" : "நிறுவனப் பிரதிநிதியின் பெயர்",
+    "agent_position" : "நிறுவன பிரதிநிதி பதவி",
+    "telephone_number" : "தொலைபேசி எண்",
+    "mobile_number" : "அலைபேசி எண்",
+    "fax_number" : "தொலைநகல் எண்",
+    "email" : "மின்னஞ்சல்",
+    "industry" : "தொழில்",
+    "org_type" : "நிறுவனத்தின் வகை"
 }
