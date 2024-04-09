@@ -15,7 +15,7 @@ class ChatPage extends StatelessWidget {
         title: const Text('Messages'), // Set the title of the app bar
         backgroundColor: const Color.fromARGB(255, 255, 136, 0),
       ),
-      body: _buildJobSeekerList(),
+      //body: _buildJobSeekerList(),
     );
   }
 
@@ -42,7 +42,7 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  // Individual list item for job seeker
+  Individual list item for job seeker
   Widget _buildJobSeekerListItem(
       Map<String, dynamic> userData, BuildContext context) {
     return JobSeekerTitle(

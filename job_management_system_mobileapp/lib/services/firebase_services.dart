@@ -108,10 +108,14 @@ class FirebaseService {
 
 
   // Add job seeker profile
+
+
+
   Future<void> addJobSeekerProfile({
     required String fullName,
     required String email,
     required String address,
+    required String nic,
     required String? gender
   }) async {
     try {
@@ -120,6 +124,7 @@ class FirebaseService {
         'email': email,
         'address':address,
         'gender':gender,
+        'nic':nic,
       });
     } catch (error) {
       throw Exception('Failed to add job seeker profile');

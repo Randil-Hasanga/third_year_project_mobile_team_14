@@ -11,8 +11,7 @@ Future<void> main() async {
 
 class ProfileJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
-  ProfileJobSeeker({Key? key}) :
-   super(key: key);
+  ProfileJobSeeker({Key? key}) : super(key: key);
 
   final FirebaseService firebaseService = FirebaseService();
 
@@ -23,7 +22,11 @@ class ProfileJobSeeker extends StatefulWidget {
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _addressController=TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _nicController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  DateTime? _selectedDate;
+
   String? _selectedGender;
 
   late FirebaseService _firebaseService;
@@ -32,6 +35,21 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   void initState() {
     super.initState();
     _firebaseService = widget.firebaseService;
+  }
+
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
 
   @override
@@ -99,20 +117,68 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 border: OutlineInputBorder(),
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              controller: _addressController,
+              maxLines:
+                  2, // Set to null or any number greater than 1 for multiple lines
+              decoration: const InputDecoration(
+                labelText: 'Address',
+                hintText: 'Address',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Gender',
+                border: OutlineInputBorder(),
+              ),
+              value: _selectedGender,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedGender = newValue;
+                });
+              },
+              items: <String>['Male', 'Female']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _nicController,
+              maxLines:
+                  1, // Set to null or any number greater than 1 for multiple lines
+              decoration: const InputDecoration(
+                labelText: 'NIC',
+                hintText: 'NIC',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
 
-            const SizedBox(height: 20,),
            TextFormField(
-  controller: _addressController,
-  maxLines: 2, // Set to null or any number greater than 1 for multiple lines
-  decoration: const InputDecoration(
-    labelText: 'Address',
-    hintText: 'Address',
-    border: OutlineInputBorder(),
-  ),
-),
- const SizedBox(height: 20,),
-
-
+          readOnly: true,
+          controller: TextEditingController(
+            text: _selectedDate != null
+                ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                : '',
+          ),
+          onTap: () => _selectDate(context),
+          decoration: const InputDecoration(
+            labelText: 'Date of Birth',
+            hintText: 'Date of Birth',
+            border: OutlineInputBorder(),
+          ),
+        ),
 
             const SizedBox(height: 20),
             Row(
@@ -124,24 +190,29 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                     _fullNameController.clear();
                     _emailController.clear();
                     _addressController.clear();
+                    _nicController.clear();
+                    _genderController.clear();
+                   // _selectedDate.clear();
+
                     setState(() {
-                      _selectedGender=null;
+                      _selectedGender = null;
                     });
                   },
                   child: const Text('Clear'),
                 ),
-              ElevatedButton(
-  onPressed: () {
-    _firebaseService.addJobSeekerProfile(
-      fullName: _fullNameController.text,
-      email: _emailController.text,
-      address:_addressController.text,
-      gender: _selectedGender,
-    );
-  },
-  child: const Text('Submit'),
-),
-
+                ElevatedButton(
+                  onPressed: () {
+                    _firebaseService.addJobSeekerProfile(
+                      fullName: _fullNameController.text,
+                      email: _emailController.text,
+                      address: _addressController.text,
+                      gender: _selectedGender,
+                      nic: _nicController.text,
+                      //dateofbirth: _selectedDate.text,
+                    );
+                  },
+                  child: const Text('Submit'),
+                ),
               ],
             ),
           ],
