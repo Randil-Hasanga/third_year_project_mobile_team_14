@@ -26,7 +26,20 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   final GlobalKey<FormState> _companyDetailsFormKey = GlobalKey<FormState>();
   ScrollController _industryScrollController = ScrollController();
 
-  String? _companyName, _selectedDistrict,_selectedIndFull, _selectedCountry, _selectedIndustry;
+  String? _companyName,
+      _email,
+      _faxNumber,
+      _agentMobile,
+      _companyAddress,
+      _agentTelephone,
+      _agentName,
+      _agentPosition,
+      _membershipNumber,
+      _selectedDistrict,
+      _selectedIndFull,
+      _selectedOrgFull,
+      _selectedOrgType,
+      _selectedIndustry;
   XFile? selectedImage;
   final TextEditingController _districtController = TextEditingController();
   final TextEditingController _industryController = TextEditingController();
@@ -207,8 +220,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         key: _companyDetailsFormKey,
         child: Column(
           children: [
-            _districtTextField(),
             // _industryTextField(),
+            _memberNumberTextField(), // mona wage format ekakda thiyenne kiyala ahanna
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
@@ -220,7 +233,39 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
+            _districtTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
             _industryListView(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _orgTypeWidget(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _agentNameTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _agentPositionTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _agentTelephoneNumberTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _agentMobileNumberTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _faxNumberTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _emailTextField(),
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
@@ -233,6 +278,29 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   bool isEnglish(String text) {
     final RegExp englishRegex = RegExp(r'^[a-zA-Z]+$');
     return englishRegex.hasMatch(text);
+  }
+
+  Widget _memberNumberTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        label: Text(
+          DemoLocalization.of(context).getTranslatedValue('membership_number')!,
+        ),
+        border: OutlineInputBorder(),
+      ),
+      onSaved: (newValue) {
+        setState(() {
+          _membershipNumber = newValue;
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Membership number cannot be empty";
+        } else {
+          return null;
+        }
+      },
+    );
   }
 
   Widget _companyNameTextField() {
@@ -273,7 +341,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       ),
       onSaved: (newValue) {
         setState(() {
-          _companyName = newValue;
+          _companyAddress = newValue;
         });
       },
       validator: (value) {
@@ -339,6 +407,80 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     );
   }
 
+  Widget _orgTypeWidget() {
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 3,
+              offset: Offset(0, 0),
+            )
+          ],
+          color: Color.fromARGB(232, 255, 202, 185),
+          borderRadius: BorderRadius.circular(10)),
+      child: ExpansionTile(
+        title: Text(DemoLocalization.of(context).getTranslatedValue('org_type')!),
+        children: [
+          Container(
+            //height: _deviceHeight! * 0.35,
+            child: ListView.builder(
+                itemCount: orgtypes.length,
+                shrinkWrap: true,
+                //scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  return _orgTypeListViewBuilder(orgtypes[index], index);
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _orgTypeListViewBuilder(String ORG, int index) {
+    bool isSelected = _selectedOrgFull == ORG;
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: _deviceWidth! * 0.02,
+        vertical: _deviceWidth! * 0.01,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedOrgFull = ORG;
+            RegExp englishRegex = RegExp(r'[a-zA-Z]+');
+            String? englishWord = englishRegex.firstMatch(ORG)?.group(0);
+
+            _selectedOrgType = englishWord;
+          });
+
+          print(_selectedOrgType);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                  offset: Offset(0, 0),
+                )
+              ],
+              color: isSelected
+                  ? Color.fromARGB(255, 201, 255, 203)
+                  : Color.fromARGB(232, 255, 246, 243),
+              borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: EdgeInsets.all(_deviceWidth! * 0.02),
+            child: Text(
+              ORG,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _industryListView() {
     return Container(
       decoration: BoxDecoration(
@@ -352,15 +494,18 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           color: Color.fromARGB(232, 255, 202, 185),
           borderRadius: BorderRadius.circular(10)),
       child: ExpansionTile(
-        title: Text("Industry"),
+        title: Text(DemoLocalization.of(context).getTranslatedValue('industry')!),
         children: [
-          ListView.builder(
-              itemCount: industries.length,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return _industryListViewBuilder(industries[index], index);
-              }),
+          Container(
+            height: _deviceHeight! * 0.35,
+            child: ListView.builder(
+                itemCount: industries.length,
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  return _industryListViewBuilder(industries[index], index);
+                }),
+          ),
         ],
       ),
     );
@@ -369,7 +514,10 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   Widget _industryListViewBuilder(String industry, int index) {
     bool isSelected = _selectedIndFull == industry;
     return Padding(
-      padding: EdgeInsets.all(_deviceWidth! * 0.02),
+      padding: EdgeInsets.symmetric(
+        horizontal: _deviceWidth! * 0.02,
+        vertical: _deviceWidth! * 0.01,
+      ),
       child: GestureDetector(
         onTap: () {
           setState(() {
@@ -393,68 +541,181 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                   offset: Offset(0, 0),
                 )
               ],
-              color: isSelected ? Color.fromARGB(255, 201, 255, 203) : Color.fromARGB(232, 255, 246, 243),
+              color: isSelected
+                  ? Color.fromARGB(255, 201, 255, 203)
+                  : Color.fromARGB(232, 255, 246, 243),
               borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: EdgeInsets.all(_deviceWidth! * 0.02),
-            child: Text(industry,style: TextStyle(fontWeight: FontWeight.w500),),
+            child: Text(
+              industry,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Widget _industryListView() {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //         color: Color.fromARGB(232, 255, 223, 211),
-  //         borderRadius: BorderRadius.circular(10)),
-  //     child: Padding(
-  //       padding: EdgeInsets.all(_deviceWidth! * 0.02),
-  //       child: Column(
-  //         children: [
-  //           Row(
-  //             children: [Text("Industry")],
-  //           ),
-  //           SizedBox(
-  //             height: _deviceHeight! * 0.005,
-  //           ),
-  //           Scrollbar(
-  //             controller: _industryScrollController,
-  // child: ListView.builder(
-  //     itemCount: industries.length,
-  //     shrinkWrap: true,
-  //     scrollDirection: Axis.vertical,
-  //     itemBuilder: (context, index) {
-  //       return _industryListViewBuilder(industries[index]);
-  //     }),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _agentNameTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        label: Text(
+          DemoLocalization.of(context).getTranslatedValue('agent_name')!,
+        ),
+        border: OutlineInputBorder(),
+      ),
+      onSaved: (newValue) {
+        setState(() {
+          _agentName = newValue;
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Agent name cannot be empty";
+        } else if (!isEnglish(value)) {
+          return "Agent name must be in English";
+        } else {
+          return null;
+        }
+      },
+    );
+  }
 
-  // Widget _industryListViewBuilder(String industry) {
-  //   return GestureDetector(
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //           boxShadow: const [
-  //             BoxShadow(
-  //               color: Colors.black12,
-  //               blurRadius: 5,
-  //               offset: Offset(0, 0),
-  //             )
-  //           ],
-  //           color: Color.fromARGB(232, 255, 246, 243),
-  //           borderRadius: BorderRadius.circular(10)),
-  //       child: Padding(
-  //         padding: EdgeInsets.all(_deviceWidth! * 0.02),
-  //         child: Text(industry),
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _agentPositionTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        label: Text(
+          DemoLocalization.of(context).getTranslatedValue('agent_position')!,
+        ),
+        border: OutlineInputBorder(),
+      ),
+      onSaved: (newValue) {
+        setState(() {
+          _agentPosition = newValue;
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Agent Position cannot be empty";
+        } else if (!isEnglish(value)) {
+          return "Agent Position must be in English";
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget _agentTelephoneNumberTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        label: Text(
+          DemoLocalization.of(context).getTranslatedValue('telephone_number')!,
+        ),
+        border: OutlineInputBorder(),
+      ),
+      onSaved: (newValue) {
+        setState(() {
+          _agentTelephone = newValue;
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Telephone number cannot be empty";
+        } else if (value.length != 10) {
+          return "Telephone number must be 10 digits";
+        } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+          return "Telephone number must contain only digits";
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget _agentMobileNumberTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        label: Text(
+          DemoLocalization.of(context).getTranslatedValue('mobile_number')!,
+        ),
+        border: OutlineInputBorder(),
+      ),
+      onSaved: (newValue) {
+        setState(() {
+          _agentMobile = newValue;
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Mobile number cannot be empty";
+        } else if (value.length != 10) {
+          return "Mobile number must be 10 digits";
+        } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+          return "Mobile number must contain only digits";
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget _faxNumberTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        label: Text(
+          DemoLocalization.of(context).getTranslatedValue('fax_number')!,
+        ),
+        border: OutlineInputBorder(),
+      ),
+      onSaved: (newValue) {
+        setState(() {
+          _faxNumber = newValue;
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return null;
+        } else if (value.length != 10) {
+          return "Telephone number must be 10 digits";
+        } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+          return "Telephone number must contain only digits";
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget _emailTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        label: Text(
+          DemoLocalization.of(context).getTranslatedValue('email')!,
+        ),
+        border: OutlineInputBorder(),
+      ),
+      onSaved: (newValue) {
+        setState(() {
+          _email = newValue;
+        });
+      },
+      validator: (_value) {
+        bool _result = _value!.contains(
+          RegExp(
+              r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"),
+        );
+        return _result ? null : "Please enter a valid email";
+      },
+    );
+  }
+
+  static const List<String> orgtypes = [
+    "Public - රාජ්‍ය - அரச",
+    "Private - පෞද්ගලික - தனியார்",
+    "NGO - රාජ්‍ය නොවන - அரசசாரா நிறுவனம்",
+  ];
 
   static const List<String> sriLankanDistricts = [
     'Ampara - අම්පාර - அம்பாறை',
@@ -486,7 +747,22 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   static const List<String> industries = [
     "\u2022Agriculture, Animal Husbandry and Forestry\n\u2022කෘෂිකර්මය, සත්ව පාලනය සහ වන වගාව\n\u2022விவசாயம், விலங்கு பராமரிப்பு மற்றும் வனவியல்",
-    "\u2022Agriculture, Animal Husbandry and Forestry",
-    "\u2022Agriculture, Animal Husbandry and Forestr",
+    "\u2022Fishing\u2022  \u2022ධීවර\u2022  \u2022மீனவர்\u2022",
+    "\u2022Mining and Quarrying\n\u2022පතල් හා කැනීම්\n\u2022சுரங்கம் மற்றும் குவாரி",
+    "\u2022Manufacturing\u2022  \u2022නිෂ්පාදන\u2022  \u2022உற்பத்தி\u2022",
+    "\u2022Electricity Gas and Water Supply\n\u2022විදුලිබල ගෑස් හා ජලසම්පාදන\n\u2022மின்சார எரிவாயு மற்றும் நீர் வழங்கல்",
+    "\u2022Construction\u2022  \u2022ඉදිකිරීම්\u2022  \u2022கட்டுமானம்\u2022",
+    "\u2022Wholesale and Retail Trade\n\u2022තොග හා සිල්ලර වෙළඳාම්\n\u2022மொத்த மற்றும் சில்லறை வர்த்தகம்",
+    "\u2022Hotel and Restaurant\n\u2022හෝටල් හා ආපනශාලා සේවා\n\u2022விடுதிகள் மற்றும் உணவகங்கள்",
+    "\u2022Financial Services\n\u2022මූල්‍ය සේවා\n\u2022நிதிச் சேவைகள்",
+    "\u2022Real Estate Services\n\u2022ඉඩකඩම් බදු දීම් ආශ්‍රිත සේවා\n\u2022ரியல் எஸ்டேட் சேவைகள்",
+    "\u2022Computer Related Services\n\u2022පරිගණක ආශ්‍රිත සේවා\n\u2022கணினி தொடர்பான சேவைகள்",
+    "\u2022Research and Development Services\n\u2022පර්යේෂණ හා සංවර්ධන සේවා\n\u2022ஆராய்ச்சி மற்றும் வளர்ச்சி சேவைகள்",
+    "\u2022Public Administration and Defence\n\u2022රාජ්‍ය පරිපාලන හා ආරක්‍ෂක\n\u2022பொது நிர்வாகம் மற்றும் பாதுகாப்பு",
+    "\u2022Health and Social Services\n\u2022සෞඛ්‍ය හා සමාජ සේවා\n\u2022சுகாதாரம் மற்றும் சமூக சேவைகள்",
+    "\u2022Other Community, Social and Personal Services\n\u2022වෙනත් ප්‍රජා මූලික සමාජ හා පුද්ගලික සේවා\n\u2022வேறு சமுதாய சமூக மற்றும் தனிப்பட்ட சேவை",
+    "\u2022Private Household with Employed Personals\n\u2022ගෘහස්ත සේවයේ නියුක්ත සේවා\n\u2022தொழில் புரிகின்ர நபர்களுடனான வீட்டுடமை",
+    "\u2022Extra Territorial Organizations\n\u2022වෙනත් ප්‍රාදේශීය සංවිධාන\n\u2022பிற பிராந்திய அமைப்புகள்",
+    "\u2022Transportation and Storage\n\u2022ප්‍රවාහනය හා ගබඩාකරණය\n\u2022போக்குவரத்து மற்றும் சேமிப்பிடம்",
   ];
 }
