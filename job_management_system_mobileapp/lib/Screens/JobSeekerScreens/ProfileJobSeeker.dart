@@ -20,14 +20,19 @@ class ProfileJobSeeker extends StatefulWidget {
 }
 
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
+  String? _selectedGender;
+  String? _selectedMaritalStatus;
+  String? _selectedNationality;
+  String? _selectedDistrict;
+  String? _selectedDivisionalSecretariat;
+  String? _specialNeeds;
+  DateTime? _selectedDate;
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _nicController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
-  DateTime? _selectedDate;
-
-  String? _selectedGender;
+  final TextEditingController _contactNumberController =
+      TextEditingController();
 
   late FirebaseService _firebaseService;
 
@@ -36,7 +41,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     super.initState();
     _firebaseService = widget.firebaseService;
   }
-
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -164,22 +168,135 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               ),
             ),
             const SizedBox(height: 20),
-
-           TextFormField(
-          readOnly: true,
-          controller: TextEditingController(
-            text: _selectedDate != null
-                ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                : '',
-          ),
-          onTap: () => _selectDate(context),
-          decoration: const InputDecoration(
-            labelText: 'Date of Birth',
-            hintText: 'Date of Birth',
-            border: OutlineInputBorder(),
-          ),
-        ),
-
+            TextFormField(
+              readOnly: true,
+              controller: TextEditingController(
+                text: _selectedDate != null
+                    ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                    : '',
+              ),
+              onTap: () => _selectDate(context),
+              decoration: const InputDecoration(
+                labelText: 'Date of Birth',
+                hintText: 'Date of Birth',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Nationality',
+                border: OutlineInputBorder(),
+              ),
+              value: _selectedNationality,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedNationality = newValue;
+                });
+              },
+              items: <String>['Nationality A', 'Nationality B']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Text('Are you with special need?'),
+                const SizedBox(width: 10),
+                Radio(
+                  value: true,
+                  groupValue: _specialNeeds != null,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value!) {
+                        _specialNeeds = '';
+                      } else {
+                        _specialNeeds = null;
+                      }
+                    });
+                  },
+                ),
+                const Text('Yes'),
+                const SizedBox(width: 10),
+                Radio(
+                  value: false,
+                  groupValue: _specialNeeds == null,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value!) {
+                        _specialNeeds = null;
+                      } else {
+                        _specialNeeds = '';
+                      }
+                    });
+                  },
+                ),
+                const Text('No'),
+              ],
+            ),
+            if (_specialNeeds != null)
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Special Needs',
+                  hintText: 'Special Needs',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            const SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'District',
+                border: OutlineInputBorder(),
+              ),
+              value: _selectedDistrict,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedDistrict = newValue;
+                });
+              },
+              items: <String>['District A', 'District B']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Divisional Secretariat',
+                border: OutlineInputBorder(),
+              ),
+              value: _selectedDivisionalSecretariat,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedDivisionalSecretariat = newValue;
+                });
+              },
+              items: <String>[
+                'Divisional Secretariat A',
+                'Divisional Secretariat B'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _contactNumberController,
+              decoration: const InputDecoration(
+                labelText: 'Contact Number',
+                hintText: 'Contact Number',
+                border: OutlineInputBorder(),
+              ),
+            ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -191,8 +308,14 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                     _emailController.clear();
                     _addressController.clear();
                     _nicController.clear();
-                    _genderController.clear();
-                   // _selectedDate.clear();
+                    _selectedGender;
+                    _selectedDate;
+                    _selectedMaritalStatus;
+                    _selectedNationality;
+                    _selectedDistrict;
+                    _selectedDivisionalSecretariat;
+                    _specialNeeds;
+                    _contactNumberController;
 
                     setState(() {
                       _selectedGender = null;
@@ -202,15 +325,29 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _firebaseService.addJobSeekerProfile(
-                      fullName: _fullNameController.text,
-                      email: _emailController.text,
-                      address: _addressController.text,
-                      gender: _selectedGender,
-                      nic: _nicController.text,
-                      //dateofbirth: _selectedDate.text,
-                    );
-                  },
+  // Format the date as a string
+  String formattedDate = _selectedDate != null
+      ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+      : '';
+
+  // Call the function to add job seeker profile
+  _firebaseService.addJobSeekerProfile(
+    fullName: _fullNameController.text,
+    email: _emailController.text,
+    address: _addressController.text,
+    gender: _selectedGender,
+    nic: _nicController.text,
+    dateOfBirth:_selectedDate ,
+    maritalStatus:_selectedMaritalStatus,
+    nationality:_selectedNationality,
+    district:_selectedDistrict,
+    divisionalsecretariat: _selectedDivisionalSecretariat,
+    specialNeeds:_specialNeeds,
+    contact: _contactNumberController      
+                
+  );
+},
+
                   child: const Text('Submit'),
                 ),
               ],
