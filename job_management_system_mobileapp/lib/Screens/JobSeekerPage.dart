@@ -12,6 +12,7 @@ import 'package:job_management_system_mobileapp/localization/demo_localization.d
 import 'package:job_management_system_mobileapp/main.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens./Help.dart';
 
 class JobSeekerPage extends StatefulWidget {
   // ignore: use_super_parameters
@@ -68,18 +69,18 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     _userName = _firebaseService!.currentUser!['username'];
     _deviceWidth = MediaQuery.of(context).size.width;
 
-  return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.language,
                 color: Colors.black,
               ),
-              underline: SizedBox(),
+              underline: const SizedBox(),
               items: Language.languageList()
                   .map<DropdownMenuItem<Language>>((lang) => DropdownMenuItem(
                       value: lang,
@@ -147,7 +148,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                       topRight: Radius.circular(60)),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.05),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.05),
                   child: Column(
                     children: <Widget>[
                       const SizedBox(
@@ -209,14 +211,14 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Jobs()),
+                                MaterialPageRoute(builder: (context) => const Jobs()),
                               );
                             },
                             child: Text(
-                             DemoLocalization.of(context)
-                                .getTranslatedValue('see_all')!,
+                              DemoLocalization.of(context)
+                                  .getTranslatedValue('see_all')!,
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 145, 0),
+                                  color: const Color.fromARGB(255, 255, 145, 0),
                                   fontSize: _deviceWidth! * 0.03),
                             ),
                           ),
@@ -261,11 +263,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             onPressed: () {
                               // Add your logic to navigate to see all recent jobs
                             },
-                            child:Text(
+                            child: Text(
                               DemoLocalization.of(context)
-                                .getTranslatedValue('see_all')!,
+                                  .getTranslatedValue('see_all')!,
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 243, 117, 33),
+                                  color: const Color.fromARGB(255, 243, 117, 33),
                                   fontSize: _deviceWidth! * 0.03),
                             ),
                           ),
@@ -403,11 +405,17 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 );
               },
             ),
-            const ListTile(
+            ListTile(
               leading:
-                  Icon(Icons.help, color: Color.fromARGB(255, 255, 137, 2)),
-              title: Text("Help"),
-// onTap: (){Navigator.push(context,MaterialPageRoute(builder: const Help()),);},
+                  const Icon(Icons.help, 
+                  color: Color.fromARGB(255, 255, 137, 2)),
+              title: const Text("Help"),
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Help()),
+                // );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.logout,

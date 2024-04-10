@@ -3,6 +3,7 @@ import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:quickalert/quickalert.dart';
 
 class Jobs extends StatefulWidget {
   const Jobs({Key? key}) : super(key: key);
@@ -37,6 +38,9 @@ class _JobsState extends State<Jobs> {
 
   List<String> filteredJobs = [];
 
+
+   double? _deviceWidth, _deviceHeight;        // for the responsiveness of the device
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +49,18 @@ class _JobsState extends State<Jobs> {
 
   @override
   Widget build(BuildContext context) {
+
+
+     //responsiveness of the device
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+    void showAlert() {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor:  Colors.orange.shade800,

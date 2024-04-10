@@ -111,44 +111,44 @@ class FirebaseService {
     return vacancyCollection.doc(vId).delete();
   }
 
-  // Add job seeker profile
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++get collection of details: Job seeker
 
+  final CollectionReference ProfileJobSeeker =
+      FirebaseFirestore.instance.collection('profileJobSeeker');
 
+//add profile details of job seeker
 
-  Future<void> addJobSeekerProfile({
-    required String fullName,
-    required String email,
-    required String address,
-    required String nic,
-    required String? gender, 
+  Future<void> addJobSeekerProfile(
+    String fullName,
+    String email,
+    String address,
+    String? gender,
+    String nic,
     DateTime? dateOfBirth,
-     String? maritalStatus,
-      String? nationality,
-       String? district,
-        String? divisionalsecretariat,
-         String? specialNeeds, 
-         required TextEditingController contact
-  }) async {
-    try {
-      await _db.collection('jobseekerprofile').add({
-        'fullname': fullName,
-        'email': email,
-        'address':address,
-        'gender':gender,
-        'nic':nic,
-        'dateOfBirth':dateOfBirth,
-        'maritalStatus':maritalStatus,
-        'nationality':nationality,
-        'district':district,
-        'divisionalsecretariat':divisionalsecretariat,
-        'specialNeeds':specialNeeds,
-        'contact':contact
-        
-      });
-    } catch (error) {
-      throw Exception('Failed to add job seeker profile');
-    }
+    String? nationality,
+    String specialNeeds,
+    String? district,
+    String divisionalSecretariatController,
+    String contact,
+  ) {
+    return ProfileJobSeeker.add({
+      'fullname': fullName,
+      'email': email,
+      'address': address,
+      'gender': gender,
+      'nic': nic,
+      'dateOfBirth': dateOfBirth,
+      'nationality': nationality,
+      'specialNeeds': specialNeeds,
+      'district': district,
+      'divisionalSecretariat': divisionalSecretariatController,
+      'contact': contact
+    });
   }
+
+  //CV creatoion:
+
+  //job provider details
 
   Future<void> addJobProviderDetails(
       XFile? logo,
@@ -175,22 +175,21 @@ class FirebaseService {
         return _task.then((_snapshot) async {
           String _downloadURL = await _snapshot.ref
               .getDownloadURL(); // get download url for the uploaded imageZz
-          await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set(
-            {
-              "logo": _downloadURL,
-              "membership_number": membership_number,
-              "company_name": company_name,
-              "company_address": company_address,
-              "district": district,
-              "industry": industry,
-              "org_type": org_type,
-              "repName": repName,
-              "repPost": repPost,
-              "repTelephone": repTelephone,
-              "repMobile": repMobile,
-              "repFax": repFax,
-              "repEmail": repEmail,
-            },SetOptions(merge: true)); // set user document for new user
+          await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
+            "logo": _downloadURL,
+            "membership_number": membership_number,
+            "company_name": company_name,
+            "company_address": company_address,
+            "district": district,
+            "industry": industry,
+            "org_type": org_type,
+            "repName": repName,
+            "repPost": repPost,
+            "repTelephone": repTelephone,
+            "repMobile": repMobile,
+            "repFax": repFax,
+            "repEmail": repEmail,
+          }, SetOptions(merge: true)); // set user document for new user
         });
       } catch (e) {
         print(e);

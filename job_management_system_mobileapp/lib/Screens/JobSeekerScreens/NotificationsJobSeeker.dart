@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 
 class NotificationsJobSeeker extends StatefulWidget {
@@ -27,9 +29,22 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
     'A company has contacted you for a job posting',
     'You have a message in your inbox',
   ];
+     double? _deviceWidth, _deviceHeight; 
+
 
   @override
   Widget build(BuildContext context) {
+ //responsiveness of the device
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+    void showAlert() {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+      );
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade800,
