@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
-class HelpCenter extends StatelessWidget {
-  const HelpCenter({Key? key}) : super(key: key);
+
+class Help extends StatelessWidget {
+  const Help({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade800,

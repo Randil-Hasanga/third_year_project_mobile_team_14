@@ -19,43 +19,43 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildJobSeekerList() {
-    return StreamBuilder(
-      stream: firebaseService.getJobSeekerStream(),
-      builder: ((context, snapshot) {
-        //error
-        if (snapshot.hasError) {
-          return const Text('Error');
-        }
-        //Loading
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
+  // Widget _buildJobSeekerList() {
+  //   return StreamBuilder(
+  //     stream: firebaseService.getJobSeekerStream(),
+  //     builder: ((context, snapshot) {
+  //       //error
+  //       if (snapshot.hasError) {
+  //         return const Text('Error');
+  //       }
+  //       //Loading
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return const CircularProgressIndicator();
+  //       }
 
-        return ListView(
-          children: snapshot.data!
-              .map<Widget>(
-                  (userData) => _buildJobSeekerListItem(userData, context))
-              .toList(),
-        );
-      }),
-    );
-  }
+  //       return ListView(
+  //         children: snapshot.data!
+  //             .map<Widget>(
+  //                 (userData) => _buildJobSeekerListItem(userData, context))
+  //             .toList(),
+  //       );
+  //     }),
+  //   );
+  // }
 
-  Individual list item for job seeker
-  Widget _buildJobSeekerListItem(
-      Map<String, dynamic> userData, BuildContext context) {
-    return JobSeekerTitle(
-        text: userData['email'],
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatUI(
-                reciverEmail: userData['email'],
-              ),
-            ),
-          );
-        });
-  }
+  // Individual list item for job seeker
+  // Widget _buildJobSeekerListItem(
+  //     Map<String, dynamic> userData, BuildContext context) {
+  //   return JobSeekerTitle(
+  //       text: userData['email'],
+  //       onTap: () {
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => ChatUI(
+  //               reciverEmail: userData['email'],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
 }

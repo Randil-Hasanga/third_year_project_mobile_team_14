@@ -199,7 +199,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                 height: 125,
               ),
             ),
-            Icon(Icons.add_a_photo),
+            const Icon(Icons.add_a_photo),
           ],
         ),
       );
@@ -321,7 +321,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('membership_number')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -345,7 +345,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('company_name')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -374,7 +374,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('company_address')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -413,7 +413,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             controller: controller,
             focusNode: focusNode,
             onEditingComplete: onEditingComplete,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               label: Text("District"),
             ),
@@ -442,7 +442,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
               offset: Offset(0, 0),
             )
           ],
-          color: Color.fromARGB(232, 255, 202, 185),
+          color: const Color.fromARGB(232, 255, 202, 185),
           borderRadius: BorderRadius.circular(10)),
       child: ExpansionTile(
         title:
@@ -492,14 +492,14 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                 )
               ],
               color: isSelected
-                  ? Color.fromARGB(255, 201, 255, 203)
-                  : Color.fromARGB(232, 255, 246, 243),
+                  ? const Color.fromARGB(255, 201, 255, 203)
+                  : const Color.fromARGB(232, 255, 246, 243),
               borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: EdgeInsets.all(_deviceWidth! * 0.02),
             child: Text(
               ORG,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -517,7 +517,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
               offset: Offset(0, 0),
             )
           ],
-          color: Color.fromARGB(232, 255, 202, 185),
+          color: const Color.fromARGB(232, 255, 202, 185),
           borderRadius: BorderRadius.circular(10)),
       child: ExpansionTile(
         title:
@@ -569,14 +569,14 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                 )
               ],
               color: isSelected
-                  ? Color.fromARGB(255, 201, 255, 203)
-                  : Color.fromARGB(232, 255, 246, 243),
+                  ? const Color.fromARGB(255, 201, 255, 203)
+                  : const Color.fromARGB(232, 255, 246, 243),
               borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: EdgeInsets.all(_deviceWidth! * 0.02),
             child: Text(
               industry,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -591,7 +591,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('agent_name')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -617,7 +617,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('agent_position')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -643,7 +643,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('telephone_number')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -671,7 +671,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('mobile_number')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -699,7 +699,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('fax_number')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -727,7 +727,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('email')!,
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onSaved: (newValue) {
         setState(() {
@@ -747,7 +747,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   Widget _clearButton() {
     return MaterialButton(
       minWidth: _deviceWidth! * 0.4,
-      color: Color(0x608A8A8A),
+      color: const Color(0x608A8A8A),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       onPressed: () {
         setState(() {
@@ -779,7 +779,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           _agentEmailController.clear();
         });
       },
-      child: Text(
+      child: const Text(
         "Clear",
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
@@ -794,7 +794,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       onPressed: () {
         _validateAndSave();
       },
-      child: Text(
+      child: const Text(
         "Submit",
         style: TextStyle(fontWeight: FontWeight.w600),
       ),

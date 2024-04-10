@@ -1,17 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(ProfileJobSeeker());
-}
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class ProfileJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
-  ProfileJobSeeker({Key? key}) : super(key: key);
+  ProfileJobSeeker({super.key});
 
   final FirebaseService firebaseService = FirebaseService();
 
@@ -20,21 +19,25 @@ class ProfileJobSeeker extends StatefulWidget {
 }
 
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
-  String? _selectedGender;
-  String? _selectedMaritalStatus;
-  String? _selectedNationality;
-  String? _selectedDistrict;
-  String? _selectedDivisionalSecretariat;
-  String? _specialNeeds;
-  DateTime? _selectedDate;
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  String? _selectedGender;
   final TextEditingController _nicController = TextEditingController();
+  DateTime? _selectedDate;
+  final TextEditingController _nationalityController = TextEditingController();
+  final TextEditingController _specialNeedsController = TextEditingController();
+  String? _selectedDistrict;
+  String? _selectedMaritalStatus;
+
+  final TextEditingController _divisionalSecretariatController =
+      TextEditingController();
   final TextEditingController _contactNumberController =
       TextEditingController();
 
   late FirebaseService _firebaseService;
+
+  double? _deviceWidth, _deviceHeight; // for the responsiveness of the device
 
   @override
   void initState() {
@@ -58,6 +61,16 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
 
   @override
   Widget build(BuildContext context) {
+    //responsiveness of the device
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+    void showAlert() {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
@@ -67,39 +80,64 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             color: Colors.white,
           ),
         ),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: (String language) {
-              // Handle language selection here
-              switch (language) {
-                case 'English':
-                  // Change app language to English
-                  break;
-                case 'සිංහල':
-                  // Change app language to Sinhala
-                  break;
-                case 'தமிழ்':
-                  // Change app language to Tamil
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'English',
-                child: Text('English'),
+      ),
+
+      //bottom app bar
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.orange.shade800,
+        shape: const CircularNotchedRectangle(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.home,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
+                },
               ),
-              const PopupMenuItem<String>(
-                value: 'සිංහල',
-                child: Text('සිංහල'),
+              IconButton(
+                icon: const Icon(Icons.settings,
+                    color: Color.fromARGB(
+                        255, 255, 255, 255)), // Change the color here
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileJobSeeker()));
+                },
               ),
-              const PopupMenuItem<String>(
-                value: 'தமிழ்',
-                child: Text('தமிழ்'),
+              IconButton(
+                icon: const Icon(Icons.notifications,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.chat,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Chattings()));
+                },
               ),
             ],
           ),
-        ],
+        ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: ListView(
@@ -183,69 +221,26 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               ),
             ),
             const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
+            TextFormField(
+              controller: _nationalityController,
+              maxLines:
+                  1, // Set to null or any number greater than 1 for multiple lines
               decoration: const InputDecoration(
                 labelText: 'Nationality',
+                hintText: 'Ex: SriLanka',
                 border: OutlineInputBorder(),
               ),
-              value: _selectedNationality,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedNationality = newValue;
-                });
-              },
-              items: <String>['Nationality A', 'Nationality B']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
             const SizedBox(height: 20),
-            Row(
-              children: [
-                const Text('Are you with special need?'),
-                const SizedBox(width: 10),
-                Radio(
-                  value: true,
-                  groupValue: _specialNeeds != null,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value!) {
-                        _specialNeeds = '';
-                      } else {
-                        _specialNeeds = null;
-                      }
-                    });
-                  },
-                ),
-                const Text('Yes'),
-                const SizedBox(width: 10),
-                Radio(
-                  value: false,
-                  groupValue: _specialNeeds == null,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value!) {
-                        _specialNeeds = null;
-                      } else {
-                        _specialNeeds = '';
-                      }
-                    });
-                  },
-                ),
-                const Text('No'),
-              ],
-            ),
-            if (_specialNeeds != null)
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Special Needs',
-                  hintText: 'Special Needs',
-                  border: OutlineInputBorder(),
-                ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _specialNeedsController,
+              decoration: const InputDecoration(
+                labelText: 'Special needs',
+                hintText: 'Special needs',
+                border: OutlineInputBorder(),
               ),
+            ),
             const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
@@ -258,8 +253,33 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   _selectedDistrict = newValue;
                 });
               },
-              items: <String>['District A', 'District B']
-                  .map<DropdownMenuItem<String>>((String value) {
+              items: <String>[
+                'Matara',
+                'Galle',
+                'Kalutara',
+                'Colombo',
+                'Gampaha',
+                'Kandy',
+                'Matale',
+                'Nuwara Eliya',
+                'Hambantota',
+                'Jaffna',
+                'Kilinochchi',
+                'Mannar',
+                'Mullaitivu',
+                'Vavuniya',
+                'Batticaloa',
+                'Ampara',
+                'Trincomalee',
+                'Kurunegala',
+                'Puttalam',
+                'Anuradhapura',
+                'Polonnaruwa',
+                'Badulla',
+                'Moneragala',
+                'Ratnapura',
+                'Kegalle'
+              ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -267,26 +287,14 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               }).toList(),
             ),
             const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _divisionalSecretariatController,
               decoration: const InputDecoration(
                 labelText: 'Divisional Secretariat',
+                hintText: 'Divisional Secretariat',
                 border: OutlineInputBorder(),
               ),
-              value: _selectedDivisionalSecretariat,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedDivisionalSecretariat = newValue;
-                });
-              },
-              items: <String>[
-                'Divisional Secretariat A',
-                'Divisional Secretariat B'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
             const SizedBox(height: 20),
             TextFormField(
@@ -303,52 +311,41 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    // Clear all text fields
-                    _fullNameController.clear();
-                    _emailController.clear();
-                    _addressController.clear();
-                    _nicController.clear();
-                    _selectedGender;
-                    _selectedDate;
-                    _selectedMaritalStatus;
-                    _selectedNationality;
-                    _selectedDistrict;
-                    _selectedDivisionalSecretariat;
-                    _specialNeeds;
-                    _contactNumberController;
+                    // Format the date as a string
+                    String formattedDate = _selectedDate != null
+                        ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                        : '';
 
-                    setState(() {
-                      _selectedGender = null;
-                    });
+                    // Call the function to add job seeker profile
+                    FirebaseService().addJobSeekerProfile(
+                      _fullNameController.text,
+                      _emailController.text,
+                      _addressController.text,
+                      _selectedGender!,
+                      _nicController.text,
+                      _selectedDate,
+                      _nationalityController.text,
+                      _specialNeedsController.text,
+                      _selectedDistrict!,
+                      _divisionalSecretariatController.text,
+                      _contactNumberController.text,
+                    );
                   },
-                  child: const Text('Clear'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-  // Format the date as a string
-  String formattedDate = _selectedDate != null
-      ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-      : '';
-
-  // Call the function to add job seeker profile
-  _firebaseService.addJobSeekerProfile(
-    fullName: _fullNameController.text,
-    email: _emailController.text,
-    address: _addressController.text,
-    gender: _selectedGender,
-    nic: _nicController.text,
-    dateOfBirth:_selectedDate ,
-    maritalStatus:_selectedMaritalStatus,
-    nationality:_selectedNationality,
-    district:_selectedDistrict,
-    divisionalsecretariat: _selectedDivisionalSecretariat,
-    specialNeeds:_specialNeeds,
-    contact: _contactNumberController      
-                
-  );
-},
-
-                  child: const Text('Submit'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange.shade800, // Background color
+                    elevation: 4, // Elevation (shadow)
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Rounded corners
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 32), // Button padding
+                  ),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 19), // Text color
+                  ), // Background color
                 ),
               ],
             ),
@@ -358,3 +355,49 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     );
   }
 }
+
+
+
+
+//  Widget _addCompanyLogo() {
+//     if (selectedImage != null) {
+//       return GestureDetector(
+//         onTap: () {
+//           _pickAndResizeImage();
+//         },
+//         child: Container(
+//           // width: _deviceWidth! * 0.3,
+//           // height: _deviceHeight! * 0.15,
+//           child: ClipRRect(
+//             borderRadius: BorderRadius.circular(10),
+//             child: Image.file(
+//               File(selectedImage!.path),
+//               width: 250,
+//               height: 125,
+//               fit: BoxFit.cover,
+//             ),
+//           ),
+//         ),
+//       );
+//     } else {
+//       return GestureDetector(
+//         onTap: () {
+//           _pickAndResizeImage();
+//         },
+//         child: Stack(
+//           children: [
+//             Container(
+//               width: _deviceWidth! * 0.3,
+//               height: _deviceHeight! * 0.15,
+//               child: SvgPicture.asset(
+//                 "assets/logo.svg",
+//                 width: 250,
+//                 height: 125,
+//               ),
+//             ),
+//             Icon(Icons.add_a_photo),
+//           ],
+//         ),
+//       );
+//     }
+//   }
