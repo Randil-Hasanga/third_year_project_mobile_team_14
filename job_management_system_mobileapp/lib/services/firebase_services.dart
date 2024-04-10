@@ -113,33 +113,37 @@ class FirebaseService {
 
   // Add job seeker profile
 
-  Future<void> addJobSeekerProfile(
-      {required String fullName,
-      required String email,
-      required String address,
-      required String nic,
-      required String? gender,
-      DateTime? dateOfBirth,
-      String? maritalStatus,
+
+
+  Future<void> addJobSeekerProfile({
+    required String fullName,
+    required String email,
+    required String address,
+    required String nic,
+    required String? gender, 
+    DateTime? dateOfBirth,
+     String? maritalStatus,
       String? nationality,
-      String? district,
-      String? divisionalsecretariat,
-      String? specialNeeds,
-      required TextEditingController contact}) async {
+       String? district,
+        String? divisionalsecretariat,
+         String? specialNeeds, 
+         required TextEditingController contact
+  }) async {
     try {
       await _db.collection('jobseekerprofile').add({
         'fullname': fullName,
         'email': email,
-        'address': address,
-        'gender': gender,
-        'nic': nic,
-        'dateOfBirth': dateOfBirth,
-        'maritalStatus': maritalStatus,
-        'nationality': nationality,
-        'district': district,
-        'divisionalsecretariat': divisionalsecretariat,
-        'specialNeeds': specialNeeds,
-        'contact': contact
+        'address':address,
+        'gender':gender,
+        'nic':nic,
+        'dateOfBirth':dateOfBirth,
+        'maritalStatus':maritalStatus,
+        'nationality':nationality,
+        'district':district,
+        'divisionalsecretariat':divisionalsecretariat,
+        'specialNeeds':specialNeeds,
+        'contact':contact
+        
       });
     } catch (error) {
       throw Exception('Failed to add job seeker profile');
