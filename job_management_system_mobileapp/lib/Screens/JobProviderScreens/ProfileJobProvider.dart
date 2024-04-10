@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
@@ -21,13 +24,16 @@ class JobProviderProfile extends StatefulWidget {
 }
 
 class _JobProviderProfileState extends State<JobProviderProfile> {
+  FirebaseService? _firebaseService;
   final FirebaseService firebaseService = FirebaseService();
   double? _deviceWidth, _deviceHeight;
   final GlobalKey<FormState> _companyDetailsFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _districtKey = GlobalKey<FormState>();
   ScrollController _industryScrollController = ScrollController();
 
   String? _companyName,
       _email,
+      _districtFull,
       _faxNumber,
       _agentMobile,
       _companyAddress,
@@ -41,8 +47,27 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       _selectedOrgType,
       _selectedIndustry;
   XFile? selectedImage;
-  final TextEditingController _districtController = TextEditingController();
+  TextEditingController _districtController = TextEditingController();
   final TextEditingController _industryController = TextEditingController();
+  final TextEditingController _memberNumberController = TextEditingController();
+  final TextEditingController _companyNameController = TextEditingController();
+  final TextEditingController _companyAddressController =
+      TextEditingController();
+  final TextEditingController _agentNameController = TextEditingController();
+  final TextEditingController _agentPositionController =
+      TextEditingController();
+  final TextEditingController _agentTelephoneController =
+      TextEditingController();
+  final TextEditingController _agentMobileController = TextEditingController();
+  final TextEditingController _agentFaxController = TextEditingController();
+  final TextEditingController _agentEmailController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,13 +193,10 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             Container(
               width: _deviceWidth! * 0.3,
               height: _deviceHeight! * 0.15,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: const DecorationImage(
-                  image: NetworkImage(
-                    "https://avatar.iran.liara.run/public/40",
-                  ),
-                ),
+              child: SvgPicture.asset(
+                "assets/logo.svg",
+                width: 250,
+                height: 125,
               ),
             ),
             Icon(Icons.add_a_photo),
@@ -220,6 +242,9 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         key: _companyDetailsFormKey,
         child: Column(
           children: [
+            // _industryTextField(),
+            // _industryTextField(),
+            // _industryTextField(),
             // _industryTextField(),
             _memberNumberTextField(), // mona wage format ekakda thiyenne kiyala ahanna
             SizedBox(
@@ -269,6 +294,15 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _clearButton(),
+                _submitButton(),
+              ],
+            ),
           ],
         ),
       ),
@@ -282,6 +316,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _memberNumberTextField() {
     return TextFormField(
+      controller: _memberNumberController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('membership_number')!,
@@ -305,6 +340,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _companyNameTextField() {
     return TextFormField(
+      controller: _companyNameController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('company_name')!,
@@ -330,6 +366,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _companyAddressTextField() {
     return TextFormField(
+      controller: _companyAddressController,
       minLines: 3,
       maxLines: 8,
       decoration: InputDecoration(
@@ -369,8 +406,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           }
         },
         fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-          _districtController:
-          controller;
+          _districtController = controller;
           return TextField(
             maxLines: 2,
             minLines: 1,
@@ -384,18 +420,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           );
         },
         onSelected: (String item) {
-          if (!sriLankanDistricts.any(
-              (district) => district.toLowerCase() == item.toLowerCase())) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  "Insert Valid District",
-                  textAlign: TextAlign.center,
-                  selectionColor: Color.fromARGB(255, 230, 255, 2),
-                ),
-              ),
-            );
-          }
+          _districtFull = item;
           List<String> parts = item.split(" - ");
           String englishDistrict = parts[0]; // Extract English word
           setState(() {
@@ -420,7 +445,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           color: Color.fromARGB(232, 255, 202, 185),
           borderRadius: BorderRadius.circular(10)),
       child: ExpansionTile(
-        title: Text(DemoLocalization.of(context).getTranslatedValue('org_type')!),
+        title:
+            Text(DemoLocalization.of(context).getTranslatedValue('org_type')!),
         children: [
           Container(
             //height: _deviceHeight! * 0.35,
@@ -494,7 +520,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           color: Color.fromARGB(232, 255, 202, 185),
           borderRadius: BorderRadius.circular(10)),
       child: ExpansionTile(
-        title: Text(DemoLocalization.of(context).getTranslatedValue('industry')!),
+        title:
+            Text(DemoLocalization.of(context).getTranslatedValue('industry')!),
         children: [
           Container(
             height: _deviceHeight! * 0.35,
@@ -559,6 +586,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _agentNameTextField() {
     return TextFormField(
+      controller: _agentNameController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('agent_name')!,
@@ -584,6 +612,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _agentPositionTextField() {
     return TextFormField(
+      controller: _agentPositionController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('agent_position')!,
@@ -609,6 +638,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _agentTelephoneNumberTextField() {
     return TextFormField(
+      controller: _agentTelephoneController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('telephone_number')!,
@@ -636,6 +666,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _agentMobileNumberTextField() {
     return TextFormField(
+      controller: _agentMobileController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('mobile_number')!,
@@ -663,6 +694,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _faxNumberTextField() {
     return TextFormField(
+      controller: _agentFaxController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('fax_number')!,
@@ -676,11 +708,11 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       },
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return null;
+          return "Fax number cannot be empty";
         } else if (value.length != 10) {
-          return "Telephone number must be 10 digits";
+          return "Fax number must be 10 digits";
         } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-          return "Telephone number must contain only digits";
+          return "Fax number must contain only digits";
         } else {
           return null;
         }
@@ -690,6 +722,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _emailTextField() {
     return TextFormField(
+      controller: _agentEmailController,
       decoration: InputDecoration(
         label: Text(
           DemoLocalization.of(context).getTranslatedValue('email')!,
@@ -709,6 +742,108 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         return _result ? null : "Please enter a valid email";
       },
     );
+  }
+
+  Widget _clearButton() {
+    return MaterialButton(
+      minWidth: _deviceWidth! * 0.4,
+      color: Color(0x608A8A8A),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      onPressed: () {
+        setState(() {
+          _membershipNumber = '';
+          _companyName = '';
+          _companyAddress = '';
+          _selectedDistrict = '';
+          _selectedIndFull = '';
+          _selectedOrgFull = '';
+          _selectedOrgType = '';
+          _selectedIndustry = '';
+          _agentName = '';
+          _agentPosition = '';
+          _agentTelephone = '';
+          _agentMobile = '';
+          _faxNumber = '';
+          _email = '';
+
+          _districtController.clear();
+          _industryController.clear();
+          _memberNumberController.clear();
+          _companyNameController.clear();
+          _companyAddressController.clear();
+          _agentNameController.clear();
+          _agentPositionController.clear();
+          _agentTelephoneController.clear();
+          _agentMobileController.clear();
+          _agentFaxController.clear();
+          _agentEmailController.clear();
+        });
+      },
+      child: Text(
+        "Clear",
+        style: TextStyle(fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+
+  Widget _submitButton() {
+    return MaterialButton(
+      minWidth: _deviceWidth! * 0.4,
+      color: Colors.orange,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      onPressed: () {
+        _validateAndSave();
+      },
+      child: Text(
+        "Submit",
+        style: TextStyle(fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+
+  void _validateAndSave() async {
+    if (_selectedDistrict == null || _selectedDistrict!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "District Field Empty or Invalid",
+            textAlign: TextAlign.center,
+            selectionColor: Color.fromARGB(255, 230, 255, 2),
+          ),
+        ),
+      );
+    } else if (!sriLankanDistricts
+        .any((district) => district == _districtFull)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Insert Valid District",
+            textAlign: TextAlign.center,
+            selectionColor: Color.fromARGB(255, 230, 255, 2),
+          ),
+        ),
+      );
+    } else {
+      if (_companyDetailsFormKey.currentState!.validate()) {
+        _companyDetailsFormKey.currentState!.save();
+
+        _firebaseService!.addJobProviderDetails(
+          selectedImage,
+          _membershipNumber!,
+          _companyName!,
+          _companyAddress!,
+          _selectedDistrict!,
+          _selectedIndustry!,
+          _selectedOrgType!,
+          _agentName!,
+          _agentPosition!,
+          _agentTelephone!,
+          _agentMobile!,
+          _faxNumber!,
+          _email!,
+        );
+      }
+    }
   }
 
   static const List<String> orgtypes = [
