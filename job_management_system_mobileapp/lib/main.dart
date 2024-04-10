@@ -90,6 +90,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
+        
       ),
       initialRoute: 'splash',
       routes: {
