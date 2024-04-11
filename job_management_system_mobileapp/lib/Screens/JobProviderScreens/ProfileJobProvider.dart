@@ -25,8 +25,8 @@ class JobProviderProfile extends StatefulWidget {
 
 class _JobProviderProfileState extends State<JobProviderProfile> {
   FirebaseService? _firebaseService;
-  final FirebaseService firebaseService = FirebaseService();
   double? _deviceWidth, _deviceHeight;
+
   final GlobalKey<FormState> _companyDetailsFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _districtKey = GlobalKey<FormState>();
   ScrollController _industryScrollController = ScrollController();
@@ -45,8 +45,11 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       _selectedIndFull,
       _selectedOrgFull,
       _selectedOrgType,
-      _selectedIndustry;
+      _selectedIndustry,
+      _logo;
+
   XFile? selectedImage;
+
   TextEditingController _districtController = TextEditingController();
   final TextEditingController _industryController = TextEditingController();
   final TextEditingController _memberNumberController = TextEditingController();
@@ -62,11 +65,53 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   final TextEditingController _agentFaxController = TextEditingController();
   final TextEditingController _agentEmailController = TextEditingController();
 
+  Map<String, dynamic>? _jobProviderDetails;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _getProvider();
+  }
+
+  void _getProvider() async {
+    _jobProviderDetails = await _firebaseService!.getCurrentProviderData();
+    print(_jobProviderDetails);
+
+    if (_jobProviderDetails != null) {
+      setState(() {
+        _districtController.text = _jobProviderDetails!['districtFull'] ?? '';
+        _industryController.text = _jobProviderDetails!['industry'] ?? '';
+        _memberNumberController.text =
+            _jobProviderDetails!['membership_number'] ?? '';
+        _companyNameController.text =
+            _jobProviderDetails!['company_name'] ?? '';
+        _companyAddressController.text =
+            _jobProviderDetails!['company_address'] ?? '';
+        _agentNameController.text = _jobProviderDetails!['repName'] ?? '';
+        _agentPositionController.text = _jobProviderDetails!['repPost'] ?? '';
+        _agentTelephoneController.text =
+            _jobProviderDetails!['repTelephone'] ?? '';
+        _agentMobileController.text = _jobProviderDetails!['repMobile'] ?? '';
+        _agentFaxController.text = _jobProviderDetails!['repFax'] ?? '';
+        _agentEmailController.text = _jobProviderDetails!['repEmail'] ?? '';
+      });
+    }
+
+    _logo = _jobProviderDetails?['logo'];
+    _companyName = _jobProviderDetails?['company_name'];
+    _email = _jobProviderDetails?['repEmail'];
+    _faxNumber = _jobProviderDetails?['repFax'];
+    _agentMobile = _jobProviderDetails?['repMobile'];
+    _companyAddress = _jobProviderDetails?['company_address'];
+    _agentTelephone = _jobProviderDetails?['repTelephone'];
+    _agentName = _jobProviderDetails?['repName'];
+    _agentPosition = _jobProviderDetails?['repPost'];
+    _membershipNumber = _jobProviderDetails?['membership_number'];
+    _districtFull = _jobProviderDetails?['districtFull'];
+    _selectedDistrict = _jobProviderDetails?['district'];
+    _selectedOrgType = _jobProviderDetails?['org_type'];
+    _selectedIndustry = _jobProviderDetails?['industry'];
   }
 
   @override
@@ -137,25 +182,45 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.04),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(
-                height: _deviceHeight! * 0.02,
+              Padding(
+                padding: EdgeInsets.only(top: _deviceHeight! * 0.02),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      DemoLocalization.of(context).getTranslatedValue('logo')!,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Container(
+                      height: 1,
+                      width: _deviceWidth! * 0.7,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  SizedBox(
+                    height: _deviceHeight! * 0.02,
+                  ),
                   _addCompanyLogo(),
+                  SizedBox(
+                    height: _deviceHeight! * 0.02,
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: _deviceHeight! * 0.02,
+                  ),
+                  _companyDetailsForm(),
                 ],
               ),
-              SizedBox(
-                height: _deviceHeight! * 0.02,
-              ),
-              _companyDetailsForm(),
             ],
           ),
         ),
@@ -164,23 +229,110 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   }
 
   Widget _addCompanyLogo() {
-    if (selectedImage != null) {
+    if (_logo != null && selectedImage == null) {
       return GestureDetector(
         onTap: () {
           _pickAndResizeImage();
         },
-        child: Container(
-          // width: _deviceWidth! * 0.3,
-          // height: _deviceHeight! * 0.15,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.file(
-              File(selectedImage!.path),
-              width: 250,
-              height: 125,
-              fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: NetworkImage(_logo!),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              height: 100,
+              width: 200,
             ),
-          ),
+            GestureDetector(
+              onTap: () => _pickAndResizeImage(),
+              child: const Icon(
+                Icons.add_a_photo,
+                size: 35,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (selectedImage != null && _logo == null) {
+      return GestureDetector(
+        onTap: () {
+          _pickAndResizeImage();
+        },
+        child: Stack(
+          children: [
+            Container(
+              // width: _deviceWidth! * 0.3,
+              // height: _deviceHeight! * 0.15,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.file(
+                  File(selectedImage!.path),
+                  width: 200,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Container(
+              height: _deviceHeight! * 0.05,
+              width: _deviceHeight! * 0.05,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Color.fromARGB(161, 204, 130, 33)),
+              child: GestureDetector(
+                onTap: () => _pickAndResizeImage(),
+                child: const Icon(
+                  Icons.add_a_photo,
+                  size: 35,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (selectedImage != null && _logo != null) {
+      return GestureDetector(
+        onTap: () {
+          _pickAndResizeImage();
+        },
+        child: Stack(
+          children: [
+            Container(
+              // width: _deviceWidth! * 0.3,
+              // height: _deviceHeight! * 0.15,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.file(
+                  File(selectedImage!.path),
+                  width: 200,
+                  colorBlendMode: BlendMode.clear,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Container(
+              height: _deviceHeight! * 0.05,
+              width: _deviceHeight! * 0.05,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Color.fromARGB(161, 204, 130, 33)),
+              child: GestureDetector(
+                onTap: () => _pickAndResizeImage(),
+                child: const Icon(
+                  Icons.add_a_photo,
+                  size: 35,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
         ),
       );
     } else {
@@ -221,8 +373,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   Future<XFile> _resizeImage(XFile imageFile) async {
     List<int> imageBytes = (await FlutterImageCompress.compressWithFile(
       imageFile.path,
-      minWidth: 800,
-      minHeight: 600,
+      minWidth: 500,
+      minHeight: 250,
       quality: 90,
     )) as List<int>;
 
@@ -242,10 +394,6 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         key: _companyDetailsFormKey,
         child: Column(
           children: [
-            // _industryTextField(),
-            // _industryTextField(),
-            // _industryTextField(),
-            // _industryTextField(),
             _memberNumberTextField(), // mona wage format ekakda thiyenne kiyala ahanna
             SizedBox(
               height: _deviceHeight! * 0.02,
@@ -268,7 +416,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             ),
             _orgTypeWidget(),
             SizedBox(
-              height: _deviceHeight! * 0.02,
+              height: _deviceHeight! * 0.03,
             ),
             _agentNameTextField(),
             SizedBox(
@@ -303,6 +451,9 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                 _submitButton(),
               ],
             ),
+            SizedBox(
+              height: _deviceHeight! * 0.01,
+            ),
           ],
         ),
       ),
@@ -310,7 +461,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   }
 
   bool isEnglish(String text) {
-    final RegExp englishRegex = RegExp(r'^[a-zA-Z]+$');
+    final RegExp englishRegex = RegExp(r'^[a-zA-Z ]+$');
     return englishRegex.hasMatch(text);
   }
 
@@ -384,6 +535,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value!.isEmpty) {
           return "Company name cannot be empty";
+        } else if (!isEnglish(value)) {
+          return "Agent name must be in English";
         } else {
           return null;
         }
@@ -413,9 +566,10 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             controller: controller,
             focusNode: focusNode,
             onEditingComplete: onEditingComplete,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: OutlineInputBorder(),
-              label: Text("District"),
+              label: Text(
+                  DemoLocalization.of(context).getTranslatedValue('district')!),
             ),
           );
         },
@@ -433,32 +587,29 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   }
 
   Widget _orgTypeWidget() {
-    return Container(
-      decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 3,
-              offset: Offset(0, 0),
-            )
+    return Material(
+      elevation: 2,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration: BoxDecoration(
+            color: const Color.fromARGB(232, 255, 202, 185),
+            borderRadius: BorderRadius.circular(20)),
+        child: ExpansionTile(
+          title: Text(
+              DemoLocalization.of(context).getTranslatedValue('org_type')!),
+          children: [
+            Container(
+              //height: _deviceHeight! * 0.35,
+              child: ListView.builder(
+                  itemCount: orgtypes.length,
+                  shrinkWrap: true,
+                  //scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    return _orgTypeListViewBuilder(orgtypes[index], index);
+                  }),
+            ),
           ],
-          color: const Color.fromARGB(232, 255, 202, 185),
-          borderRadius: BorderRadius.circular(10)),
-      child: ExpansionTile(
-        title:
-            Text(DemoLocalization.of(context).getTranslatedValue('org_type')!),
-        children: [
-          Container(
-            //height: _deviceHeight! * 0.35,
-            child: ListView.builder(
-                itemCount: orgtypes.length,
-                shrinkWrap: true,
-                //scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return _orgTypeListViewBuilder(orgtypes[index], index);
-                }),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -482,24 +633,21 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
           print(_selectedOrgType);
         },
-        child: Container(
-          decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 5,
-                  offset: Offset(0, 0),
-                )
-              ],
-              color: isSelected
-                  ? const Color.fromARGB(255, 201, 255, 203)
-                  : const Color.fromARGB(232, 255, 246, 243),
-              borderRadius: BorderRadius.circular(10)),
-          child: Padding(
-            padding: EdgeInsets.all(_deviceWidth! * 0.02),
-            child: Text(
-              ORG,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+        child: Material(
+          elevation: 1,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color.fromARGB(255, 201, 255, 203)
+                    : const Color.fromARGB(232, 255, 246, 243),
+                borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: EdgeInsets.all(_deviceWidth! * 0.02),
+              child: Text(
+                ORG,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ),
@@ -508,32 +656,30 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   }
 
   Widget _industryListView() {
-    return Container(
-      decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 3,
-              offset: Offset(0, 0),
-            )
-          ],
+    return Material(
+      elevation: 2,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration: BoxDecoration(
           color: const Color.fromARGB(232, 255, 202, 185),
-          borderRadius: BorderRadius.circular(10)),
-      child: ExpansionTile(
-        title:
-            Text(DemoLocalization.of(context).getTranslatedValue('industry')!),
-        children: [
-          Container(
-            height: _deviceHeight! * 0.35,
-            child: ListView.builder(
-                itemCount: industries.length,
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return _industryListViewBuilder(industries[index], index);
-                }),
-          ),
-        ],
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: ExpansionTile(
+          title: Text(
+              DemoLocalization.of(context).getTranslatedValue('industry')!),
+          children: [
+            Container(
+              height: _deviceHeight! * 0.35,
+              child: ListView.builder(
+                  itemCount: industries.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    return _industryListViewBuilder(industries[index], index);
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -559,24 +705,21 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
           print(_selectedIndustry);
         },
-        child: Container(
-          decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 5,
-                  offset: Offset(0, 0),
-                )
-              ],
-              color: isSelected
-                  ? const Color.fromARGB(255, 201, 255, 203)
-                  : const Color.fromARGB(232, 255, 246, 243),
-              borderRadius: BorderRadius.circular(10)),
-          child: Padding(
-            padding: EdgeInsets.all(_deviceWidth! * 0.02),
-            child: Text(
-              industry,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+        child: Material(
+          elevation: 1,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color.fromARGB(255, 201, 255, 203)
+                    : const Color.fromARGB(232, 255, 246, 243),
+                borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: EdgeInsets.all(_deviceWidth! * 0.02),
+              child: Text(
+                industry,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ),
@@ -746,9 +889,12 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   Widget _clearButton() {
     return MaterialButton(
+      elevation: 2,
       minWidth: _deviceWidth! * 0.4,
       color: const Color(0x608A8A8A),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50),
+      ),
       onPressed: () {
         setState(() {
           _membershipNumber = '';
@@ -779,8 +925,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           _agentEmailController.clear();
         });
       },
-      child: const Text(
-        "Clear",
+      child: Text(
+        DemoLocalization.of(context).getTranslatedValue('clear')!,
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
     );
@@ -794,8 +940,8 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       onPressed: () {
         _validateAndSave();
       },
-      child: const Text(
-        "Submit",
+      child: Text(
+        DemoLocalization.of(context).getTranslatedValue('save')!,
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
     );
@@ -828,22 +974,36 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         _companyDetailsFormKey.currentState!.save();
 
         _firebaseService!.addJobProviderDetails(
-          selectedImage,
-          _membershipNumber!,
-          _companyName!,
-          _companyAddress!,
-          _selectedDistrict!,
-          _selectedIndustry!,
-          _selectedOrgType!,
-          _agentName!,
-          _agentPosition!,
-          _agentTelephone!,
-          _agentMobile!,
-          _faxNumber!,
-          _email!,
+            selectedImage,
+            _logo,
+            _membershipNumber!,
+            _companyName!,
+            _companyAddress!,
+            _selectedDistrict!,
+            _selectedIndustry!,
+            _selectedOrgType!,
+            _agentName!,
+            _agentPosition!,
+            _agentTelephone!,
+            _agentMobile!,
+            _faxNumber!,
+            _email!,
+            _districtFull!);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Color.fromARGB(255, 0, 255, 8),
+            content: Text(
+              "Provider Details Successfully Updated",
+              style: TextStyle(color: Colors.black),
+              textAlign: TextAlign.center,
+              selectionColor: Color.fromARGB(255, 230, 255, 2),
+            ),
+          ),
         );
       }
     }
+    _getProvider();
   }
 
   static const List<String> orgtypes = [

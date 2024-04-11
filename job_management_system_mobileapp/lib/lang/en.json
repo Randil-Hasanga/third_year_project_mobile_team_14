@@ -19,6 +19,10 @@
     "fax_number" : "Fax Number",
     "email" : "Email",
     "industry" : "Industry",
-    "org_type" : "Organization Type"
+    "org_type" : "Organization Type",
+    "logo" : "Logo",
+    "district" : "District",
+    "clear" : "Clear",
+    "save" : "Save"
 }
 
