@@ -151,23 +151,25 @@ class FirebaseService {
   //job provider details
 
   Future<void> addJobProviderDetails(
-      XFile? logo,
-      String membership_number,
-      String company_name,
-      String company_address,
-      String district,
-      String industry,
-      String org_type,
-      String repName,
-      String repPost,
-      String repTelephone,
-      String repMobile,
-      String repFax,
-      String repEmail) async {
+    XFile? logo,
+    String? logoLink,
+    String membershipNumber,
+    String companyName,
+    String companyAddress,
+    String district,
+    String industry,
+    String orgType,
+    String repName,
+    String repPost,
+    String repTelephone,
+    String repMobile,
+    String repFax,
+    String repEmail,
+    String districtFull,
+  ) async {
     if (logo != null) {
       try {
-        String _fileName = Timestamp.now().millisecondsSinceEpoch.toString() +
-            p.extension(logo.path);
+        String _fileName = "logo" + p.extension(logo.path);
 
         UploadTask _task =
             _storage.ref('images/$uid/$_fileName').putFile(File(logo.path));
@@ -177,18 +179,19 @@ class FirebaseService {
               .getDownloadURL(); // get download url for the uploaded imageZz
           await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
             "logo": _downloadURL,
-            "membership_number": membership_number,
-            "company_name": company_name,
-            "company_address": company_address,
+            "membership_number": membershipNumber,
+            "company_name": companyName,
+            "company_address": companyAddress,
             "district": district,
             "industry": industry,
-            "org_type": org_type,
+            "org_type": orgType,
             "repName": repName,
             "repPost": repPost,
             "repTelephone": repTelephone,
             "repMobile": repMobile,
             "repFax": repFax,
             "repEmail": repEmail,
+            "districtFull": districtFull,
           }, SetOptions(merge: true)); // set user document for new user
         });
       } catch (e) {
@@ -197,23 +200,35 @@ class FirebaseService {
     } else {
       try {
         await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
-          "logo": "",
-          "membership_number": membership_number,
-          "company_name": company_name,
-          "company_address": company_address,
+          "logo": logoLink,
+          "membership_number": membershipNumber,
+          "company_name": companyName,
+          "company_address": companyAddress,
           "district": district,
           "industry": industry,
-          "org_type": org_type,
+          "org_type": orgType,
           "repName": repName,
           "repPost": repPost,
           "repTelephone": repTelephone,
           "repMobile": repMobile,
           "repFax": repFax,
           "repEmail": repEmail,
+          "districtFull": districtFull,
         }, SetOptions(merge: true));
       } catch (e) {
         print(e);
       }
+    }
+  }
+
+  Future<Map<String, dynamic>?> getCurrentProviderData() async {
+    DocumentSnapshot<Map<String, dynamic>?> _doc =
+        await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).get();
+
+    if (_doc.exists) {
+      return _doc.data();
+    } else {
+      return null;
     }
   }
 }
