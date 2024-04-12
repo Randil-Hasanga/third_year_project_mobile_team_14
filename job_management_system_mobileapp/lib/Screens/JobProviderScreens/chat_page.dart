@@ -15,7 +15,7 @@ class ChatPage extends StatelessWidget {
         title: const Text('Messages'), // Set the title of the app bar
         backgroundColor: const Color.fromARGB(255, 255, 136, 0),
       ),
-      //body: _buildJobSeekerList(),
+      //body: _buildJobSeekerListItem(),
     );
   }
 
