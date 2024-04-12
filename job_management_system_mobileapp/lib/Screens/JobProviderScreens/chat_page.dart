@@ -43,19 +43,25 @@ class ChatPage extends StatelessWidget {
   // }
 
   // Individual list item for job seeker
-  // Widget _buildJobSeekerListItem(
-  //     Map<String, dynamic> userData, BuildContext context) {
-  //   return JobSeekerTitle(
-  //       text: userData['email'],
-  //       onTap: () {
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => ChatUI(
-  //               reciverEmail: userData['email'],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
+  Widget _buildJobSeekerListItem(
+      Map<String, dynamic> userData, BuildContext context) {
+    return JobSeekerTitle(
+        text: userData['email'],
+        onTap: () {
+          if (userData.containsKey('uid')) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatUI(
+                  reciverEmail: userData['email'],
+                  reciverID: userData['uid'],
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('UID not found')));
+          }
+        });
+  }
 }
