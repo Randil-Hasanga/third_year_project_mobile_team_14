@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:job_management_system_mobileapp/model/message.dart';
 
 const String USER_COLLECTION = 'users';
 
@@ -125,24 +126,47 @@ class FirebaseService {
     });
   }
 
-  //get the job seeker list
-  /* Future<List<Map<String, dynamic>>?> getJobSeekersData() async {
-  QuerySnapshot<Map<String, dynamic>>? _querySnapshot = await _db
-      .collection(USER_COLLECTION)
-      .where('type', isEqualTo: 'seeker')
-            .get();
+  //Create a message
+  Future<void> sendMessage(String receiverID, message) async {
+    //get current Job Provider
+    final String currentUserID = _auth.currentUser!.uid.toString();
+    final String currentUserEmail = _auth.currentUser!.email.toString();
+    final Timestamp timestamp = Timestamp.now();
 
-  List<Map<String, dynamic>> jobSeekers = [];
+    //send message
+    Message newMessage = Message(
+      senderID: currentUserEmail!,
+      senderEmail: currentUserID,
+      receiverID: receiverID,
+      message: message,
+      timestamp: timestamp.toString(),
+    );
 
-  for (QueryDocumentSnapshot<Map<String, dynamic>> doc
-      in _querySnapshot.docs) {
-    jobSeekers.add(doc.data());
+    //Construct chat room id for two persons
+    List<String> ids = [currentUserID, receiverID];
+    ids.sort(); // two person chat room id should be same for both users
+    String chatRoomID = ids.join('_');
+
+    // messages add to databse
+    await _db
+        .collection("chat_rooms")
+        .doc(chatRoomID)
+        .collection("messages")
+        .add(newMessage.toMap());
   }
 
-  if (jobSeekers.isNotEmpty) {
-    return jobSeekers;
-  } else {
-    return null;
+  //get messages
+  Stream<QuerySnapshot> getMessages(String userID, otherUserID) {
+    //contruct chat room id for two persons
+    List<String> ids = [userID, otherUserID];
+    ids.sort();
+    String chatRoomID = ids.join('_');
+
+    return _db
+        .collection("chat_rooms")
+        .doc(chatRoomID)
+        .collection("messages")
+        .orderBy('timestamp')
+        .snapshots();
   }
-}*/
 }

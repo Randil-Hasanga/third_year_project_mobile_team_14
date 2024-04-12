@@ -48,14 +48,20 @@ class ChatPage extends StatelessWidget {
     return JobSeekerTitle(
         text: userData['email'],
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatUI(
-                reciverEmail: userData['email'],
+          if (userData.containsKey('uid')) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatUI(
+                  reciverEmail: userData['email'],
+                  reciverID: userData['uid'],
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('UID not found')));
+          }
         });
   }
 }

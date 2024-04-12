@@ -11,8 +11,7 @@ Future<void> main() async {
 
 class ProfileJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
-  ProfileJobSeeker({Key? key}) :
-   super(key: key);
+  ProfileJobSeeker({Key? key}) : super(key: key);
 
   final FirebaseService firebaseService = FirebaseService();
 
@@ -108,16 +107,15 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   },
                   child: const Text('Clear'),
                 ),
-              ElevatedButton(
-  onPressed: () {
-    _firebaseService.addJobSeekerProfile(
+                ElevatedButton(
+                  onPressed: () {
+                    /*_firebaseService.addJobSeekerProfile(
       fullName: _fullNameController.text,
       email: _emailController.text,
-    );
-  },
-  child: const Text('Submit'),
-),
-
+    );*/
+                  },
+                  child: const Text('Submit'),
+                ),
               ],
             ),
           ],
