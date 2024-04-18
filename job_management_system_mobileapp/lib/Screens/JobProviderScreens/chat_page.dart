@@ -15,32 +15,32 @@ class ChatPage extends StatelessWidget {
         title: const Text('Messages'), // Set the title of the app bar
         backgroundColor: const Color.fromARGB(255, 255, 136, 0),
       ),
-      //body: _buildJobSeekerListItem(),
+      body: _buildJobSeekerList(),
     );
   }
 
-  // Widget _buildJobSeekerList() {
-  //   return StreamBuilder(
-  //     stream: firebaseService.getJobSeekerStream(),
-  //     builder: ((context, snapshot) {
-  //       //error
-  //       if (snapshot.hasError) {
-  //         return const Text('Error');
-  //       }
-  //       //Loading
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return const CircularProgressIndicator();
-  //       }
+  Widget _buildJobSeekerList() {
+    return StreamBuilder(
+      stream: firebaseService.getJobSeekerStream(),
+      builder: ((context, snapshot) {
+        //error
+        if (snapshot.hasError) {
+          return const Text('Error');
+        }
+        //Loading
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
 
-  //       return ListView(
-  //         children: snapshot.data!
-  //             .map<Widget>(
-  //                 (userData) => _buildJobSeekerListItem(userData, context))
-  //             .toList(),
-  //       );
-  //     }),
-  //   );
-  // }
+        return ListView(
+          children: snapshot.data!
+              .map<Widget>(
+                  (userData) => _buildJobSeekerListItem(userData, context))
+              .toList(),
+        );
+      }),
+    );
+  }
 
   // Individual list item for job seeker
   Widget _buildJobSeekerListItem(

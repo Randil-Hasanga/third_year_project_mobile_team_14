@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/interview_scheduler.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
@@ -59,8 +60,8 @@ class _JobProviderPageState extends State<JobProviderPage> {
     }
     MyApp.setLocale(context, _temp);
   }
- // DemoLocalization.of(context)
- //                               .getTranslatedValue('my_vacancies')!,
+  // DemoLocalization.of(context)
+  //                               .getTranslatedValue('my_vacancies')!,
 
   @override
   Widget build(BuildContext context) {
@@ -704,7 +705,11 @@ class _JobProviderPageState extends State<JobProviderPage> {
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: const Text('Schedule Interveiws'),
               onTap: () {
-                // Navigate to create CV page
+                //Navigate to interview scheduler page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InterviewScheduler()));
               },
             ),
             ListTile(
