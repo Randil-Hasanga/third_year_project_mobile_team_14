@@ -1,5 +1,7 @@
 import "package:board_datetime_picker/board_datetime_picker.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:flutter/widgets.dart";
 import "package:job_management_system_mobileapp/localization/demo_localization.dart";
 import "package:job_management_system_mobileapp/services/firebase_services.dart";
 import "package:quickalert/models/quickalert_type.dart";
@@ -16,6 +18,8 @@ class InterviewScheduler extends StatefulWidget {
 
 class _InterviewSchedulerState extends State<InterviewScheduler> {
   String groupValue = "Online";
+
+  String selectedParticipant = "0";
 
   DateTime _selectedDateTime = DateTime.now();
 
@@ -99,35 +103,73 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+
                 //add participants
-                DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    labelText: "Add Participants",
-                    hintText: "Select Participants",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+
+                Row(
+                  children: [
+                    const Text(
+                      "Select Participant:",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  items: const [
-                    DropdownMenuItem(
-                      value: "Participant 1",
-                      child: Text("Participant 1"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Participant 2",
-                      child: Text("Participant 2"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Participant 3",
-                      child: Text("Participant 3"),
+                    const SizedBox(width: 30.0),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('profileJobSeeker')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        List<DropdownMenuItem> participantItems = [];
+
+                        if (!snapshot.hasData) {
+                          const CircularProgressIndicator();
+                        } else {
+                          final participants =
+                              snapshot.data?.docs.reversed.toList();
+                          participantItems.add(
+                            const DropdownMenuItem(
+                              value: "0",
+                              child: Text('Select Participant'),
+                            ),
+                          );
+
+                          for (var participant in participants!) {
+                            participantItems.add(
+                              DropdownMenuItem(
+                                value: participant.id,
+                                child: Text(
+                                  participant['fullname'],
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                        return DropdownButton(
+                          menuMaxHeight: screenWidth * 0.5,
+                          items: participantItems,
+                          onChanged: (participantValue) {
+                            selectedParticipant = participantValue;
+                            print(participantValue);
+                          },
+                          value: selectedParticipant,
+                          isExpanded: false,
+                        );
+                      },
                     ),
                   ],
-                  onChanged: (value) {},
                 ),
                 const SizedBox(height: 20.0),
                 // select iterview type
                 Row(
                   children: [
+                    const Text(
+                      "Type:",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 5.0),
                     Radio(
                       value: "Online",
                       groupValue: groupValue,
@@ -145,7 +187,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 30.0),
+                    const SizedBox(width: 20.0),
                     Radio(
                       value: "Physical",
                       groupValue: groupValue,
@@ -165,6 +207,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     ),
                   ],
                 ),
+
                 //date and time pickers
                 Row(
                   children: [
@@ -187,8 +230,20 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     ),
                     const SizedBox(width: 20.0),
                     /*Text(
-                        _selectedDateTime.toString(),
-                        ),*/
+                      _selectedDateTime.toString(),
+                    ),*/
+                  ],
+                ),
+                const SizedBox(height: 20.0),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        "Selected Date and Time: ",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(_selectedDateTime.toString()),
                   ],
                 ),
                 const SizedBox(height: 80.0),
