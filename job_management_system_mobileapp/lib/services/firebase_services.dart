@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:job_management_system_mobileapp/model/message.dart';
 import 'package:path/path.dart' as p;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -148,6 +149,56 @@ class FirebaseService {
   }
 
   //CV creatoion:
+  final CollectionReference CVCreation =
+      FirebaseFirestore.instance.collection('CVDetails');
+
+  Future<void> addCVdetails(
+    String? title,
+    String? gender,
+    String? jobType,
+    String? workingSection,
+    String? maritalStatus,
+    String? currentJobStatus,
+    String nameWithIni,
+    String fullname,
+    String nationality,
+    String nic,
+    String drivingLicence,
+    DateTime? selectedDate,
+    String religion,
+    String age,
+    String email,
+    String contactMobile,
+    String contactHome,
+    String address,
+    String? district,
+    String divisionalSecretariat,
+    String salary, 
+  ) {
+    return CVCreation.add({
+      'title': title,
+      'gender': gender,
+      ' jobType': jobType,
+      'workingSection': workingSection,
+      'maritalStatus': maritalStatus,
+      'currentJobStatus': currentJobStatus,
+      'nameWithIni':nameWithIni,
+      'fullname': fullname,
+      'nationality': nationality,
+      'nic': nic,
+      'drivingLicence': drivingLicence,
+      'selectedDate': selectedDate,
+      'religion': religion,
+      'age': age,
+      'email': email,
+      'contactMobile': contactMobile,
+      'ContactHome': contactHome,
+      'address': address,
+      'district': district,
+      'divisionalSecretariat': divisionalSecretariat,
+      'salary': salary,
+    });
+  }
 
   //job provider details
 
