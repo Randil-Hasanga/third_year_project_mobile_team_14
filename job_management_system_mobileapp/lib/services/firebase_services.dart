@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
@@ -153,28 +155,83 @@ class FirebaseService {
       FirebaseFirestore.instance.collection('CVDetails');
 
   Future<void> addCVdetails(
-    String? title,
-    String? gender,
-    String? jobType,
-    String? workingSection,
-    String? maritalStatus,
-    String? currentJobStatus,
-    String nameWithIni,
-    String fullname,
-    String nationality,
-    String nic,
-    String drivingLicence,
-    DateTime? selectedDate,
-    String religion,
-    String age,
-    String email,
-    String contactMobile,
-    String contactHome,
-    String address,
-    String? district,
-    String divisionalSecretariat,
-    String salary, 
-  ) {
+      String? title,
+      String? gender,
+      String? jobType,
+      String? workingSection,
+      String? maritalStatus,
+      String? currentJobStatus,
+      String nameWithIni,
+      String fullname,
+      String nationality,
+      String nic,
+      String drivingLicence,
+      DateTime? selectedDate,
+      String religion,
+      String age,
+      String email,
+      String contactMobile,
+      String contactHome,
+      String address,
+      String? district,
+      String divisionalSecretariat,
+      String salary, //21 FIELDS
+
+      //EDUCATIONAL TAB
+      String? EduQalification,
+      String? ProfQualification,
+      String OLYear,
+      String OLIndex,
+      String OLMedium,
+      String OLSchool,
+      String OLAttempt,
+      String? OLStatus,
+      String ALYear,
+      String ALIndex,
+      String ALMedium,
+      String ALSchool,
+      String ALAttempt,
+      String? ALStatus,
+      String sec01Name,
+      String sec01Ins,
+      String sec01duration,
+      String sec02Name,
+      String sec02Ins,
+      String sec02duration,
+
+      //Skill tab
+      String yearOfExperience,
+      String currentJobPosition,
+      String dateOfJoin,
+      String currentEmployee,
+      String responsibilities,
+      String specialSkill,
+      String computerSkill,
+      String otherSkill,
+      String achievements,
+      String extraCurricular,
+      String trainingReq,
+      String prefferedArea,
+      String careerGuidance,
+      String? sinhalaWriting,
+      String? sinhalaReading,
+      String? sinhalaSpeaking,
+      String? englishSpeaking,
+      String? englishReading,
+      String? englishWriting,
+      String? tamilSpeaking,
+      String? tamilReading,
+      String? tamilWriting,
+      
+      //Job Expectation
+      String careerObjective,
+      String refeeOne,
+      String refeeTwo,
+      String preferredJobs,
+      String? selectPrefArea
+
+
+      ) {
     return CVCreation.add({
       'title': title,
       'gender': gender,
@@ -182,7 +239,7 @@ class FirebaseService {
       'workingSection': workingSection,
       'maritalStatus': maritalStatus,
       'currentJobStatus': currentJobStatus,
-      'nameWithIni':nameWithIni,
+      'nameWithIni': nameWithIni,
       'fullname': fullname,
       'nationality': nationality,
       'nic': nic,
@@ -197,6 +254,61 @@ class FirebaseService {
       'district': district,
       'divisionalSecretariat': divisionalSecretariat,
       'salary': salary,
+
+      //EDUCATIONAL TAB
+      'EduQalification': EduQalification,
+      'ProfQualification': ProfQualification,
+      'OLYear': OLYear,
+      'OLIndex': OLIndex,
+      'OLMedium': OLMedium,
+      'OLSchool': OLSchool,
+      'OLAttempt': OLAttempt,
+      'OLStatus': OLStatus,
+      'ALYear': ALYear,
+      'ALIndex': ALIndex,
+      'ALMedium': ALMedium,
+      'ALSchool': ALSchool,
+      'ALAttempt': ALAttempt,
+      'ALStatus': ALStatus,
+      'sec01Name': sec01Name,
+      'sec01Ins': sec01Ins,
+      'sec01duration': sec01duration,
+      'sec02Name': sec02Name,
+      'sec02Ins': sec02Ins,
+      'sec02duration': sec02duration,
+
+      //Skill Tab
+
+      'yearOfExperience': yearOfExperience,
+      'currentJobPosition': currentJobPosition,
+      'dateOfJoin': dateOfJoin,
+      'currentEmployee': currentEmployee,
+      'responsibilities': responsibilities,
+      'specialSkill': specialSkill,
+      'computerSkill': computerSkill,
+      'otherSkill': otherSkill,
+      'achievements': achievements,
+      'extraCurricular': extraCurricular,
+      'trainingReq': trainingReq,
+      'prefferedArea': prefferedArea,
+      'careerGuidance': careerGuidance,
+      'sinhalaWriting': sinhalaWriting,
+      'sinhalaReading': sinhalaReading,
+      'sinhalaWriting': sinhalaWriting,
+      'englishSpeaking': englishSpeaking,
+      'englishReading': englishReading,
+      'englishReading': englishReading,
+      'englishWriting': englishWriting,
+      'tamilSpeaking': tamilSpeaking,
+      'tamilReading,': tamilReading,
+      'tamilWriting': tamilWriting,
+
+      //Job Expectation
+       'careerObjective':careerObjective,
+       'refeeOne':refeeOne,
+       'refeeTwo':refeeTwo,
+       'preferredJobs':preferredJobs,
+       'selectPrefArea':selectPrefArea
     });
   }
 
