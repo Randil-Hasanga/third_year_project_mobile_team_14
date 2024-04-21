@@ -376,7 +376,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CVCreation()),
+                  MaterialPageRoute(builder: (context) =>CVCreation()),
                 );
               },
             ),

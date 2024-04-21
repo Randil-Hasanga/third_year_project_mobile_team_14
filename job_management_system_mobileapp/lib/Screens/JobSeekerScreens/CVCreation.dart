@@ -1,46 +1,81 @@
+import 'dart:ffi';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class CVCreation extends StatefulWidget {
-  const CVCreation({Key? key}) : super(key: key);
+  CVCreation({super.key});
+
+  final FirebaseService firebaseService = FirebaseService();
 
   @override
   _CVCreationState createState() => _CVCreationState();
 }
 
 class _CVCreationState extends State<CVCreation> {
-  // Define variables to hold CV information
-  String name = '';
-  String email = '';
-  String mobileTel = '';
-  String homeTel = '';
-  String address = '';
-  String district = '';
-  String divisionalSecretariat = '';
-  String gceOLYear = '';
-  String gceOLIndexNo = '';
-  String gceOLMedium = '';
-  String gceOLSchool = '';
-  String gceOLAttempt = '';
-  bool gceOLPassedExam = false;
-  String gceALYear = '';
-  String gceALIndexNo = '';
-  String gceALMedium = '';
-  String gceALSchool = '';
-  String gceALAttempt = '';
-  bool gceALPassedExam = false;
-  String professionalQualificationName = '';
-  String professionalInstituteName = '';
-  String professionalDuration = '';
-  String selectedEducationalLevel = 'Below O/L';
-  String selectedProfessionalLevel = 'NVQ1';
+  //Tab 01: personal informations
+  String? _selectedtitle;
+  String? _selectedgender;
+  String? _selectedjobType;
+  String? _selectedworkingSection;
+  String? _selectedmaritalStatus;
+  String? _selectedcurrentJobStatus;
+  final TextEditingController _nameWithIniController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _nationalityController = TextEditingController();
+  final TextEditingController _nicController = TextEditingController();
+  final TextEditingController _drivingLicenceController =
+      TextEditingController();
+  DateTime? _selectedDate;
+  final TextEditingController _religionController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _contactMobileController =
+      TextEditingController();
+  final TextEditingController _contactHomeController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  String? _selecteddistrict;
+  final TextEditingController _divisionalSecController =
+      TextEditingController();
+
+  final TextEditingController _salaryController = TextEditingController();
+
+  //Tab 02: Educational
+
+  //Tab 03:
+
+  //Tab 04:
 
   double? _deviceWidth, _deviceHeight;
+
+  late FirebaseService _firebaseService;
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseService = widget.firebaseService;
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,8 +172,12 @@ class _CVCreationState extends State<CVCreation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DropdownButtonFormField<String>(
-                      value: 'Mr',
-                      onChanged: (value) {},
+                      value: _selectedtitle,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedtitle = newValue;
+                        });
+                      },
                       items: <String>['Dr', 'Miss', 'Mr', 'Mrs', 'Prof']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -153,8 +192,12 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     DropdownButtonFormField<String>(
-                      value: 'Male',
-                      onChanged: (value) {},
+                      value: _selectedgender,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedgender = newValue;
+                        });
+                      },
                       items: <String>['Male', 'Female']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -171,8 +214,12 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     DropdownButtonFormField<String>(
-                      value: 'Full Time',
-                      onChanged: (value) {},
+                      value: _selectedjobType,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedjobType = newValue;
+                        });
+                      },
                       items: <String>['Part Time', 'Full Time']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -189,8 +236,12 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     DropdownButtonFormField<String>(
-                      value: 'Government',
-                      onChanged: (value) {},
+                      value: _selectedworkingSection,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedworkingSection = newValue;
+                        });
+                      },
                       items: <String>[
                         'Government',
                         'Private',
@@ -210,8 +261,12 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     DropdownButtonFormField<String>(
-                      value: 'Unmarried',
-                      onChanged: (value) {},
+                      value: _selectedmaritalStatus,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedmaritalStatus = newValue;
+                        });
+                      },
                       items: <String>['Married', 'Unmarried']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -228,8 +283,12 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     DropdownButtonFormField<String>(
-                      value: 'Employed',
-                      onChanged: (value) {},
+                      value: _selectedcurrentJobStatus,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedcurrentJobStatus = newValue;
+                        });
+                      },
                       items: <String>['Employed', 'Not Employed']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -246,6 +305,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _nameWithIniController,
                       decoration: const InputDecoration(
                         labelText: 'Name With Initials *',
                         border: OutlineInputBorder(),
@@ -255,6 +315,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _fullNameController,
                       decoration: const InputDecoration(
                         labelText: 'Full Name *',
                         border: OutlineInputBorder(),
@@ -264,6 +325,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _nationalityController,
                       decoration: const InputDecoration(
                         labelText: 'Nationality (Eg: Srilanka)',
                         border: OutlineInputBorder(),
@@ -273,6 +335,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _nicController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'NIC cannot be empty';
@@ -315,6 +378,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _drivingLicenceController,
                       decoration: const InputDecoration(
                         labelText: 'Driving License',
                         border: OutlineInputBorder(),
@@ -322,7 +386,13 @@ class _CVCreationState extends State<CVCreation> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
-                      // onTap: () => _selectDate(context),
+                      readOnly: true,
+                      controller: TextEditingController(
+                        text: _selectedDate != null
+                            ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                            : '',
+                      ),
+                      onTap: () => _selectDate(context),
                       decoration: const InputDecoration(
                         labelText: 'Date of Birth',
                         hintText: 'Date of Birth',
@@ -331,6 +401,7 @@ class _CVCreationState extends State<CVCreation> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      controller: _religionController,
                       decoration: const InputDecoration(
                         labelText: 'Religion',
                         border: OutlineInputBorder(),
@@ -340,6 +411,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _ageController,
                       decoration: const InputDecoration(
                         labelText: 'Age',
                         border: OutlineInputBorder(),
@@ -349,6 +421,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _emailController,
                       decoration: const InputDecoration(
                         labelText: 'Email Address',
                         border: OutlineInputBorder(),
@@ -358,6 +431,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _contactMobileController,
                       decoration: const InputDecoration(
                         labelText: 'Tel (Mobile)',
                         border: OutlineInputBorder(),
@@ -367,6 +441,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _contactHomeController,
                       decoration: const InputDecoration(
                         labelText: 'Tel (Home)',
                         border: OutlineInputBorder(),
@@ -376,6 +451,7 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _addressController,
                       maxLines: 2,
                       decoration: const InputDecoration(
                         labelText: 'Address',
@@ -386,33 +462,54 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        labelText: 'District',
+                        border: OutlineInputBorder(),
+                      ),
+                      value: _selecteddistrict,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selecteddistrict = newValue;
+                        });
+                      },
                       items: <String>[
-                        'Matara', 'Galle', 'Kalutara', 'Colombo', 'Gampaha',
+                        'Matara',
+                        'Galle',
+                        'Kalutara',
+                        'Colombo',
+                        'Gampaha',
                         'Kandy',
-                        'Matale', 'Nuwara Eliya', 'Hambantota', 'Jaffna',
+                        'Matale',
+                        'Nuwara Eliya',
+                        'Hambantota',
+                        'Jaffna',
                         'Kilinochchi',
-                        'Mannar', 'Mullaitivu', 'Vavuniya', 'Batticaloa',
+                        'Mannar',
+                        'Mullaitivu',
+                        'Vavuniya',
+                        'Batticaloa',
                         'Ampara',
-                        'Trincomalee', 'Kurunegala', 'Puttalam',
-                        'Anuradhapura', 'Polonnaruwa',
-                        'Badulla', 'Moneragala', 'Ratnapura', 'Kegalle'
-                        // Add all districts
-                      ].map((String value) {
+                        'Trincomalee',
+                        'Kurunegala',
+                        'Puttalam',
+                        'Anuradhapura',
+                        'Polonnaruwa',
+                        'Badulla',
+                        'Moneragala',
+                        'Ratnapura',
+                        'Kegalle'
+                      ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: (value) {},
-                      decoration: const InputDecoration(
-                        labelText: 'Select District',
-                        border: OutlineInputBorder(),
-                      ),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _divisionalSecController,
                       decoration: const InputDecoration(
                         labelText: 'Divisional Secretariat',
                         border: OutlineInputBorder(),
@@ -422,19 +519,11 @@ class _CVCreationState extends State<CVCreation> {
                       height: 20,
                     ),
                     const SizedBox(height: 20),
-                    const Row(
-                      children: [
-                        Text('Are you a person with special needs?'),
-                        Radio(value: true, groupValue: null, onChanged: null),
-                        Text('Yes'),
-                        Radio(value: false, groupValue: null, onChanged: null),
-                        Text('No'),
-                      ],
-                    ),
                     const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _salaryController,
                       decoration: const InputDecoration(
                         labelText: 'Minimum Salary Expectation (LKR)',
                         border: OutlineInputBorder(),
@@ -443,20 +532,53 @@ class _CVCreationState extends State<CVCreation> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // Add functionality to the onPressed callback
+                        // Format the date as a string
+                        String formattedDate = _selectedDate != null
+                            ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                            : '';
+
+                        // Call the function to add job seeker profile
+                        FirebaseService().addCVdetails(
+                          _selectedtitle!,
+                          _selectedgender!,
+                          _selectedjobType!,
+                          _selectedworkingSection!,
+                          _selectedmaritalStatus!,
+                          _selectedcurrentJobStatus!,
+                          _nameWithIniController.text,
+                          _fullNameController.text,
+                          _nationalityController.text,
+                          _nicController.text,
+                          _drivingLicenceController.text,
+                          _selectedDate,
+                          _religionController.text,
+                          _ageController.text,
+                          _emailController.text,
+                          _contactMobileController.text,
+                          _contactHomeController.text,
+                          _addressController.text,
+                          _selecteddistrict!,
+                          _divisionalSecController.text,
+                          _salaryController.text
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.orange, // Text color
+                        backgroundColor:
+                            Colors.orange.shade800, // Background color
+                        elevation: 4, // Elevation (shadow)
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.circular(8), // Rounded corners
+                              BorderRadius.circular(10), // Rounded corners
                         ),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12), // Button padding
+                            vertical: 16, horizontal: 32), // Button padding
                       ),
-                      child: const Text('Save'),
-                    )
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 19), // Text color
+                      ), // Background color
+                    ),
                   ],
                 ),
               ),
@@ -481,11 +603,11 @@ class _CVCreationState extends State<CVCreation> {
                     const SizedBox(height: 10),
                     // Educational Dropdown
                     DropdownButtonFormField<String>(
-                      value: selectedEducationalLevel,
+                      // value: ,
                       onChanged: (value) {
-                        setState(() {
-                          selectedEducationalLevel = value!;
-                        });
+                        // setState(() {
+                        //   selectedEducationalLevel = value!;
+                        // });
                       },
                       items: <String>[
                         'Below O/L',
@@ -507,11 +629,11 @@ class _CVCreationState extends State<CVCreation> {
                     const SizedBox(height: 20),
                     // Professional Qualification Dropdown
                     DropdownButtonFormField<String>(
-                      value: selectedProfessionalLevel,
+                      //value: selectedProfessionalLevel,
                       onChanged: (value) {
-                        setState(() {
-                          selectedProfessionalLevel = value!;
-                        });
+                        // setState(() {
+                        //   selectedProfessionalLevel = value!;
+                        // });
                       },
                       items: <String>[
                         'NVQ1',
@@ -588,10 +710,10 @@ class _CVCreationState extends State<CVCreation> {
                     Row(
                       children: [
                         const Text('Did you pass the Exam?'),
-                        Checkbox(
-                          value: gceOLPassedExam,
-                          onChanged: (value) {},
-                        ),
+                        // Checkbox(
+                        //   value: gceOLPassedExam,
+                        //   onChanged: (value) {},
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -643,10 +765,10 @@ class _CVCreationState extends State<CVCreation> {
                     Row(
                       children: [
                         const Text('Did you pass the Exam?'),
-                        Checkbox(
-                          value: gceALPassedExam,
-                          onChanged: (value) {},
-                        ),
+                        // Checkbox(
+                        //   value: gceALPassedExam,
+                        //   onChanged: (value) {},
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -843,21 +965,21 @@ class _CVCreationState extends State<CVCreation> {
 
                       const SizedBox(height: 20),
                       ElevatedButton(
-                      onPressed: () {
-                        // Add functionality to the onPressed callback
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.orange, // Text color
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(8), // Rounded corners
+                        onPressed: () {
+                          // Add functionality to the onPressed callback
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.orange, // Text color
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8), // Rounded corners
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12), // Button padding
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12), // Button padding
-                      ),
-                      child: const Text('Save'),
-                    )
+                        child: const Text('Save'),
+                      )
                     ],
                   ),
                 ),
@@ -958,21 +1080,22 @@ class _CVCreationState extends State<CVCreation> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
-                      onPressed: () {
-                        // Add functionality to the onPressed callback
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.orange, // Text color
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(8), // Rounded corners
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12), // Button padding
-                      ),
-                      child: const Text('Save'),
-                    ),
+                            onPressed: () {
+                              // Add functionality to the onPressed callback
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.orange, // Text color
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(8), // Rounded corners
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12), // Button padding
+                            ),
+                            child: const Text('Save'),
+                          ),
                           ElevatedButton(
                             onPressed: () {},
                             child: const Text('Create my CV'),
@@ -1086,10 +1209,4 @@ class _CVCreationState extends State<CVCreation> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: CVCreation(),
-  ));
 }
