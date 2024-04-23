@@ -222,16 +222,13 @@ class FirebaseService {
       String? tamilSpeaking,
       String? tamilReading,
       String? tamilWriting,
-      
+
       //Job Expectation
       String careerObjective,
       String refeeOne,
       String refeeTwo,
       String preferredJobs,
-      String? selectPrefArea
-
-
-      ) {
+      String? selectPrefArea) {
     return CVCreation.add({
       'title': title,
       'gender': gender,
@@ -304,11 +301,11 @@ class FirebaseService {
       'tamilWriting': tamilWriting,
 
       //Job Expectation
-       'careerObjective':careerObjective,
-       'refeeOne':refeeOne,
-       'refeeTwo':refeeTwo,
-       'preferredJobs':preferredJobs,
-       'selectPrefArea':selectPrefArea
+      'careerObjective': careerObjective,
+      'refeeOne': refeeOne,
+      'refeeTwo': refeeTwo,
+      'preferredJobs': preferredJobs,
+      'selectPrefArea': selectPrefArea
     });
   }
 
