@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
@@ -22,6 +23,9 @@ class JobSeekerPage extends StatefulWidget {
   State<JobSeekerPage> createState() => _JobSeekerPageState();
 }
 
+
+ final FirebaseService firebaseService = FirebaseService();
+
 class _JobSeekerPageState extends State<JobSeekerPage> {
   FirebaseService? _firebaseService;
   String? _userName;
@@ -34,6 +38,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
+
+//language navigation
   void _changeLanguage(Language? language) {
     print(language!.name);
 
@@ -224,27 +230,115 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 150,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: List.generate(
-                            10,
-                            (index) => Container(
-                              margin: const EdgeInsets.all(8),
-                              width: 250,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Job $index",
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            ),
-                          ),
+                    SizedBox(
+                        height: 160,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('vacancy')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              ); // Show loading indicator while fetching data
+                            }
+
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                var vacancyData =
+                                    snapshot.data?.docs[index].data();
+                                String companyName = '';
+
+                                if (vacancyData != null) {
+                                  companyName = (vacancyData as Map<String,
+                                      dynamic>)['company_name'] as String;
+                                }
+                                return Container(
+                                  margin: const EdgeInsets.all(8),
+                                  width: 250,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.business),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            companyName = (vacancyData as Map<
+                                                    String,
+                                                    dynamic>)['company_name']
+                                                as String, // Assuming 'company_name' is a field in your Firestore document
+                                            style:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 6),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.work),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            companyName =
+                                                (vacancyData)['job_position']
+                                                    as String,
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 6),
+                                      /* Text(
+                                        companyName = (vacancyData as Map<
+                                                String, dynamic>)['salary']
+                                            as String, 
+                                        style: const TextStyle(fontSize: 8),
+                                      ),*/
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.location_on),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            companyName =
+                                                (vacancyData)['location']
+                                                    as String,
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              //add edit logic
+                                            },
+                                            icon: const Icon(Icons.edit),
+                                          ),
+                                          IconButton(
+                                            onPressed: () => FirebaseService()
+                                                .deleteVacancy(snapshot
+                                                    .data!.docs[index].id),
+                                            icon: const Icon(Icons.delete),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 20),
