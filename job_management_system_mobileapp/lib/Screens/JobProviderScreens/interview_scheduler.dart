@@ -1,5 +1,6 @@
 import "package:board_datetime_picker/board_datetime_picker.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:job_management_system_mobileapp/localization/demo_localization.dart";
@@ -17,7 +18,10 @@ class InterviewScheduler extends StatefulWidget {
 }
 
 class _InterviewSchedulerState extends State<InterviewScheduler> {
-  String groupValue = "Online";
+  String groupValue = "";
+  bool showLinkFeild = false;
+  final TextEditingController _linkController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   String selectedParticipant = "0";
 
@@ -76,10 +80,17 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 //input field for topic
-                TextField(
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter the topic";
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     labelText: "Topic",
                     hintText: "HR Interview",
@@ -91,6 +102,12 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 const SizedBox(height: 20.0),
                 //input field for description
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter description";
+                    }
+                    return null;
+                  },
                   minLines: 3,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
@@ -177,6 +194,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         setState(
                           () {
                             groupValue = value!;
+                            showLinkFeild = true;
                           },
                         );
                       },
@@ -195,6 +213,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         setState(
                           () {
                             groupValue = value!;
+                            showLinkFeild = false;
                           },
                         );
                       },
@@ -205,6 +224,23 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    /*showLinkFeild
+                        ? Column(
+                            children: [
+                              const Text("Enter Link:"),
+                              Expanded(
+                                child: TextField(
+                                  controller: _linkController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(),*/
                   ],
                 ),
 
@@ -249,7 +285,9 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 const SizedBox(height: 80.0),
                 ElevatedButton(
                   onPressed: () {
-                    showAlert();
+                    if (_formKey.currentState!.validate()) {
+                      showAlert();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
