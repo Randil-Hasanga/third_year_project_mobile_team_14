@@ -17,6 +17,61 @@ class vacancies extends StatelessWidget {
   final _descriptionController = TextEditingController();
   final _salaryController = TextEditingController();
   final _locationController = TextEditingController();
+  String? selectedLocation;
+
+  final List<String> items = [
+    'Akkaraipattu',
+    'Ampara',
+    'anuradhapura',
+    'Badulla',
+    'Balangoda',
+    'Bandarawela',
+    'Batticaloa',
+    'Beruwala',
+    'Chavakachcheri',
+    'Chilaw',
+    'Colombo',
+    'Dambulla',
+    'Dehiwala-Mount Lavinia',
+    'Eravur',
+    'Galle',
+    'Gampola',
+    'Hambantota',
+    'Happutale',
+    'Homagama',
+    'Jaffna',
+    'Kalmunai',
+    'Kalutara',
+    'Kandy',
+    'Kattankudy',
+    'Kegalle',
+    'Kelaniya',
+    'Kilinochchi',
+    'Kolonnawa',
+    'Kurunegala',
+    'Mannar',
+    'Matale',
+    'Matara',
+    'Minuwangoda',
+    'Monaragala',
+    'Moratuwa',
+    'Mullaitivu',
+    'Negombo',
+    'Nuwara Eliya',
+    'Panadura',
+    'Peliyagoda',
+    'Point Pedro',
+    'Puttalam',
+    'Ratnapura',
+    'Sri Jayawardenepura Kotte',
+    'Tangalle',
+    'Trincomalee',
+    'Valvettithurai',
+    'Vavuniya',
+    'Wattala',
+    'Wattegama',
+    'Weligama',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +150,14 @@ class vacancies extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
+                  //Input for Company Name
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "please enter company name";
+                      }
+                      return null;
+                    },
                     controller: _companyNameController,
                     decoration: const InputDecoration(
                         labelText: 'Company Name',
@@ -103,7 +165,14 @@ class vacancies extends StatelessWidget {
                         border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  //Dropdown for Job Position
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "please enter job position";
+                      }
+                      return null;
+                    },
                     controller: _jobPositionController,
                     decoration: const InputDecoration(
                         labelText: 'Job Position',
@@ -111,15 +180,30 @@ class vacancies extends StatelessWidget {
                         border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "please enter description";
+                      }
+                      return null;
+                    },
                     controller: _descriptionController,
+                    minLines: 3,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
                         labelText: 'Description',
                         hintText: 'Description',
                         border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "please enter description";
+                      }
+                      return null;
+                    },
                     controller: _salaryController,
                     decoration: const InputDecoration(
                         labelText: 'Salary',
@@ -127,7 +211,33 @@ class vacancies extends StatelessWidget {
                         border: OutlineInputBorder()),
                   ),
                   SizedBox(height: 20),
-                  TextFormField(
+
+                  //dropdown for location
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                        labelText: 'Location',
+                        hintText: 'Location',
+                        border: OutlineInputBorder()),
+                    value: selectedLocation,
+                    onChanged: (String? value) {
+                      selectedLocation = value;
+                      _locationController.text = value ?? '';
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select location';
+                      }
+                      return null;
+                    },
+                    items: items.map<DropdownMenuItem<String>>((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(item),
+                      );
+                    }).toList(),
+                  ),
+                  /*TextFormField(
+
                     controller: _locationController,
                     decoration: const InputDecoration(
                         labelText: 'Location',
@@ -139,23 +249,25 @@ class vacancies extends StatelessWidget {
                       }
                       return null;
                     },
-                  ),
+                  ),*/
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      FirebaseService().addVacancy(
-                          _companyNameController.text,
-                          _jobPositionController.text,
-                          _descriptionController.text,
-                          _salaryController.text,
-                          _locationController.text);
+                      if (_formKey.currentState!.validate()) {
+                        FirebaseService().addVacancy(
+                            _companyNameController.text,
+                            _jobPositionController.text,
+                            _descriptionController.text,
+                            _salaryController.text,
+                            _locationController.text);
 
-                      _companyNameController.clear();
-                      _jobPositionController.clear();
-                      _descriptionController.clear();
-                      _salaryController.clear();
-                      _locationController.clear();
-                      showAlert();
+                        _companyNameController.clear();
+                        _jobPositionController.clear();
+                        _descriptionController.clear();
+                        _salaryController.clear();
+                        _locationController.clear();
+                        showAlert();
+                      }
                     },
                     child: const Text('Add Vacancy'),
                   )
