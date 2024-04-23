@@ -73,6 +73,31 @@ class vacancies extends StatelessWidget {
     'Weligama',
   ];
 
+  List<String> jobPositions = [
+    'Software Engineer',
+    'Product Manager',
+    'Data Scientist',
+    'UX Designer',
+    'QA Engineer',
+    'Marketing Manager',
+    'Librarian',
+    'Receptionist',
+    'Bookkeeper',
+    'Account Executive',
+    'Branch Manager',
+    'Secretary',
+    'Office Clerk',
+    'Supervisor',
+    'Administrator',
+    'Sales Manager',
+    'Cashier',
+    'Area Sales Manager',
+    'Plumber',
+    'Supervisors',
+    'Marketing Staff',
+    'Customer Service Manager'
+  ];
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -165,20 +190,49 @@ class vacancies extends StatelessWidget {
                         border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 20),
+
                   //Dropdown for Job Position
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "please enter job position";
+                  Autocomplete<String>(
+                    optionsBuilder: (TextEditingValue _JobEditiingValue) {
+                      if (_JobEditiingValue.text == '') {
+                        return const Iterable<String>.empty();
                       }
-                      return null;
+                      return jobPositions.where(
+                        (String option) {
+                          return option
+                              .contains(_JobEditiingValue.text.toLowerCase());
+                        },
+                      );
                     },
-                    controller: _jobPositionController,
-                    decoration: const InputDecoration(
-                        labelText: 'Job Position',
-                        hintText: 'Job Position',
-                        border: OutlineInputBorder()),
+                    onSelected: (String value) {
+                      _jobPositionController.text = value;
+                      debugPrint('You selected $value');
+                    },
+                    fieldViewBuilder: (BuildContext context,
+                        TextEditingController controller,
+                        FocusNode focusNode,
+                        VoidCallback onFieldSubmitted) {
+                      return TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "please enter job position";
+                          }
+                          return null;
+                        },
+                        controller: controller,
+                        focusNode: focusNode,
+                        onFieldSubmitted: (_) => onFieldSubmitted,
+                        decoration: const InputDecoration(
+                          labelText: 'Job Position',
+                          hintText: 'Job Position',
+                          border: OutlineInputBorder(),
+                        ),
+                      );
+                    },
                   ),
+                  /* TextFormField(
+                    
+                  ),*/
                   const SizedBox(height: 20),
                   TextFormField(
                     validator: (value) {
