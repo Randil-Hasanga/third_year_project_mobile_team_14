@@ -290,21 +290,9 @@ class vacancies extends StatelessWidget {
                       );
                     }).toList(),
                   ),
-                  /*TextFormField(
 
-                    controller: _locationController,
-                    decoration: const InputDecoration(
-                        labelText: 'Location',
-                        hintText: 'Location',
-                        border: OutlineInputBorder()),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter location';
-                      }
-                      return null;
-                    },
-                  ),*/
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
+
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
