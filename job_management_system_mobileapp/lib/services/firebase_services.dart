@@ -101,13 +101,15 @@ class FirebaseService {
   //create add new vacancy
   Future<void> addVacancy(String companyName, String jobPosition,
       String description, String salary, String location) {
-    return vacancyCollection.add({
-      'company_name': companyName,
-      'job_position': jobPosition,
-      'description': description,
-      'salary': salary,
-      'location': location,
-    });
+    return vacancyCollection.add(
+      {
+        'company_name': companyName,
+        'job_position': jobPosition,
+        'description': description,
+        'salary': salary,
+        'location': location,
+      },
+    );
   }
 
   //delete vacancy
@@ -445,5 +447,23 @@ class FirebaseService {
         .collection("messages")
         .orderBy('timestamp')
         .snapshots();
+  }
+
+// get collection of interview detials
+  final CollectionReference interviewCollection =
+      FirebaseFirestore.instance.collection('interview_details');
+
+  //add scheduled interview
+  Future<void> addInterviewDetails(String topic, String description,
+      String participant, String type, String date_time) {
+    return interviewCollection.add(
+      {
+        'topic': topic,
+        'description': description,
+        'participant': participant,
+        'type': type,
+        'date_time': date_time,
+      },
+    );
   }
 }

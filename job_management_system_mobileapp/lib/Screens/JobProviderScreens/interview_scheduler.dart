@@ -1,9 +1,6 @@
 import "package:board_datetime_picker/board_datetime_picker.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import "package:flutter/widgets.dart";
-import "package:job_management_system_mobileapp/localization/demo_localization.dart";
 import "package:job_management_system_mobileapp/services/firebase_services.dart";
 import "package:quickalert/models/quickalert_type.dart";
 import "package:quickalert/widgets/quickalert_dialog.dart";
@@ -11,19 +8,21 @@ import "package:quickalert/widgets/quickalert_dialog.dart";
 class InterviewScheduler extends StatefulWidget {
   InterviewScheduler({super.key});
 
-  final FirebaseService _firebaseService = FirebaseService();
-
   @override
   State<InterviewScheduler> createState() => _InterviewSchedulerState();
 }
 
 class _InterviewSchedulerState extends State<InterviewScheduler> {
+  final FirebaseService _firebaseService = FirebaseService();
   String groupValue = "";
   bool showLinkFeild = false;
   final TextEditingController _linkController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _topicController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   String selectedParticipant = "0";
+  String selectedParticipantName = 'Select Participant';
 
   DateTime _selectedDateTime = DateTime.now();
 
@@ -91,6 +90,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     }
                     return null;
                   },
+                  controller: _topicController,
                   decoration: InputDecoration(
                     labelText: "Topic",
                     hintText: "HR Interview",
@@ -111,6 +111,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                   minLines: 3,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
+                  controller: _descriptionController,
                   decoration: InputDecoration(
                     labelText: "Description",
                     hintText: "give a brief description",
@@ -166,7 +167,14 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                           menuMaxHeight: screenWidth * 0.5,
                           items: participantItems,
                           onChanged: (participantValue) {
+                            selectedParticipantName = participantItems
+                                .firstWhere(
+                                    (item) => item.value == participantValue)
+                                .child
+                                .toString();
+
                             selectedParticipant = participantValue;
+
                             print(participantValue);
                           },
                           value: selectedParticipant,
@@ -286,7 +294,20 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      _firebaseService.addInterviewDetails(
+                        _topicController.text,
+                        _descriptionController.text,
+                        selectedParticipant,
+                        groupValue,
+                        _selectedDateTime.toString(),
+                      );
                       showAlert();
+
+                      _topicController.clear();
+                      _descriptionController.clear();
+                      selectedParticipant = "0";
+                      groupValue = "";
+                      _selectedDateTime = DateTime.now();
                     }
                   },
                   style: ElevatedButton.styleFrom(
