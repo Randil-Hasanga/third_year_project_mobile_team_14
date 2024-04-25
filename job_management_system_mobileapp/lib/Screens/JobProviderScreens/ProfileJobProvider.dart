@@ -580,7 +580,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           setState(() {
             _selectedDistrict = englishDistrict;
           });
-          print(_selectedDistrict);
+          print("$_selectedDistrict,$_selectedOrgType,$_selectedIndustry");
         },
       ),
     );
@@ -631,7 +631,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             _selectedOrgType = englishWord;
           });
 
-          print(_selectedOrgType);
+          print("$_selectedDistrict,$_selectedOrgType,$_selectedIndustry");
         },
         child: Material(
           elevation: 1,
@@ -703,7 +703,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             _selectedIndustry = englishPart;
           });
 
-          print(_selectedIndustry);
+          print("$_selectedDistrict,$_selectedOrgType,$_selectedIndustry");
         },
         child: Material(
           elevation: 1,

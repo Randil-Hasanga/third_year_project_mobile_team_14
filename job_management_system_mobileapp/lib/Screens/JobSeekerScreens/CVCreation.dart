@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
@@ -21,6 +22,9 @@ class CVCreation extends StatefulWidget {
 
 class _CVCreationState extends State<CVCreation> {
 
+  FirebaseService? _firebaseService;
+
+  
   final _formKey = GlobalKey<FormState>();
   //Tab 01: personal informations
   String? _selectedtitle;
@@ -124,12 +128,11 @@ class _CVCreationState extends State<CVCreation> {
 
   double? _deviceWidth, _deviceHeight;
 
-  late FirebaseService _firebaseService;
 
   @override
   void initState() {
     super.initState();
-    _firebaseService = widget.firebaseService;
+    _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -424,32 +427,32 @@ class _CVCreationState extends State<CVCreation> {
                           if (value == null || value.isEmpty) {
                             return 'NIC cannot be empty';
                           }
-          
+
                           // Remove any whitespaces
                           value = value.replaceAll(' ', '');
-          
+
                           // Check if the input starts with digits
                           if (!RegExp(r'^[0-9]').hasMatch(value)) {
                             return 'Invalid NIC format';
                           }
-          
+
                           // Check the length of the NIC
                           if (value.length != 12 && value.length != 10) {
                             return 'NIC must be 10 or 12 characters long';
                           }
-          
+
                           // Check for old version NIC (9 digits + 'V' or 'X')
                           if (value.length == 10 &&
                               !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
                             return 'Invalid NIC format';
                           }
-          
+
                           // Check for new version NIC (12 digits)
                           if (value.length == 12 &&
                               !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
                             return 'Invalid NIC format';
                           }
-          
+
                           // Valid NIC
                           return null;
                         },
@@ -471,7 +474,7 @@ class _CVCreationState extends State<CVCreation> {
                           // Regular expression pattern for Sri Lankan driving license
                           RegExp regex = RegExp(
                               r'^[A-Z]{2}\d{9}$'); // Example pattern: AB123456789
-          
+
                           if (value == null || value.isEmpty) {
                             // Return null if the field is empty (validation passed)
                             return null;
@@ -538,7 +541,7 @@ class _CVCreationState extends State<CVCreation> {
                           }
                           // Additional validation if needed
                           // ...
-          
+
                           return null; // Return null if the input is valid
                         },
                       ),
@@ -704,7 +707,8 @@ class _CVCreationState extends State<CVCreation> {
                             return 'Minimum Salary Expectation is required';
                           }
                           // Regular expression pattern to validate Sri Lankan salary format
-                          RegExp regex = RegExp(r'^\d{1,3}(,\d{3})*(\.\d+)?/=?$');
+                          RegExp regex =
+                              RegExp(r'^\d{1,3}(,\d{3})*(\.\d+)?/=?$');
                           if (!regex.hasMatch(value)) {
                             return 'Enter a valid salary amount(e.g., 25,000/=)';
                           }
@@ -717,9 +721,9 @@ class _CVCreationState extends State<CVCreation> {
                   ),
                 ),
               ),
-          
+
               // Educational Tab************************************************************************************
-          
+
               SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -826,7 +830,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-          
+
                       const SizedBox(height: 10),
                       TextFormField(
                         controller: _OLIndexController,
@@ -846,7 +850,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-          
+
                       const SizedBox(height: 10),
                       TextFormField(
                         controller: _OLMediumController,
@@ -867,7 +871,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-          
+
                       const SizedBox(height: 10),
                       TextFormField(
                         controller: _OLSchoolController,
@@ -882,7 +886,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-          
+
                       const SizedBox(height: 10),
                       TextFormField(
                         controller: _OLAttemptController,
@@ -903,7 +907,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-          
+
                       const SizedBox(height: 10),
                       DropdownButtonFormField<String>(
                         value: _selectOLStatus,
@@ -927,7 +931,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 20),
-          
+
                       // GCE A/L Exam Section
                       const Text(
                         'GCE A/L Exam:',
@@ -1017,7 +1021,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-          
+
                       const SizedBox(height: 10),
                       DropdownButtonFormField<String>(
                         value: _selectALStatus,
@@ -1093,9 +1097,9 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-          
+
                       const SizedBox(height: 10),
-          
+
                       const Text(
                         'Professional Qualifications: section 02',
                         style: TextStyle(
@@ -1127,14 +1131,14 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 10),
-          
+
                       const Text("Swap to go to Skills section"),
                     ],
                   ),
                 ),
               ),
               // Skills Tab***************************************************************************************
-          
+
               SingleChildScrollView(
                 child: Center(
                   child: Padding(
@@ -1151,63 +1155,63 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         const SizedBox(height: 10),
                         // Job Experience fields
-                      TextFormField(
-            controller: _yearOfExperienceController,
-            decoration: const InputDecoration(
-              labelText: 'Year of job experience',
-              hintText: 'Ex: 2 years',
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Year of job experience is required';
-              }
-              // Regular expression to match the pattern "<number> years"
-              RegExp regExp = RegExp(r'^\d+ years$');
-              if (!regExp.hasMatch(value)) {
-                return 'Please enter a valid year of job experience in the format: <number> years';
-              }
-              return null;  // Return null if the input is valid
-            },
-          ),
-          
+                        TextFormField(
+                          controller: _yearOfExperienceController,
+                          decoration: const InputDecoration(
+                            labelText: 'Year of job experience',
+                            hintText: 'Ex: 2 years',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Year of job experience is required';
+                            }
+                            // Regular expression to match the pattern "<number> years"
+                            RegExp regExp = RegExp(r'^\d+ years$');
+                            if (!regExp.hasMatch(value)) {
+                              return 'Please enter a valid year of job experience in the format: <number> years';
+                            }
+                            return null; // Return null if the input is valid
+                          },
+                        ),
+
                         const SizedBox(height: 10),
-                      TextFormField(
-            controller: _currentJobPositionController,
-            decoration: const InputDecoration(
-              labelText: 'Current Job Position',
-              hintText: 'HR Manager',
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Current job position is required';
-              }
-              return null;  // Return null if the input is valid
-            },
-          ),
-          
+                        TextFormField(
+                          controller: _currentJobPositionController,
+                          decoration: const InputDecoration(
+                            labelText: 'Current Job Position',
+                            hintText: 'HR Manager',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Current job position is required';
+                            }
+                            return null; // Return null if the input is valid
+                          },
+                        ),
+
                         const SizedBox(height: 10),
-                       TextFormField(
-            controller: _dateOfJoinController,
-            decoration: const InputDecoration(
-              labelText: 'Date of join',
-              hintText: 'xxxx-xx-xx',
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Date of join is required';
-              }
-              // Regular expression to match the pattern "xxxx-xx-xx"
-              RegExp regExp = RegExp(r'^\d{4}-\d{2}-\d{2}$');
-              if (!regExp.hasMatch(value)) {
-                return 'Please enter a valid date in the format: xxxx-xx-xx';
-              }
-              return null;  // Return null if the input is valid
-            },
-          ),
-          
+                        TextFormField(
+                          controller: _dateOfJoinController,
+                          decoration: const InputDecoration(
+                            labelText: 'Date of join',
+                            hintText: 'xxxx-xx-xx',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Date of join is required';
+                            }
+                            // Regular expression to match the pattern "xxxx-xx-xx"
+                            RegExp regExp = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+                            if (!regExp.hasMatch(value)) {
+                              return 'Please enter a valid date in the format: xxxx-xx-xx';
+                            }
+                            return null; // Return null if the input is valid
+                          },
+                        ),
+
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _currentEmployeeController,
@@ -1233,7 +1237,7 @@ class _CVCreationState extends State<CVCreation> {
                             border: OutlineInputBorder(),
                           ),
                         ),
-          
+
                         const SizedBox(height: 20),
                         const Text(
                           'Basic Skills:',
@@ -1302,7 +1306,7 @@ class _CVCreationState extends State<CVCreation> {
                             border: OutlineInputBorder(),
                           ),
                         ),
-          
+
                         const SizedBox(height: 20),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1328,8 +1332,8 @@ class _CVCreationState extends State<CVCreation> {
                   ),
                 ),
               ),
-          
-          // Job Expectation Tab**************************************************************************
+
+              // Job Expectation Tab**************************************************************************
               SingleChildScrollView(
                 child: Center(
                   child: Padding(
@@ -1369,7 +1373,7 @@ class _CVCreationState extends State<CVCreation> {
                             border: OutlineInputBorder(),
                           ),
                         ),
-          
+
                         const SizedBox(height: 20),
                         const Text(
                           'Preferred Jobs:',
@@ -1448,152 +1452,153 @@ class _CVCreationState extends State<CVCreation> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                               if (_formKey.currentState!.validate()) {
-                                // Format the date as a string
-                                String formattedDate = _selectedDate != null
-                                    ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                                    : '';
-          
-                                // Call the function to add job seeker profile
-                                FirebaseService().addCVdetails(
-                                  _selectedtitle!,
-                                  _selectedgender!,
-                                  _selectedjobType!,
-                                  _selectedworkingSection!,
-                                  _selectedmaritalStatus!,
-                                  _selectedcurrentJobStatus!,
-                                  _nameWithIniController.text,
-                                  _fullNameController.text,
-                                  _nationalityController.text,
-                                  _nicController.text,
-                                  _drivingLicenceController.text,
-                                  _selectedDate,
-                                  _religionController.text,
-                                  _ageController.text,
-                                  _emailController.text,
-                                  _contactMobileController.text,
-                                  _contactHomeController.text,
-                                  _addressController.text,
-                                  _selecteddistrict!,
-                                  _divisionalSecController.text,
-                                  _salaryController.text,
-                                  _selectEduQalification!,
-                                  _selectProfQualification!,
-                                  _OLYearController.text,
-                                  _OLIndexController.text,
-                                  _OLMediumController.text,
-                                  _OLSchoolController.text,
-                                  _OLAttemptController.text,
-                                  _selectOLStatus!,
-                                  _ALYearController.text,
-                                  _ALIndexController.text,
-                                  _ALMediumController.text,
-                                  _ALSchoolController.text,
-                                  _ALAttemptController.text,
-                                  _selectALStatus!,
-                                  _sec01NameController.text,
-                                  _sec01InstituteController.text,
-                                  _sec01durationController.text,
-                                  _sec02NameController.text,
-                                  _sec02InstituteController.text,
-                                  _sec02durationController.text,
-                                  _yearOfExperienceController.text,
-                                  _currentJobPositionController.text,
-                                  _dateOfJoinController.text,
-                                  _currentEmployeeController.text,
-                                  _responsibilitiesController.text,
-                                  _specialSkillController.text,
-                                  _computerSkillController.text,
-                                  _otherSkillController.text,
-                                  _achievementsController.text,
-                                  _extraCurricularController.text,
-                                  _trainingReqController.text,
-                                  _prefferedAreaController.text,
-                                  _careerGuidanceController.text,
-                                  sinhalaWriting!,
-                                  sinhalaReading!,
-                                  sinhalaWriting!,
-                                  englishSpeaking!,
-                                  englishReading!,
-                                  englishWriting!,
-                                  tamilSpeaking!,
-                                  tamilReading!,
-                                  tamilWriting!,
-                                  _careerObjectiveController.text,
-                                  _refeeOneController.text,
-                                  _refeeTwoController.text,
-                                  _preferredJobsController.text,
-                                  selectPrefAreaToWork!,
-                                );
-                                // _selectedtitle!.clear();
-                                //_selectedgender.clear();
-                                // _selectedjobType!,
-                                // _selectedworkingSection!,
-                                //_selectedmaritalStatus!,
-                                //_selectedcurrentJobStatus!,
-                                _nameWithIniController.clear();
-                                _fullNameController.clear();
-                                _nationalityController.clear();
-                                _nicController.clear();
-                                _drivingLicenceController.clear();
-                                //_selectedDate!,
-                                _religionController.clear();
-                                _ageController.clear();
-                                _emailController.clear();
-                                _contactMobileController.clear();
-                                _contactHomeController.clear();
-                                _addressController.clear();
-                                //_selecteddistrict!,
-                                _divisionalSecController.clear();
-                                _salaryController.clear();
-                                //_selectEduQalification!,
-                                //_selectProfQualification!,
-                                _OLYearController.clear();
-                                _OLIndexController.clear();
-                                _OLMediumController.clear();
-                                _OLSchoolController.clear();
-                                _OLAttemptController.clear();
-                                //_selectOLStatus!,
-                                _ALYearController.clear();
-                                _ALIndexController.clear();
-                                _ALMediumController.clear();
-                                _ALSchoolController.clear();
-                                _ALAttemptController.clear();
-                                //_selectALStatus!,
-                                _sec01NameController.clear();
-                                _sec01InstituteController.clear();
-                                _sec01durationController.clear();
-                                _sec02NameController.clear();
-                                _sec02InstituteController.clear();
-                                _sec02durationController.clear();
-                                _yearOfExperienceController.clear();
-                                _currentJobPositionController.clear();
-                                _dateOfJoinController.clear();
-                                _currentEmployeeController.clear();
-                                _responsibilitiesController.clear();
-                                _specialSkillController.clear();
-                                _computerSkillController.clear();
-                                _otherSkillController.clear();
-                                _achievementsController.clear();
-                                _extraCurricularController.clear();
-                                _trainingReqController.clear();
-                                _prefferedAreaController.clear();
-                                _careerGuidanceController.clear();
-                                //sinhalaWriting!,
-                                //sinhalaReading!,
-                                //sinhalaWriting!,
-                                //englishSpeaking!,
-                                // englishReading!,
-                                //englishWriting!,
-                                //tamilSpeaking!,
-                                // tamilReading!,
-                                //tamilWriting!,
-                                _careerObjectiveController.clear();
-                                _refeeOneController.clear();
-                                _refeeTwoController.clear();
-                                _preferredJobsController.clear();
-                                //selectPrefAreaToWork!,
-                                showAlert();}
+                                if (_formKey.currentState!.validate()) {
+                                  // Format the date as a string
+                                  String formattedDate = _selectedDate != null
+                                      ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                                      : '';
+
+                                  // Call the function to add job seeker profile
+                                  _firebaseService!.addCVdetails(
+                                    _selectedtitle!,
+                                    _selectedgender!,
+                                    _selectedjobType!,
+                                    _selectedworkingSection!,
+                                    _selectedmaritalStatus!,
+                                    _selectedcurrentJobStatus!,
+                                    _nameWithIniController.text,
+                                    _fullNameController.text,
+                                    _nationalityController.text,
+                                    _nicController.text,
+                                    _drivingLicenceController.text,
+                                    _selectedDate,
+                                    _religionController.text,
+                                    _ageController.text,
+                                    _emailController.text,
+                                    _contactMobileController.text,
+                                    _contactHomeController.text,
+                                    _addressController.text,
+                                    _selecteddistrict!,
+                                    _divisionalSecController.text,
+                                    _salaryController.text,
+                                    _selectEduQalification!,
+                                    _selectProfQualification!,
+                                    _OLYearController.text,
+                                    _OLIndexController.text,
+                                    _OLMediumController.text,
+                                    _OLSchoolController.text,
+                                    _OLAttemptController.text,
+                                    _selectOLStatus!,
+                                    _ALYearController.text,
+                                    _ALIndexController.text,
+                                    _ALMediumController.text,
+                                    _ALSchoolController.text,
+                                    _ALAttemptController.text,
+                                    _selectALStatus!,
+                                    _sec01NameController.text,
+                                    _sec01InstituteController.text,
+                                    _sec01durationController.text,
+                                    _sec02NameController.text,
+                                    _sec02InstituteController.text,
+                                    _sec02durationController.text,
+                                    _yearOfExperienceController.text,
+                                    _currentJobPositionController.text,
+                                    _dateOfJoinController.text,
+                                    _currentEmployeeController.text,
+                                    _responsibilitiesController.text,
+                                    _specialSkillController.text,
+                                    _computerSkillController.text,
+                                    _otherSkillController.text,
+                                    _achievementsController.text,
+                                    _extraCurricularController.text,
+                                    _trainingReqController.text,
+                                    _prefferedAreaController.text,
+                                    _careerGuidanceController.text,
+                                    sinhalaWriting!,
+                                    sinhalaReading!,
+                                    sinhalaWriting!,
+                                    englishSpeaking!,
+                                    englishReading!,
+                                    englishWriting!,
+                                    tamilSpeaking!,
+                                    tamilReading!,
+                                    tamilWriting!,
+                                    _careerObjectiveController.text,
+                                    _refeeOneController.text,
+                                    _refeeTwoController.text,
+                                    _preferredJobsController.text,
+                                    selectPrefAreaToWork!,
+                                  );
+                                  // _selectedtitle!.clear();
+                                  //_selectedgender.clear();
+                                  // _selectedjobType!,
+                                  // _selectedworkingSection!,
+                                  //_selectedmaritalStatus!,
+                                  //_selectedcurrentJobStatus!,
+                                  // _nameWithIniController.clear();
+                                  // _fullNameController.clear();
+                                  // _nationalityController.clear();
+                                  // _nicController.clear();
+                                  // _drivingLicenceController.clear();
+                                  // //_selectedDate!,
+                                  // _religionController.clear();
+                                  // _ageController.clear();
+                                  // _emailController.clear();
+                                  // _contactMobileController.clear();
+                                  // _contactHomeController.clear();
+                                  // _addressController.clear();
+                                  // //_selecteddistrict!,
+                                  // _divisionalSecController.clear();
+                                  // _salaryController.clear();
+                                  // //_selectEduQalification!,
+                                  // //_selectProfQualification!,
+                                  // _OLYearController.clear();
+                                  // _OLIndexController.clear();
+                                  // _OLMediumController.clear();
+                                  // _OLSchoolController.clear();
+                                  // _OLAttemptController.clear();
+                                  // //_selectOLStatus!,
+                                  // _ALYearController.clear();
+                                  // _ALIndexController.clear();
+                                  // _ALMediumController.clear();
+                                  // _ALSchoolController.clear();
+                                  // _ALAttemptController.clear();
+                                  // //_selectALStatus!,
+                                  // _sec01NameController.clear();
+                                  // _sec01InstituteController.clear();
+                                  // _sec01durationController.clear();
+                                  // _sec02NameController.clear();
+                                  // _sec02InstituteController.clear();
+                                  // _sec02durationController.clear();
+                                  // _yearOfExperienceController.clear();
+                                  // _currentJobPositionController.clear();
+                                  // _dateOfJoinController.clear();
+                                  // _currentEmployeeController.clear();
+                                  // _responsibilitiesController.clear();
+                                  // _specialSkillController.clear();
+                                  // _computerSkillController.clear();
+                                  // _otherSkillController.clear();
+                                  // _achievementsController.clear();
+                                  // _extraCurricularController.clear();
+                                  // _trainingReqController.clear();
+                                  // _prefferedAreaController.clear();
+                                  // _careerGuidanceController.clear();
+                                  // //sinhalaWriting!,
+                                  // //sinhalaReading!,
+                                  // //sinhalaWriting!,
+                                  // //englishSpeaking!,
+                                  // // englishReading!,
+                                  // //englishWriting!,
+                                  // //tamilSpeaking!,
+                                  // // tamilReading!,
+                                  // //tamilWriting!,
+                                  // _careerObjectiveController.clear();
+                                  // _refeeOneController.clear();
+                                  // _refeeTwoController.clear();
+                                  // _preferredJobsController.clear();
+                                  //selectPrefAreaToWork!,
+                                  showAlert();
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
