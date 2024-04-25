@@ -17,6 +17,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 const String USER_COLLECTION = 'users';
 const String PROVIDER_DETAILS_COLLECTION = 'provider_details';
 const String POSTS_COLLECTION = 'posts';
+const String CV_COLLECTION = 'CVDetails';
 
 class FirebaseService {
   FirebaseService();
@@ -36,7 +37,7 @@ class FirebaseService {
 
       if (_userCredentials != null) {
         currentUser = await _getUserData(uid: _userCredentials.user!.uid);
-        uid = _userCredentials.user!.uid;
+        uid = _auth.currentUser?.uid;
         return true;
       } else {
         return false;
@@ -153,8 +154,6 @@ class FirebaseService {
   }
 
   //CV creatoion:
-  final CollectionReference CVCreation =
-      FirebaseFirestore.instance.collection('CVDetails');
 
   Future<void> addCVdetails(
       String? title,
@@ -230,8 +229,8 @@ class FirebaseService {
       String refeeOne,
       String refeeTwo,
       String preferredJobs,
-      String? selectPrefArea) {
-    return CVCreation.add({
+      String? selectPrefArea) async {
+    _db.collection(CV_COLLECTION).doc(uid).set({
       'title': title,
       'gender': gender,
       ' jobType': jobType,
@@ -308,7 +307,7 @@ class FirebaseService {
       'refeeTwo': refeeTwo,
       'preferredJobs': preferredJobs,
       'selectPrefArea': selectPrefArea
-    });
+    }, SetOptions(merge: true));
   }
 
   //job provider details
