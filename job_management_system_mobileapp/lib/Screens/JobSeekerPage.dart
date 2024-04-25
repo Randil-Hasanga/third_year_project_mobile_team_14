@@ -217,7 +217,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const Jobs()),
+                                MaterialPageRoute(builder: (context) =>Jobs()),
                               );
                             },
                             child: Text(
@@ -267,73 +267,62 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                     color: Colors.grey.shade200,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.business),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            companyName = (vacancyData as Map<
-                                                    String,
-                                                    dynamic>)['company_name']
-                                                as String, // Assuming 'company_name' is a field in your Firestore document
-                                            style:
-                                                const TextStyle(fontSize: 20),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 6),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.work),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            companyName =
-                                                (vacancyData)['job_position']
-                                                    as String,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 6),
-                                      /* Text(
-                                        companyName = (vacancyData as Map<
-                                                String, dynamic>)['salary']
-                                            as String, 
-                                        style: const TextStyle(fontSize: 8),
-                                      ),*/
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.location_on),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            companyName =
-                                                (vacancyData)['location']
-                                                    as String,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              //add edit logic
-                                            },
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                          IconButton(
-                                            onPressed: () => FirebaseService()
-                                                .deleteVacancy(snapshot
-                                                    .data!.docs[index].id),
-                                            icon: const Icon(Icons.delete),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(25.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.business),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              companyName = (vacancyData as Map<
+                                                      String,
+                                                      dynamic>)['company_name']
+                                                  as String, // Assuming 'company_name' is a field in your Firestore document
+                                              style:
+                                                  const TextStyle(fontSize: 20,
+                                                  color: Colors.blue),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 6),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.work),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              companyName =
+                                                  (vacancyData)['job_position']
+                                                      as String,
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 6),
+                                        /* Text(
+                                          companyName = (vacancyData as Map<
+                                                  String, dynamic>)['salary']
+                                              as String, 
+                                          style: const TextStyle(fontSize: 8),
+                                        ),*/
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.location_on),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              companyName =
+                                                  (vacancyData)['location']
+                                                      as String,
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                       
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
@@ -368,47 +357,104 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                         ],
                       ),
                       SizedBox(
-                        height: 300, // Adjust the height as needed
-                        child: ListView(
-                          children: List.generate(
-                            5,
-                            (index) => Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 20),
-                              padding: const EdgeInsets.all(16),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Job Title $index",
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
+                        height: 160,
+                         // Adjust the height as needed
+                       child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('vacancy')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              ); // Show loading indicator while fetching data
+                            }
+
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                var vacancyData =
+                                    snapshot.data?.docs[index].data();
+                                String companyName = '';
+
+                                if (vacancyData != null) {
+                                  companyName = (vacancyData as Map<String,
+                                      dynamic>)['company_name'] as String;
+                                }
+                                return Container(
+                                  margin: const EdgeInsets.all(8),
+                                  width: 250,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    "Company Name",
-                                    style: TextStyle(fontSize: 16),
+                               child: Padding(
+                                    padding: const EdgeInsets.all(25.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.business),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              companyName = (vacancyData as Map<
+                                                      String,
+                                                      dynamic>)['company_name']
+                                                  as String, // Assuming 'company_name' is a field in your Firestore document
+                                              style:
+                                                  const TextStyle(fontSize: 20,
+                                                  color: Colors.blue),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 6),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.work),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              companyName =
+                                                  (vacancyData)['job_position']
+                                                      as String,
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 6),
+                                        /* Text(
+                                          companyName = (vacancyData as Map<
+                                                  String, dynamic>)['salary']
+                                              as String, 
+                                          style: const TextStyle(fontSize: 8),
+                                        ),*/
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.location_on),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              companyName =
+                                                  (vacancyData)['location']
+                                                      as String,
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                       
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    "Location",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    "Description of the job goes here. You can provide more details about the job in this section.",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -458,7 +504,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Jobs()),
+                  MaterialPageRoute(builder: (context) => Jobs()),
                 );
               },
             ),

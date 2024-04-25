@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,8 +9,13 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+// ignore: depend_on_referenced_packages
+import 'package:printing/printing.dart';
 
 class CVCreation extends StatefulWidget {
   CVCreation({super.key});
@@ -21,10 +27,8 @@ class CVCreation extends StatefulWidget {
 }
 
 class _CVCreationState extends State<CVCreation> {
-
   FirebaseService? _firebaseService;
 
-  
   final _formKey = GlobalKey<FormState>();
   //Tab 01: personal informations
   String? _selectedtitle;
@@ -40,7 +44,7 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _drivingLicenceController =
       TextEditingController();
   DateTime? _selectedDate;
-  final TextEditingController _religionController = TextEditingController();
+  String? _selectReligion;
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _contactMobileController =
@@ -115,7 +119,12 @@ class _CVCreationState extends State<CVCreation> {
   String? tamilReading;
   String? tamilWriting;
 
-  List<String> proficiencyLevels = ['Basic', 'Good', 'Fluent'];
+  List<String> proficiencyLevels = [
+    'Basic',
+    'Good',
+    'Fluent',
+    'None'
+  ]; // language skill
 
   //Tab 04:Job Expectation
   final TextEditingController _careerObjectiveController =
@@ -127,7 +136,6 @@ class _CVCreationState extends State<CVCreation> {
   String? selectPrefAreaToWork;
 
   double? _deviceWidth, _deviceHeight;
-
 
   @override
   void initState() {
@@ -147,6 +155,29 @@ class _CVCreationState extends State<CVCreation> {
         _selectedDate = picked;
       });
     }
+  }
+
+  Future<void> generateEmptyPdf() async {
+    final pdf = pw.Document();
+
+    // Add a page to the PDF document
+    final page = pw.Page(
+      build: (pw.Context context) {
+        return pw.Center(
+          child: pw.Text('Deshani', style: pw.TextStyle(fontSize: 24)),
+        );
+      },
+    );
+    pdf.addPage(page);
+
+    // Save the PDF file
+    final output = await getTemporaryDirectory();
+    final file = File('${output.path}/empty.pdf');
+    await file.writeAsBytes(await pdf.save());
+
+    // Print the PDF
+    final bytes = await file.readAsBytes();
+    await Printing.sharePdf(bytes: bytes, filename: 'empty.pdf');
   }
 
   @override
@@ -502,18 +533,28 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _religionController,
+                      DropdownButtonFormField<String>(
+                        value: _selectReligion,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectReligion = newValue;
+                          });
+                        },
+                        items: <String>[
+                          'Buddhism',
+                          'Hinduism',
+                          'Islam',
+                          'Christianity',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                         decoration: const InputDecoration(
                           labelText: 'Religion',
                           border: OutlineInputBorder(),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Religion is required';
-                          }
-                          return null; // Return null if the input is valid
-                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -574,6 +615,7 @@ class _CVCreationState extends State<CVCreation> {
                         controller: _contactMobileController,
                         decoration: const InputDecoration(
                           labelText: 'Tel (Mobile)',
+                          hintText: 'EX: +947185245600',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
@@ -596,6 +638,7 @@ class _CVCreationState extends State<CVCreation> {
                         controller: _contactHomeController,
                         decoration: const InputDecoration(
                           labelText: 'Tel (Home)',
+                          hintText: 'EX: +947185245600',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
@@ -1472,7 +1515,7 @@ class _CVCreationState extends State<CVCreation> {
                                     _nicController.text,
                                     _drivingLicenceController.text,
                                     _selectedDate,
-                                    _religionController.text,
+                                    _selectReligion!,
                                     _ageController.text,
                                     _emailController.text,
                                     _contactMobileController.text,
@@ -1541,7 +1584,7 @@ class _CVCreationState extends State<CVCreation> {
                                   // _nicController.clear();
                                   // _drivingLicenceController.clear();
                                   // //_selectedDate!,
-                                  // _religionController.clear();
+                                  // _selectReligion!,
                                   // _ageController.clear();
                                   // _emailController.clear();
                                   // _contactMobileController.clear();
@@ -1620,7 +1663,9 @@ class _CVCreationState extends State<CVCreation> {
                               ), // Background color
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                generateEmptyPdf();
+                              },
                               child: const Text('Create CV'),
                             ),
                           ],

@@ -1,75 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class Jobs extends StatefulWidget {
-  const Jobs({Key? key}) : super(key: key);
+  const Jobs({super.key});
 
   @override
-  _JobsState createState() => _JobsState();
+  State<Jobs> createState() => _JobsState();
 }
 
+final FirebaseService firebaseService = FirebaseService();
+
 class _JobsState extends State<Jobs> {
-  List<String> jobs = [
-    'Job Position: Software Engineer\nCompany Name: Tech Innovations Inc\nLocation: Colombo\nSalary: 90,000/= 120,000/= per month\nDescription: Join our team to develop cutting-edge software solutions for our clients. You\'ll be responsible for designing, implementing, and maintaining software applications to meet customer needs.',
-    'Job Position: Data Analyst\nCompany Name:Virtusa\nLocation: Colombo\nSalary: 90,000/= - 120,000/= per month\nDescription: Join our team to analyze and interpret complex data sets. You\'ll be responsible for gathering, processing, and analyzing data to provide valuable insights and recommendations to our clients',
-
-    'Job Position: Web Developer\nCompany Name: LankaTech Solutions Pvt Ltd\nLocation: Colombo\nSalary: LKR 90,000 - LKR 120,000 per month\nDescription: Join our team to develop cutting-edge web applications for our clients. You\'ll be responsible for designing, implementing, and maintaining websites and web-based applications to meet customer needs.',
-    'Job Position: Sales Executive\nCompany Name: SalesSri Lanka Pvt Ltd\nLocation: Galle\nSalary: LKR 90,000 - LKR 120,000 per month\nDescription: Join our team to drive sales and revenue growth. You\'ll be responsible for prospecting new clients, negotiating contracts, and maintaining relationships with existing customers to achieve sales targets.',
-    'Job Position: Graphic Designer\nCompany Name: DesignSri Lanka Pvt Ltd\nLocation: Colombo\nSalary: LKR 90,000 - LKR 120,000 per month\nDescription: Join our team to create visually appealing graphics and artworks. You\ll be responsible for designing marketing materials, branding assets, and multimedia content to support our business objectives.',
-    
-    'Job Position:UI/UX Designer\nCompany Name: IFS\nLocation: Galle\n',
-    'Job Position:Marketing Manager\nCompany Name:Code Alpha\nLocation:Colombo\n',
-    'Job Position:Project Manager\nCompany Name:SalesSri Lanka Pvt Ltd\nLocation: Ratnapura\n',
-    'Job Position:Accountant\nCompany Name:SupportSri Lanka Pvt Ltd\nLocation:Kegalle\n',
-    'Job Position:HR Specialist\nCompany Name:HR Solutions Lanka Pvt Ltd\nLocation: Kandy\n',
-    'Job Position:Customer Support\nCompany Name:FinanceSri Lanka Pvt Ltd\nLocation: Nugegoda\n',
-    'Job Position:Content Writer\nCompany Name:Code Alpha\nLocation: Embilipitiya\n',
-    'Job Position:Network Engineer\nCompany Name:Code Alpha\nLocation: Eheliyagoda\n',
-    'Job Position:Business Analyst\nCompany Name:MarketSri Lanka Pvt Ltd\nLocation: Awissawella\n',
-    'Job Position:Digital Marketer\nCompany Name:ProjectSri Lanka Pvt Ltd\nLocation: Jaffna\n',
-  ];
-
-  List<String> selectedFilters = [];
-  TextEditingController searchController = TextEditingController();
-
-  List<String> filteredJobs = [];
-
-
-   double? _deviceWidth, _deviceHeight;        // for the responsiveness of the device
+  FirebaseService? _firebaseService;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    filteredJobs.addAll(jobs);
+    _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
   @override
   Widget build(BuildContext context) {
-
-
-     //responsiveness of the device
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
-    void showAlert() {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:  Colors.orange.shade800,
+        backgroundColor: Colors.orange.shade800,
         title: const Text(
-    'Find Your Job Here',
-    style: TextStyle(
-      color: Color.fromARGB(255, 248, 248, 248), // Add the desired color here
-    ),
-  ),
+          'Find your Job in here',
+          style: TextStyle(
+            color: Color.fromARGB(255, 248, 248, 248),
+          ),
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
@@ -80,143 +50,163 @@ class _JobsState extends State<Jobs> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home,color: Colors.white,),
+                icon: const Icon(Icons.home,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const JobSeekerPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings,color: Colors.white,),
+                icon: const Icon(Icons.settings,
+                    color: Color.fromARGB(
+                        255, 255, 255, 255)), // Change the color here
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,color: Colors.white,),
+                icon: const Icon(Icons.notifications,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat,color: Colors.white,),
+                icon: const Icon(Icons.chat,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const Chattings()));
-                },
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Chattings()));
+},
               ),
             ],
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: 'Search for jobs...',
-                prefixIcon: const Icon(Icons.search, color: Colors.orange),
-                filled: true,
-                fillColor: const Color.fromARGB(255, 255, 255, 255),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              onChanged: (value) {
-                filterJobs(value);
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              spacing: 8.0,
-              children: List.generate(
-                5,
-                (index) {
-                  String filterLabel = 'Filter ${index + 1}';
-                  if (index == 0) {
-                    filterLabel = 'Software Engineer';
-                  } else if (index == 1) {
-                    filterLabel = 'Web Developer';
-                  } else if (index == 2) {
-                    filterLabel = 'Data Analyst';
-                  } else if (index == 3) {
-                    filterLabel = 'UI/UX Designer';
-                  } else if (index == 4) {
-                    filterLabel = 'Network Engineer';
-                  }else if (index == 4) {
-                    filterLabel = 'Mobile App';
-                  }
-                  return FilterChip(
-                    label: Text(filterLabel),
-                    selected: selectedFilters.contains(filterLabel),
-                    onSelected: (bool selected) {
-                      setState(() {
-                        if (selected) {
-                          selectedFilters.add(filterLabel);
-                        } else {
-                          selectedFilters.remove(filterLabel);
-                        }
-                      });
-                      filterJobs(searchController.text);
-                    },
-                    selectedColor: const Color.fromARGB(255, 236, 168, 84),
-                    backgroundColor: selectedFilters.contains(filterLabel) ? Colors.orange : const Color.fromARGB(255, 240, 236, 236),
-                    checkmarkColor: const Color.fromARGB(255, 1, 114, 5),
-                    labelStyle: TextStyle(color: selectedFilters.contains(filterLabel) ? const Color.fromARGB(255, 107, 44, 44) : Colors.black),
-                  );
-                },
-              ),
-            ),
-          ),
-          Expanded(
-            child: filteredJobs.isEmpty
-                ? const Center(
-                    child: Text('Not Found'),
-                  )
-                : ListView.builder(
-                    itemCount: filteredJobs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 3.0,
-                        child: Padding(
-                          padding: const
-EdgeInsets.all(20.0),
-                    child: Text(filteredJobs[index]),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+    body: Column(
+  children: [
+    Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.orange.shade900,
+            Colors.orange.shade800,
+            Colors.orange.shade400,
+          ],
+        ),
       ),
-      
+    ),
+    SizedBox(
+      height: 160,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('vacancy').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            ); // Show loading indicator while fetching data
+          }
+
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data?.docs.length,
+            itemBuilder: (context, index) {
+              var vacancyData = snapshot.data?.docs[index].data();
+              String companyName = '';
+
+              if (vacancyData != null) {
+                companyName = (vacancyData as Map<String, dynamic>)['company_name'] as String;
+              }
+              return Container(
+                margin: const EdgeInsets.all(8),
+                width: 250,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.business),
+                          const SizedBox(width: 8),
+                          Text(
+                            companyName = (vacancyData as Map<String, dynamic>)['company_name'] as String, // Assuming 'company_name' is a field in your Firestore document
+                            style: const TextStyle(fontSize: 20, color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 6),
+                      Row(
+                        children: [
+                          const Icon(Icons.work),
+                          const SizedBox(width: 8),
+                          Text(
+                            companyName = (vacancyData)['job_position'] as String,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 6),
+                      /* Text(
+                        companyName = (vacancyData as Map<String, dynamic>)['salary'] as String, 
+                        style: const TextStyle(fontSize: 8),
+                      ),*/
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on),
+                          const SizedBox(width: 8),
+                          Text(
+                            companyName = (vacancyData)['location'] as String,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    ),
+    Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: List<Widget>.generate(
+        3,
+        (int index) {
+          return ChoiceChip(
+            label: Text('Chip $index'),
+            selected: false,
+            onSelected: (bool selected) {},
+          );
+        },
+      ).toList(),
+    ),
+  ],
+),
     );
-  }
-
-  void filterJobs(String query) {
-    setState(() {
-      filteredJobs.clear();
-      for (String job in jobs) {
-        if (job.toLowerCase().contains(query.toLowerCase()) && _passesFilter(job)) {
-          filteredJobs.add(job);
-        }
-      }
-    });
-  }
-
-  bool _passesFilter(String job) {
-    if (selectedFilters.isEmpty) {
-      return true;
-    }
-    for (String filter in selectedFilters) {
-      if (job.toLowerCase().contains(filter.toLowerCase())) {
-        return true;
-      }
-    }
-    return false;
-  }
-}
+  }}
