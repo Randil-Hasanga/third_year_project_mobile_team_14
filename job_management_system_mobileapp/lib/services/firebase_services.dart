@@ -20,6 +20,8 @@ const String POSTS_COLLECTION = 'posts';
 const String CV_COLLECTION = 'CVDetails';
 
 class FirebaseService {
+  var value;
+
   FirebaseService();
 
   Map? currentUser;
@@ -28,6 +30,8 @@ class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  get instance => null;
 
   Future<bool> loginUser(
       {required String email, required String password}) async {
@@ -168,7 +172,7 @@ class FirebaseService {
       String nic,
       String drivingLicence,
       DateTime? selectedDate,
-      String religion,
+      String? religion,
       String age,
       String email,
       String contactMobile,
