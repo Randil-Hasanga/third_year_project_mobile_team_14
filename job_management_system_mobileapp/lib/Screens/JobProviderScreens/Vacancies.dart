@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,18 +7,39 @@ import 'package:job_management_system_mobileapp/localization/demo_localization.d
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:quickalert/quickalert.dart';
 
-class vacancies extends StatelessWidget {
+class vacancies extends StatefulWidget {
   vacancies({super.key});
 
+  @override
+  State<vacancies> createState() => _vacanciesState();
+}
+
+class _vacanciesState extends State<vacancies> {
   final FirebaseService firebaseService = FirebaseService();
 
   final _formKey = GlobalKey<FormState>();
+
   final _companyNameController = TextEditingController();
+
   final _jobPositionController = TextEditingController();
+
   final _descriptionController = TextEditingController();
+
   final _salaryController = TextEditingController();
+
   final _locationController = TextEditingController();
+
   String? selectedLocation;
+
+  FirebaseService? firebaseSerice;
+
+  String selectedJobPosition = '';
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseSerice = GetIt.instance.get<FirebaseService>();
+  }
 
   final List<String> items = [
     'Akkaraipattu',
@@ -101,6 +123,7 @@ class vacancies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
     void showAlert() {
       QuickAlert.show(
         context: context,
@@ -191,12 +214,13 @@ class vacancies extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  //Dropdown for Job Position
+                  //Input for Job Position
                   Autocomplete<String>(
                     optionsBuilder: (TextEditingValue _JobEditiingValue) {
                       if (_JobEditiingValue.text == '') {
                         return const Iterable<String>.empty();
                       }
+
                       return jobPositions.where(
                         (String option) {
                           return option
@@ -205,8 +229,10 @@ class vacancies extends StatelessWidget {
                       );
                     },
                     onSelected: (String value) {
-                      _jobPositionController.text = value;
-                      debugPrint('You selected $value');
+                      if (value != null && jobPositions.contains(value)) {
+                        _jobPositionController.text = value;
+                        debugPrint('You selected $value');
+                      }
                     },
                     fieldViewBuilder: (BuildContext context,
                         TextEditingController controller,
@@ -264,7 +290,7 @@ class vacancies extends StatelessWidget {
                         hintText: 'Salary',
                         border: OutlineInputBorder()),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   //dropdown for location
                   DropdownButtonFormField<String>(
@@ -296,14 +322,16 @@ class vacancies extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        FirebaseService().addVacancy(
-                            _companyNameController.text,
-                            _jobPositionController.text,
-                            _descriptionController.text,
-                            _salaryController.text,
-                            _locationController.text);
+                        firebaseSerice!.addVacancy(
+                          _companyNameController.text,
+                          _jobPositionController.text,
+                          _descriptionController.text,
+                          _salaryController.text,
+                          _locationController.text,
+                        );
 
                         _companyNameController.clear();
+                        selectedJobPosition = '';
                         _jobPositionController.clear();
                         _descriptionController.clear();
                         _salaryController.clear();
