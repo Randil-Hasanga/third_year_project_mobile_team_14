@@ -35,6 +35,8 @@ class _vacanciesState extends State<vacancies> {
 
   String selectedJobPosition = '';
 
+  DateTime issuedDate = DateTime.now();
+
   @override
   void initState() {
     super.initState();
@@ -123,6 +125,7 @@ class _vacanciesState extends State<vacancies> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     void showAlert() {
       QuickAlert.show(
@@ -212,7 +215,8 @@ class _vacanciesState extends State<vacancies> {
                         hintText: 'Company Name',
                         border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 20),
+
+                  SizedBox(height: screenHeight * 0.02),
 
                   //Input for Job Position
                   Autocomplete<String>(
@@ -256,10 +260,9 @@ class _vacanciesState extends State<vacancies> {
                       );
                     },
                   ),
-                  /* TextFormField(
-                    
-                  ),*/
-                  const SizedBox(height: 20),
+
+                  SizedBox(height: screenHeight * 0.02),
+
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -276,7 +279,9 @@ class _vacanciesState extends State<vacancies> {
                         hintText: 'Description',
                         border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 20),
+
+                  SizedBox(height: screenHeight * 0.02),
+
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -290,7 +295,8 @@ class _vacanciesState extends State<vacancies> {
                         hintText: 'Salary',
                         border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 20),
+
+                  SizedBox(height: screenHeight * 0.02),
 
                   //dropdown for location
                   DropdownButtonFormField<String>(
@@ -317,7 +323,7 @@ class _vacanciesState extends State<vacancies> {
                     }).toList(),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: screenHeight * 0.02),
 
                   ElevatedButton(
                     onPressed: () {
@@ -328,6 +334,7 @@ class _vacanciesState extends State<vacancies> {
                           _descriptionController.text,
                           _salaryController.text,
                           _locationController.text,
+                          issuedDate,
                         );
 
                         _companyNameController.clear();

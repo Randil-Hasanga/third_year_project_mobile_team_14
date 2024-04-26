@@ -110,6 +110,7 @@ class FirebaseService {
     String description,
     String salary,
     String location,
+    DateTime date,
   ) {
     return vacancyCollection.add(
       {
@@ -119,6 +120,7 @@ class FirebaseService {
         'salary': salary,
         'location': location,
         'uid': uid,
+        'date': date,
       },
     );
   }
@@ -468,6 +470,7 @@ class FirebaseService {
     String description,
     String participant,
     String type,
+    String link,
     String date_time,
   ) {
     return interviewCollection.add(
@@ -476,6 +479,7 @@ class FirebaseService {
         'description': description,
         'participant': participant,
         'type': type,
+        'link': link,
         'date_time': date_time,
         'uid': uid,
       },
