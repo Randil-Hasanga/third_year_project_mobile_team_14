@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
@@ -13,47 +14,25 @@ class Jobs extends StatefulWidget {
 }
 
 class _JobsState extends State<Jobs> {
-  List<String> jobs = [
-    'Job Position: Software Engineer\nCompany Name: Tech Innovations Inc\nLocation: Colombo\nSalary: 90,000/= 120,000/= per month\nDescription: Join our team to develop cutting-edge software solutions for our clients. You\'ll be responsible for designing, implementing, and maintaining software applications to meet customer needs.',
-    'Job Position: Data Analyst\nCompany Name:Virtusa\nLocation: Colombo\nSalary: 90,000/= - 120,000/= per month\nDescription: Join our team to analyze and interpret complex data sets. You\'ll be responsible for gathering, processing, and analyzing data to provide valuable insights and recommendations to our clients',
-
-    'Job Position: Web Developer\nCompany Name: LankaTech Solutions Pvt Ltd\nLocation: Colombo\nSalary: LKR 90,000 - LKR 120,000 per month\nDescription: Join our team to develop cutting-edge web applications for our clients. You\'ll be responsible for designing, implementing, and maintaining websites and web-based applications to meet customer needs.',
-    'Job Position: Sales Executive\nCompany Name: SalesSri Lanka Pvt Ltd\nLocation: Galle\nSalary: LKR 90,000 - LKR 120,000 per month\nDescription: Join our team to drive sales and revenue growth. You\'ll be responsible for prospecting new clients, negotiating contracts, and maintaining relationships with existing customers to achieve sales targets.',
-    'Job Position: Graphic Designer\nCompany Name: DesignSri Lanka Pvt Ltd\nLocation: Colombo\nSalary: LKR 90,000 - LKR 120,000 per month\nDescription: Join our team to create visually appealing graphics and artworks. You\ll be responsible for designing marketing materials, branding assets, and multimedia content to support our business objectives.',
-    
-    'Job Position:UI/UX Designer\nCompany Name: IFS\nLocation: Galle\n',
-    'Job Position:Marketing Manager\nCompany Name:Code Alpha\nLocation:Colombo\n',
-    'Job Position:Project Manager\nCompany Name:SalesSri Lanka Pvt Ltd\nLocation: Ratnapura\n',
-    'Job Position:Accountant\nCompany Name:SupportSri Lanka Pvt Ltd\nLocation:Kegalle\n',
-    'Job Position:HR Specialist\nCompany Name:HR Solutions Lanka Pvt Ltd\nLocation: Kandy\n',
-    'Job Position:Customer Support\nCompany Name:FinanceSri Lanka Pvt Ltd\nLocation: Nugegoda\n',
-    'Job Position:Content Writer\nCompany Name:Code Alpha\nLocation: Embilipitiya\n',
-    'Job Position:Network Engineer\nCompany Name:Code Alpha\nLocation: Eheliyagoda\n',
-    'Job Position:Business Analyst\nCompany Name:MarketSri Lanka Pvt Ltd\nLocation: Awissawella\n',
-    'Job Position:Digital Marketer\nCompany Name:ProjectSri Lanka Pvt Ltd\nLocation: Jaffna\n',
-  ];
-
   List<String> selectedFilters = [];
   TextEditingController searchController = TextEditingController();
 
-  List<String> filteredJobs = [];
+  List<String> filteredSnapshot = []; // Declare the filteredSnapshot list here
 
-
-   double? _deviceWidth, _deviceHeight;        // for the responsiveness of the device
+  double? _deviceWidth, _deviceHeight;
+  
+  // for the responsiveness of the device
 
   @override
   void initState() {
     super.initState();
-    filteredJobs.addAll(jobs);
   }
 
   @override
   Widget build(BuildContext context) {
-
-
-     //responsiveness of the device
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
+
     void showAlert() {
       QuickAlert.show(
         context: context,
@@ -63,13 +42,13 @@ class _JobsState extends State<Jobs> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:  Colors.orange.shade800,
+        backgroundColor: Colors.orange.shade800,
         title: const Text(
-    'Find Your Job Here',
-    style: TextStyle(
-      color: Color.fromARGB(255, 248, 248, 248), // Add the desired color here
-    ),
-  ),
+          'Find Your Job Here',
+          style: TextStyle(
+            color: Color.fromARGB(255, 248, 248, 248), // Add the desired color here
+          ),
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
@@ -80,27 +59,31 @@ class _JobsState extends State<Jobs> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home,color: Colors.white,),
+                icon: const Icon(Icons.home, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const JobSeekerPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings,color: Colors.white,),
+                icon: const Icon(Icons.settings, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileJobSeeker()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,color: Colors.white,),
+                icon: const Icon(Icons.notifications, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat,color: Colors.white,),
+                icon: const Icon(Icons.chat, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const Chattings()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Chattings()));
                 },
               ),
             ],
@@ -147,8 +130,6 @@ class _JobsState extends State<Jobs> {
                     filterLabel = 'UI/UX Designer';
                   } else if (index == 4) {
                     filterLabel = 'Network Engineer';
-                  }else if (index == 4) {
-                    filterLabel = 'Mobile App';
                   }
                   return FilterChip(
                     label: Text(filterLabel),
@@ -164,59 +145,121 @@ class _JobsState extends State<Jobs> {
                       filterJobs(searchController.text);
                     },
                     selectedColor: const Color.fromARGB(255, 236, 168, 84),
-                    backgroundColor: selectedFilters.contains(filterLabel) ? Colors.orange : const Color.fromARGB(255, 240, 236, 236),
+                    backgroundColor: selectedFilters.contains(filterLabel)
+                        ? Colors.orange
+                        : const Color.fromARGB(255, 240, 236, 236),
                     checkmarkColor: const Color.fromARGB(255, 1, 114, 5),
-                    labelStyle: TextStyle(color: selectedFilters.contains(filterLabel) ? const Color.fromARGB(255, 107, 44, 44) : Colors.black),
+                    labelStyle: TextStyle(
+                        color: selectedFilters.contains(filterLabel)
+                            ? const Color.fromARGB(255, 107, 44, 44)
+                            : Colors.black),
                   );
                 },
               ),
             ),
           ),
           Expanded(
-            child: filteredJobs.isEmpty
-                ? const Center(
-                    child: Text('Not Found'),
-                  )
-                : ListView.builder(
-                    itemCount: filteredJobs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 3.0,
-                        child: Padding(
-                          padding: const
-EdgeInsets.all(20.0),
-                    child: Text(filteredJobs[index]),
-                  ),
-                );
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance.collection('vacancy').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+             
+      List<String> filteredSnapshot = snapshot.hasData ? snapshot.data!.docs.map((doc) {
+        String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
+        String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
+        String location = (doc.data() as Map<String, dynamic>)['location'] as String;
+
+        return 'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
+      }).toList() : [];
+
+                for (var doc in snapshot.data?.docs ?? []) {
+                  String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
+                  String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
+                  String location = (doc.data() as Map<String, dynamic>)['location'] as String;
+
+                  String job =
+                      'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
+
+                  if (filteredSnapshot.isEmpty) {
+                    filteredSnapshot.add(job);
+                  } else {
+                    bool added = false;
+                    for (String filteredJob in filteredSnapshot) {
+                      if (filteredJob.contains(jobPosition) &&
+                          filteredJob.contains(companyName) &&
+                          filteredJob.contains(location)) {
+                        added = true;
+                        break;
+                      }
+                    }
+                    if (!added) {
+                      filteredSnapshot.add(job);
+                    }
+                  }
+                }
+
+                return filteredSnapshot.isEmpty
+    ? const Center(
+        child: Text('Not Found'),
+      )
+    : ListView.builder(
+        itemCount: filteredSnapshot.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            elevation: 3.0,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(filteredSnapshot[index]),
+            ),
+          );
+        },
+      );
               },
             ),
           ),
         ],
       ),
-      
     );
   }
 
-  void filterJobs(String query) {
-    setState(() {
-      filteredJobs.clear();
-      for (String job in jobs) {
-        if (job.toLowerCase().contains(query.toLowerCase()) && _passesFilter(job)) {
-          filteredJobs.add(job);
-        }
-      }
-    });
-  }
+  
 
-  bool _passesFilter(String job) {
-    if (selectedFilters.isEmpty) {
+ void filterJobs(String query) {
+  setState(() {
+    filteredSnapshot.clear();
+    var snapshot;
+    for (var doc in snapshot.data?.docs ?? []) {
+      String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
+      String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
+      String location = (doc.data() as Map<String, dynamic>)['location'] as String;
+
+      String job =
+          'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
+
+      if (job.toLowerCase().contains(query.toLowerCase()) && _passesFilter(job)) {
+        filteredSnapshot.add(job);
+      }
+    }
+  });
+}
+
+ bool _passesFilter(String job) {
+  if (selectedFilters.isEmpty) {
+    return true;
+  }
+  for (String filter in selectedFilters) {
+    if (job.toLowerCase().contains(filter.toLowerCase())) {
       return true;
     }
-    for (String filter in selectedFilters) {
-      if (job.toLowerCase().contains(filter.toLowerCase())) {
-        return true;
-      }
-    }
-    return false;
   }
-}
+  return false;
+}}

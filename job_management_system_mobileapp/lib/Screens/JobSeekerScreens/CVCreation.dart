@@ -1,4 +1,6 @@
 import 'dart:ffi';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,8 +10,13 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+// ignore: depend_on_referenced_packages
+import 'package:printing/printing.dart';
 
 class CVCreation extends StatefulWidget {
   CVCreation({super.key});
@@ -21,10 +28,8 @@ class CVCreation extends StatefulWidget {
 }
 
 class _CVCreationState extends State<CVCreation> {
-
   FirebaseService? _firebaseService;
 
-  
   final _formKey = GlobalKey<FormState>();
   //Tab 01: personal informations
   String? _selectedtitle;
@@ -40,7 +45,7 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _drivingLicenceController =
       TextEditingController();
   DateTime? _selectedDate;
-  final TextEditingController _religionController = TextEditingController();
+  String? _selectReligion;
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _contactMobileController =
@@ -99,8 +104,8 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _extraCurricularController =
       TextEditingController();
   final TextEditingController _trainingReqController = TextEditingController();
-  final TextEditingController _prefferedAreaController =
-      TextEditingController();
+  // final TextEditingController _prefferedAreaController =
+  //     TextEditingController();
   final TextEditingController _careerGuidanceController =
       TextEditingController();
   String? sinhalaSpeaking;
@@ -115,19 +120,22 @@ class _CVCreationState extends State<CVCreation> {
   String? tamilReading;
   String? tamilWriting;
 
-  List<String> proficiencyLevels = ['Basic', 'Good', 'Fluent'];
+  List<String> proficiencyLevels = [
+    'Basic',
+    'Good',
+    'Fluent',
+    'None'
+  ]; // language skill
 
   //Tab 04:Job Expectation
   final TextEditingController _careerObjectiveController =
       TextEditingController();
   final TextEditingController _refeeOneController = TextEditingController();
   final TextEditingController _refeeTwoController = TextEditingController();
-  final TextEditingController _preferredJobsController =
-      TextEditingController();
+  String? selectPrefIndustry;
   String? selectPrefAreaToWork;
 
   double? _deviceWidth, _deviceHeight;
-
 
   @override
   void initState() {
@@ -149,6 +157,130 @@ class _CVCreationState extends State<CVCreation> {
     }
   }
 
+  Future<void> generatePdfFromFirebase() async {
+    final pdf = pw.Document();
+
+    // Create an instance of FirebaseService
+    final firebaseService = FirebaseService();
+
+    // Fetch user details from Firestore
+    final userDetails = await firebaseService.getCVDetails('CVDetails');
+    if (userDetails != null) {
+      // Add a page to the PDF document
+      final page = pw.Page(
+        build: (pw.Context context) {
+          return pw.Row(
+            children: [
+              // First Column: Personal Information
+              pw.Expanded(
+                flex: 1,
+                child: pw.Container(
+                  padding: pw.EdgeInsets.all(10),
+                  color: PdfColors
+                      .blueGrey, // Color for personal information section
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Header(
+                        level: 1,
+                        text: 'Personal Information',
+                        textStyle: pw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.white, // Text color
+                        ),
+                      ),
+                      // Personal information fields
+                      pw.Paragraph(
+                          text: 'Full Name: ${userDetails['fullname']}'),
+                      pw.Paragraph(text: 'Age: ${userDetails['age']}'),
+                      pw.Paragraph(text: 'Gender: ${userDetails['gender']}'),
+                      // Add more personal information fields here
+                    ],
+                  ),
+                ),
+              ),
+
+              // Second Column: Educational, Skills, and Job Prospects
+              pw.Expanded(
+                flex: 1,
+                child: pw.Container(
+                  padding: pw.EdgeInsets.all(10),
+                  color: PdfColors
+                      .orangeAccent, // Color for educational, skills, and job prospects section
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      // Educational Details
+                      pw.Header(
+                        level: 1,
+                        text: 'Educational Details',
+                        textStyle: pw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.white, // Text color
+                        ),
+                      ),
+                      // Educational details fields
+                      pw.Paragraph(
+                          text: 'Education: ${userDetails['EduQalification']}'),
+                      // Add more educational details fields here
+
+                      // Skills
+                      pw.Header(
+                        level: 1,
+                        text: 'Skills',
+                        textStyle: pw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.white, // Text color
+                        ),
+                      ),
+                      // Skills fields
+                      pw.Paragraph(
+                          text:
+                              'Year of Experience: ${userDetails['yearOfExperience']}'),
+                      // Add more skills fields here
+
+                      // Job Prospects
+                      pw.Header(
+                        level: 1,
+                        text: 'Job Prospects',
+                        textStyle: pw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.white, // Text color
+                        ),
+                      ),
+                      // Job prospects fields
+                      pw.Paragraph(
+                          text:
+                              'Career Objective: ${userDetails['careerObjective']}'),
+                      // Add more job prospects fields here
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+
+      pdf.addPage(page);
+
+      // Save the PDF file
+      final output = await getTemporaryDirectory();
+      final file = File('${output.path}/cv_from_firebase.pdf');
+      await file.writeAsBytes(await pdf.save());
+
+      // Print the PDF
+      final bytes = await file.readAsBytes();
+      await Printing.sharePdf(bytes: bytes, filename: 'cv_from_firebase.pdf');
+    } else {
+      print('User details not found');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //responsiveness of the device
@@ -158,7 +290,7 @@ class _CVCreationState extends State<CVCreation> {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.success,
-        title: 'Press "Create CV" ',
+        title: 'Your CV is already created\nPress "Create CV" ',
       );
     }
 
@@ -502,18 +634,28 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _religionController,
+                      DropdownButtonFormField<String>(
+                        value: _selectReligion,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectReligion = newValue;
+                          });
+                        },
+                        items: <String>[
+                          'Buddhism',
+                          'Hinduism',
+                          'Islam',
+                          'Christianity',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                         decoration: const InputDecoration(
                           labelText: 'Religion',
                           border: OutlineInputBorder(),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Religion is required';
-                          }
-                          return null; // Return null if the input is valid
-                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -574,6 +716,7 @@ class _CVCreationState extends State<CVCreation> {
                         controller: _contactMobileController,
                         decoration: const InputDecoration(
                           labelText: 'Tel (Mobile)',
+                          hintText: 'EX: +947185245600',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
@@ -596,6 +739,7 @@ class _CVCreationState extends State<CVCreation> {
                         controller: _contactHomeController,
                         decoration: const InputDecoration(
                           labelText: 'Tel (Home)',
+                          hintText: 'EX: +947185245600',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
@@ -1291,13 +1435,13 @@ class _CVCreationState extends State<CVCreation> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _prefferedAreaController,
-                          decoration: const InputDecoration(
-                            labelText: 'Area preferred to start Employment',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
+                        // TextFormField(
+                        //   controller: _prefferedAreaController,
+                        //   decoration: const InputDecoration(
+                        //     labelText: 'Area preferred to start Employment',
+                        //     border: OutlineInputBorder(),
+                        //   ),
+                        // ),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _careerGuidanceController,
@@ -1360,16 +1504,22 @@ class _CVCreationState extends State<CVCreation> {
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _refeeOneController,
+                          maxLines: 3,
                           decoration: const InputDecoration(
                             labelText: 'Referee [1]',
+                            hintText:
+                                'Ex: MR. Bandara\n lecturer\n +94 xxxxxxxxx',
                             border: OutlineInputBorder(),
                           ),
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _refeeTwoController,
+                          maxLines: 3,
                           decoration: const InputDecoration(
                             labelText: 'Referee [2]',
+                            hintText:
+                                'Ex: Ms. Bandara\n lecturer\n +94 xxxxxxxxx',
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -1384,13 +1534,43 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         const SizedBox(height: 10),
                         // Preferred Jobs fields
-                        TextFormField(
-                          controller: _preferredJobsController,
-                          maxLines: 3,
+                        DropdownButtonFormField<String>(
                           decoration: const InputDecoration(
-                            labelText: 'Enter Preferred Jobs',
+                            hintMaxLines: 2,
+                            labelText: 'preffered Industry',
                             border: OutlineInputBorder(),
                           ),
+                          value: selectPrefIndustry,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectPrefIndustry = newValue;
+                            });
+                          },
+                          items: <String>[
+                            '1. Agriculture Animal Husbandry\nand Forestry',
+                            '2. Fishing',
+                            '3. Mining and Quarrying',
+                            '4. Manufacturing',
+                            '5. Electricity Gas and Water Supply',
+                            '6. Construction',
+                            '7. Wholesale and Retail Trade',
+                            '8. Hotel and Restaurant',
+                            '9. Financial Services',
+                            '10.Real Estate Services',
+                            '11.Computer Related Services',
+                            '12.Research and Development Services',
+                            '13.Public Administration and Defence',
+                            '14.Health and Social Services',
+                            '15.Other Community,Social and Personal\nServices',
+                            '16.Private Householdwith Employed\nPersonals',
+                            '17.Extra Territorial Organizations',
+                            '18.Transportation and Storage',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value.trim()),
+                            );
+                          }).toList(),
                         ),
                         const SizedBox(height: 20),
                         const Text(
@@ -1472,7 +1652,7 @@ class _CVCreationState extends State<CVCreation> {
                                     _nicController.text,
                                     _drivingLicenceController.text,
                                     _selectedDate,
-                                    _religionController.text,
+                                    _selectReligion!,
                                     _ageController.text,
                                     _emailController.text,
                                     _contactMobileController.text,
@@ -1512,7 +1692,7 @@ class _CVCreationState extends State<CVCreation> {
                                     _achievementsController.text,
                                     _extraCurricularController.text,
                                     _trainingReqController.text,
-                                    _prefferedAreaController.text,
+                                    //_prefferedAreaController.text,
                                     _careerGuidanceController.text,
                                     sinhalaWriting!,
                                     sinhalaReading!,
@@ -1526,7 +1706,7 @@ class _CVCreationState extends State<CVCreation> {
                                     _careerObjectiveController.text,
                                     _refeeOneController.text,
                                     _refeeTwoController.text,
-                                    _preferredJobsController.text,
+                                    selectPrefIndustry!,
                                     selectPrefAreaToWork!,
                                   );
                                   // _selectedtitle!.clear();
@@ -1541,7 +1721,7 @@ class _CVCreationState extends State<CVCreation> {
                                   // _nicController.clear();
                                   // _drivingLicenceController.clear();
                                   // //_selectedDate!,
-                                  // _religionController.clear();
+                                  // _selectReligion!,
                                   // _ageController.clear();
                                   // _emailController.clear();
                                   // _contactMobileController.clear();
@@ -1620,7 +1800,9 @@ class _CVCreationState extends State<CVCreation> {
                               ), // Background color
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                generatePdfFromFirebase();
+                              },
                               child: const Text('Create CV'),
                             ),
                           ],
@@ -1767,5 +1949,149 @@ class _CVCreationState extends State<CVCreation> {
         ),
       ],
     );
+  }
+}
+
+//create cv pdf format
+Future<void> generatePdfFromFirebase() async {
+  final pdf = pw.Document();
+
+  // Create an instance of FirebaseService
+  final firebaseService = FirebaseService();
+
+  // Fetch user details from Firestore
+  final userDetails = await firebaseService.getCVDetails('CVDetails');
+  if (userDetails != null) {
+    // Add a page to the PDF document
+   final page = pw.Page(
+  build: (pw.Context context) {
+    return pw.Row(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        // Row for "Curriculum Vitae" title
+        pw.Container(
+          padding: pw.EdgeInsets.all(10),
+          color: PdfColors.blue, // Color for the title row
+          child: pw.Header(
+            level: 1,
+            text: 'Curriculum Vitae',
+            textStyle: pw.TextStyle(
+              fontSize: 24,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.white, // Text color
+            ),
+          ),
+        ),
+        // Column for Personal Information, Educational, Skills, and Job Prospects
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            // Personal Information
+            pw.Container(
+              padding: pw.EdgeInsets.all(10),
+              color: PdfColors.blueGrey, // Color for personal information section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 1,
+                    text: 'Personal Information',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.white, // Text color
+                    ),
+                  ),
+                  // Personal information fields
+                  pw.Paragraph(
+                    text: 'Full Name: ${userDetails['fullname']}',
+                  ),
+                  pw.Paragraph(
+                    text: 'Age: ${userDetails['age']}',
+                  ),
+                  pw.Paragraph(
+                    text: 'Gender: ${userDetails['gender']}',
+                  ),
+                  // Add more personal information fields here
+                ],
+              ),
+            ),
+
+            // Educational, Skills, and Job Prospects
+            pw.Container(
+              padding: pw.EdgeInsets.all(10),
+              color: PdfColors.orangeAccent, // Color for other sections
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  // Educational Details
+                  pw.Header(
+                    level: 1,
+                    text: 'Educational Details',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.white, // Text color
+                    ),
+                  ),
+                  // Educational details fields
+                  pw.Paragraph(
+                    text: 'Education: ${userDetails['EduQalification']}',
+                  ),
+                  // Add more educational details fields here
+
+                  // Skills
+                  pw.Header(
+                    level: 1,
+                    text: 'Skills',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.white, // Text color
+                    ),
+                  ),
+                  // Skills fields
+                  pw.Paragraph(
+                    text: 'Year of Experience: ${userDetails['yearOfExperience']}',
+                  ),
+                  // Add more skills fields here
+
+                  // Job Prospects
+                  pw.Header(
+                    level: 1,
+                    text: 'Job Prospects',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.white, // Text color
+                    ),
+                  ),
+                  // Job prospects fields
+                  pw.Paragraph(
+                    text: 'Career Objective: ${userDetails['careerObjective']}',
+                  ),
+                  // Add more job prospects fields here
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  },
+);
+
+    pdf.addPage(page);
+
+    // Save the PDF file
+    final output = await getTemporaryDirectory();
+    final file = File('${output.path}/cv_from_firebase.pdf');
+    await file.writeAsBytes(await pdf.save());
+
+    // Print the PDF
+    final bytes = await file.readAsBytes();
+    await Printing.sharePdf(bytes: bytes, filename: 'cv_from_firebase.pdf');
+  } else {
+    print('User details not found');
   }
 }
