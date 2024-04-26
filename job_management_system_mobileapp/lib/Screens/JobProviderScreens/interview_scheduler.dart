@@ -2,20 +2,21 @@ import "package:board_datetime_picker/board_datetime_picker.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:get_it/get_it.dart";
+import "package:job_management_system_mobileapp/Screens/JobSeekerPage.dart";
 import "package:job_management_system_mobileapp/services/firebase_services.dart";
 import "package:quickalert/models/quickalert_type.dart";
 import "package:quickalert/widgets/quickalert_dialog.dart";
 
 class InterviewScheduler extends StatefulWidget {
   InterviewScheduler({super.key});
-  final FirebaseService _firebaseService = FirebaseService();
+
   @override
   State<InterviewScheduler> createState() => _InterviewSchedulerState();
 }
 
 class _InterviewSchedulerState extends State<InterviewScheduler> {
   FirebaseService? firebaseSerice;
-  String? _userId;
+
   String groupValue = "";
   bool showLinkFeild = false;
   final TextEditingController _linkController = TextEditingController();
@@ -70,7 +71,6 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    _userId = firebaseSerice!.currentUser!['uid'];
 
     return Scaffold(
       appBar: AppBar(
@@ -309,7 +309,6 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         selectedParticipant,
                         groupValue,
                         _selectedDateTime.toString(),
-                        _userId.toString(),
                       );
                       showAlert();
 

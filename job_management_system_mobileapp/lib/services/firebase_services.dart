@@ -104,8 +104,13 @@ class FirebaseService {
       FirebaseFirestore.instance.collection('vacancy');
 
   //create add new vacancy
-  Future<void> addVacancy(String companyName, String jobPosition,
-      String description, String salary, String location) {
+  Future<void> addVacancy(
+    String companyName,
+    String jobPosition,
+    String description,
+    String salary,
+    String location,
+  ) {
     return vacancyCollection.add(
       {
         'company_name': companyName,
@@ -113,6 +118,7 @@ class FirebaseService {
         'description': description,
         'salary': salary,
         'location': location,
+        'uid': uid,
       },
     );
   }
@@ -457,8 +463,13 @@ class FirebaseService {
       FirebaseFirestore.instance.collection('interview_details');
 
   //add scheduled interview
-  Future<void> addInterviewDetails(String topic, String description,
-      String participant, String type, String date_time, String uid) {
+  Future<void> addInterviewDetails(
+    String topic,
+    String description,
+    String participant,
+    String type,
+    String date_time,
+  ) {
     return interviewCollection.add(
       {
         'topic': topic,
