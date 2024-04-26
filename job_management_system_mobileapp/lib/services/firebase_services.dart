@@ -165,7 +165,7 @@ class FirebaseService {
     });
   }
 
-  //CV creatoion:
+  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++CV creatoion:
 
   Future<void> addCVdetails(
       String? title,
@@ -224,7 +224,7 @@ class FirebaseService {
       String achievements,
       String extraCurricular,
       String trainingReq,
-      String prefferedArea,
+      //String prefferedArea,
       String careerGuidance,
       String? sinhalaWriting,
       String? sinhalaReading,
@@ -300,7 +300,7 @@ class FirebaseService {
       'achievements': achievements,
       'extraCurricular': extraCurricular,
       'trainingReq': trainingReq,
-      'prefferedArea': prefferedArea,
+      //'prefferedArea': prefferedArea,
       'careerGuidance': careerGuidance,
       'sinhalaWriting': sinhalaWriting,
       'sinhalaReading': sinhalaReading,
@@ -320,6 +320,31 @@ class FirebaseService {
       'preferredJobs': preferredJobs,
       'selectPrefArea': selectPrefArea
     }, SetOptions(merge: true));
+  }
+
+// CV PDF genarating
+
+  final CollectionReference cvDetailsCollection =
+      FirebaseFirestore.instance.collection('CVDetails');
+
+  // Method to get details of a CV from Firestore
+  Future<DocumentSnapshot?> getCVDetails(String s) async {
+    try {
+      // Query the "CVDetails" collection to retrieve all documents
+      QuerySnapshot querySnapshot = await cvDetailsCollection.get();
+
+      // Check if any documents are returned
+      if (querySnapshot.docs.isNotEmpty) {
+        // Return the first document found (assuming there's only one matching document)
+        return querySnapshot.docs.first;
+      } else {
+        print('No CVDetails documents found');
+        return null;
+      }
+    } catch (error) {
+      print('Error getting CVDetails: $error');
+      return null;
+    }
   }
 
   //job provider details

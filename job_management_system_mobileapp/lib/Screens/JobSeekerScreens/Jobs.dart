@@ -1,43 +1,52 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
-import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:get_it/get_it.dart';
-import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class Jobs extends StatefulWidget {
-  const Jobs({super.key});
+  const Jobs({Key? key}) : super(key: key);
 
   @override
-  State<Jobs> createState() => _JobsState();
+  _JobsState createState() => _JobsState();
 }
 
-final FirebaseService firebaseService = FirebaseService();
-
 class _JobsState extends State<Jobs> {
-  FirebaseService? _firebaseService;
+  List<String> selectedFilters = [];
+  TextEditingController searchController = TextEditingController();
+
+  List<String> filteredSnapshot = []; // Declare the filteredSnapshot list here
+
+  double? _deviceWidth, _deviceHeight;
+  
+  // for the responsiveness of the device
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
   @override
   Widget build(BuildContext context) {
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+
+    void showAlert() {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade800,
         title: const Text(
-          'Find your Job in here',
+          'Find Your Job Here',
           style: TextStyle(
-            color: Color.fromARGB(255, 248, 248, 248),
+            color: Color.fromARGB(255, 248, 248, 248), // Add the desired color here
           ),
         ),
       ),
@@ -50,163 +59,207 @@ class _JobsState extends State<Jobs> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home,
-                    color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.home, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const JobSeekerPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings,
-                    color: Color.fromARGB(
-                        255, 255, 255, 255)), // Change the color here
+                icon: const Icon(Icons.settings, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileJobSeeker()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,
-                    color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.notifications, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const NotificationsJobSeeker()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat,
-                    color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.chat, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Chattings()));
-},
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Chattings()));
+                },
               ),
             ],
           ),
         ),
       ),
-    body: Column(
-  children: [
-    Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.orange.shade900,
-            Colors.orange.shade800,
-            Colors.orange.shade400,
-          ],
-        ),
-      ),
-    ),
-    SizedBox(
-      height: 160,
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('vacancy').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            ); // Show loading indicator while fetching data
-          }
-
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: snapshot.data?.docs.length,
-            itemBuilder: (context, index) {
-              var vacancyData = snapshot.data?.docs[index].data();
-              String companyName = '';
-
-              if (vacancyData != null) {
-                companyName = (vacancyData as Map<String, dynamic>)['company_name'] as String;
-              }
-              return Container(
-                margin: const EdgeInsets.all(8),
-                width: 250,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Search for jobs...',
+                prefixIcon: const Icon(Icons.search, color: Colors.orange),
+                filled: true,
+                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.business),
-                          const SizedBox(width: 8),
-                          Text(
-                            companyName = (vacancyData as Map<String, dynamic>)['company_name'] as String, // Assuming 'company_name' is a field in your Firestore document
-                            style: const TextStyle(fontSize: 20, color: Colors.blue),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 6),
-                      Row(
-                        children: [
-                          const Icon(Icons.work),
-                          const SizedBox(width: 8),
-                          Text(
-                            companyName = (vacancyData)['job_position'] as String,
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 6),
-                      /* Text(
-                        companyName = (vacancyData as Map<String, dynamic>)['salary'] as String, 
-                        style: const TextStyle(fontSize: 8),
-                      ),*/
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on),
-                          const SizedBox(width: 8),
-                          Text(
-                            companyName = (vacancyData)['location'] as String,
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
+              ),
+              onChanged: (value) {
+                filterJobs(value);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Wrap(
+              spacing: 8.0,
+              children: List.generate(
+                5,
+                (index) {
+                  String filterLabel = 'Filter ${index + 1}';
+                  if (index == 0) {
+                    filterLabel = 'Software Engineer';
+                  } else if (index == 1) {
+                    filterLabel = 'Web Developer';
+                  } else if (index == 2) {
+                    filterLabel = 'Data Analyst';
+                  } else if (index == 3) {
+                    filterLabel = 'UI/UX Designer';
+                  } else if (index == 4) {
+                    filterLabel = 'Network Engineer';
+                  }
+                  return FilterChip(
+                    label: Text(filterLabel),
+                    selected: selectedFilters.contains(filterLabel),
+                    onSelected: (bool selected) {
+                      setState(() {
+                        if (selected) {
+                          selectedFilters.add(filterLabel);
+                        } else {
+                          selectedFilters.remove(filterLabel);
+                        }
+                      });
+                      filterJobs(searchController.text);
+                    },
+                    selectedColor: const Color.fromARGB(255, 236, 168, 84),
+                    backgroundColor: selectedFilters.contains(filterLabel)
+                        ? Colors.orange
+                        : const Color.fromARGB(255, 240, 236, 236),
+                    checkmarkColor: const Color.fromARGB(255, 1, 114, 5),
+                    labelStyle: TextStyle(
+                        color: selectedFilters.contains(filterLabel)
+                            ? const Color.fromARGB(255, 107, 44, 44)
+                            : Colors.black),
+                  );
+                },
+              ),
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance.collection('vacancy').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+             
+      List<String> filteredSnapshot = snapshot.hasData ? snapshot.data!.docs.map((doc) {
+        String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
+        String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
+        String location = (doc.data() as Map<String, dynamic>)['location'] as String;
+
+        return 'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
+      }).toList() : [];
+
+                for (var doc in snapshot.data?.docs ?? []) {
+                  String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
+                  String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
+                  String location = (doc.data() as Map<String, dynamic>)['location'] as String;
+
+                  String job =
+                      'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
+
+                  if (filteredSnapshot.isEmpty) {
+                    filteredSnapshot.add(job);
+                  } else {
+                    bool added = false;
+                    for (String filteredJob in filteredSnapshot) {
+                      if (filteredJob.contains(jobPosition) &&
+                          filteredJob.contains(companyName) &&
+                          filteredJob.contains(location)) {
+                        added = true;
+                        break;
+                      }
+                    }
+                    if (!added) {
+                      filteredSnapshot.add(job);
+                    }
+                  }
+                }
+
+                return filteredSnapshot.isEmpty
+    ? const Center(
+        child: Text('Not Found'),
+      )
+    : ListView.builder(
+        itemCount: filteredSnapshot.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            elevation: 3.0,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(filteredSnapshot[index]),
+            ),
           );
         },
+      );
+              },
+            ),
+          ),
+        ],
       ),
-    ),
-    Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: List<Widget>.generate(
-        3,
-        (int index) {
-          return ChoiceChip(
-            label: Text('Chip $index'),
-            selected: false,
-            onSelected: (bool selected) {},
-          );
-        },
-      ).toList(),
-    ),
-  ],
-),
     );
-  }}
+  }
+
+  
+
+ void filterJobs(String query) {
+  setState(() {
+    filteredSnapshot.clear();
+    var snapshot;
+    for (var doc in snapshot.data?.docs ?? []) {
+      String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
+      String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
+      String location = (doc.data() as Map<String, dynamic>)['location'] as String;
+
+      String job =
+          'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
+
+      if (job.toLowerCase().contains(query.toLowerCase()) && _passesFilter(job)) {
+        filteredSnapshot.add(job);
+      }
+    }
+  });
+}
+
+ bool _passesFilter(String job) {
+  if (selectedFilters.isEmpty) {
+    return true;
+  }
+  for (String filter in selectedFilters) {
+    if (job.toLowerCase().contains(filter.toLowerCase())) {
+      return true;
+    }
+  }
+  return false;
+}}
