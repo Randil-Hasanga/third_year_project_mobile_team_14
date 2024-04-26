@@ -1,6 +1,8 @@
 import "package:board_datetime_picker/board_datetime_picker.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:get_it/get_it.dart";
+import "package:job_management_system_mobileapp/Screens/JobSeekerPage.dart";
 import "package:job_management_system_mobileapp/services/firebase_services.dart";
 import "package:quickalert/models/quickalert_type.dart";
 import "package:quickalert/widgets/quickalert_dialog.dart";
@@ -13,7 +15,8 @@ class InterviewScheduler extends StatefulWidget {
 }
 
 class _InterviewSchedulerState extends State<InterviewScheduler> {
-  final FirebaseService _firebaseService = FirebaseService();
+  FirebaseService? firebaseSerice;
+
   String groupValue = "";
   bool showLinkFeild = false;
   final TextEditingController _linkController = TextEditingController();
@@ -25,6 +28,12 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
   String selectedParticipantName = 'Select Participant';
 
   DateTime _selectedDateTime = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseSerice = GetIt.instance.get<FirebaseService>();
+  }
 
   void _chooseDateTime() async {
     final result = await showBoardDateTimePicker(
@@ -59,9 +68,30 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
     );
   }
 
+  void linkPopup() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.custom,
+      title: "Enter Link",
+      text: "Please enter the link",
+      confirmBtnText: "Continue",
+      widget: TextFormField(
+        controller: _linkController,
+        decoration: InputDecoration(
+          labelText: "Meeting Link",
+          hintText: "https://meet.google.com/xyz-abc",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -99,7 +129,9 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20.0),
+
+                SizedBox(height: screenHeight * 0.02),
+
                 //input field for description
                 TextFormField(
                   validator: (value) {
@@ -120,7 +152,8 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20.0),
+
+                SizedBox(height: screenHeight * 0.02),
 
                 //add participants
 
@@ -184,8 +217,9 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20.0),
-                // select iterview type
+
+                SizedBox(height: screenHeight * 0.02),
+                // select interview type
                 Row(
                   children: [
                     const Text(
@@ -194,7 +228,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 5.0),
+                    SizedBox(width: screenWidth * 0.05),
                     Radio(
                       value: "Online",
                       groupValue: groupValue,
@@ -203,6 +237,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                           () {
                             groupValue = value!;
                             showLinkFeild = true;
+                            linkPopup();
                           },
                         );
                       },
@@ -213,7 +248,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 20.0),
+                    SizedBox(width: screenWidth * 0.02),
                     Radio(
                       value: "Physical",
                       groupValue: groupValue,
@@ -232,23 +267,6 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    /*showLinkFeild
-                        ? Column(
-                            children: [
-                              const Text("Enter Link:"),
-                              Expanded(
-                                child: TextField(
-                                  controller: _linkController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Container(),*/
                   ],
                 ),
 
@@ -272,13 +290,13 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 20.0),
+                    SizedBox(width: screenWidth * 0.02),
                     /*Text(
                       _selectedDateTime.toString(),
                     ),*/
                   ],
                 ),
-                const SizedBox(height: 20.0),
+                SizedBox(height: screenHeight * 0.02),
                 Row(
                   children: [
                     const Expanded(
@@ -290,15 +308,18 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     Text(_selectedDateTime.toString()),
                   ],
                 ),
-                const SizedBox(height: 80.0),
+
+                SizedBox(height: screenHeight * 0.08),
+
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _firebaseService.addInterviewDetails(
+                      firebaseSerice?.addInterviewDetails(
                         _topicController.text,
                         _descriptionController.text,
                         selectedParticipant,
                         groupValue,
+                        _linkController.text,
                         _selectedDateTime.toString(),
                       );
                       showAlert();
@@ -307,6 +328,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                       _descriptionController.clear();
                       selectedParticipant = "0";
                       groupValue = "";
+                      _linkController.clear();
                       _selectedDateTime = DateTime.now();
                     }
                   },

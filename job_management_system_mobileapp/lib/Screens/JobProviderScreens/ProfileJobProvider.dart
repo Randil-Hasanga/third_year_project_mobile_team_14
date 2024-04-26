@@ -465,6 +465,12 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     return englishRegex.hasMatch(text);
   }
 
+  bool isEnglishWithSymbols(String text) {
+  final RegExp englishRegex = RegExp(r'^[a-zA-Z ,.!?]+$');
+  return englishRegex.hasMatch(text);
+}
+
+
   Widget _memberNumberTextField() {
     return TextFormField(
       controller: _memberNumberController,
@@ -506,7 +512,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Company name cannot be empty";
-        } else if (!isEnglish(value)) {
+        } else if (!isEnglishWithSymbols(value)) {
           return "Company name must be in English";
         } else {
           return null;
@@ -534,9 +540,9 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       },
       validator: (value) {
         if (value!.isEmpty) {
-          return "Company name cannot be empty";
-        } else if (!isEnglish(value)) {
-          return "Agent name must be in English";
+          return "Address cannot be empty";
+        } else if (!isEnglishWithSymbols(value)) {
+          return "Address must be in English";
         } else {
           return null;
         }
@@ -744,7 +750,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Agent name cannot be empty";
-        } else if (!isEnglish(value)) {
+        } else if (!isEnglishWithSymbols(value)) {
           return "Agent name must be in English";
         } else {
           return null;
@@ -770,7 +776,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Agent Position cannot be empty";
-        } else if (!isEnglish(value)) {
+        } else if (!isEnglishWithSymbols(value)) {
           return "Agent Position must be in English";
         } else {
           return null;

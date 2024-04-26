@@ -20,6 +20,8 @@ const String POSTS_COLLECTION = 'posts';
 const String CV_COLLECTION = 'CVDetails';
 
 class FirebaseService {
+  var value;
+
   FirebaseService();
 
   Map? currentUser;
@@ -28,6 +30,8 @@ class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  get instance => null;
 
   Future<bool> loginUser(
       {required String email, required String password}) async {
@@ -100,8 +104,14 @@ class FirebaseService {
       FirebaseFirestore.instance.collection('vacancy');
 
   //create add new vacancy
-  Future<void> addVacancy(String companyName, String jobPosition,
-      String description, String salary, String location) {
+  Future<void> addVacancy(
+    String companyName,
+    String jobPosition,
+    String description,
+    String salary,
+    String location,
+    DateTime date,
+  ) {
     return vacancyCollection.add(
       {
         'company_name': companyName,
@@ -109,6 +119,8 @@ class FirebaseService {
         'description': description,
         'salary': salary,
         'location': location,
+        'uid': uid,
+        'date': date,
       },
     );
   }
@@ -168,7 +180,7 @@ class FirebaseService {
       String nic,
       String drivingLicence,
       DateTime? selectedDate,
-      String religion,
+      String? religion,
       String age,
       String email,
       String contactMobile,
@@ -478,15 +490,23 @@ class FirebaseService {
       FirebaseFirestore.instance.collection('interview_details');
 
   //add scheduled interview
-  Future<void> addInterviewDetails(String topic, String description,
-      String participant, String type, String date_time) {
+  Future<void> addInterviewDetails(
+    String topic,
+    String description,
+    String participant,
+    String type,
+    String link,
+    String date_time,
+  ) {
     return interviewCollection.add(
       {
         'topic': topic,
         'description': description,
         'participant': participant,
         'type': type,
+        'link': link,
         'date_time': date_time,
+        'uid': uid,
       },
     );
   }
