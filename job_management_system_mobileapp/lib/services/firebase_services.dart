@@ -18,6 +18,7 @@ const String USER_COLLECTION = 'users';
 const String PROVIDER_DETAILS_COLLECTION = 'provider_details';
 const String POSTS_COLLECTION = 'posts';
 const String CV_COLLECTION = 'CVDetails';
+const String VACANCY_COLLECTION = 'vacancy';
 
 class FirebaseService {
   var value;
@@ -25,7 +26,9 @@ class FirebaseService {
   FirebaseService();
 
   Map? currentUser;
+
   String? uid;
+  Map? currentSeekerCV;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -71,6 +74,7 @@ class FirebaseService {
     required bool pending,
   }) async {
     try {
+      DateTime currentDate = DateTime.now();
       UserCredential _userCredentials = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
@@ -86,9 +90,8 @@ class FirebaseService {
           'profile_pic': '',
           'pending': pending,
           'disabled': false,
+          'registered_date': currentDate,
         });
-
-        //currentUser = await _getUserData(uid: _userCredentials.user!.uid);
         return true;
       } else {
         return false;
@@ -420,11 +423,27 @@ class FirebaseService {
     }
   }
 
+  //current provider data
   Future<Map<String, dynamic>?> getCurrentProviderData() async {
     DocumentSnapshot<Map<String, dynamic>?> _doc =
         await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).get();
 
     if (_doc.exists) {
+      return _doc.data();
+    } else {
+      return null;
+    }
+  }
+
+  //get current seeker CV
+
+  Future<Map<String, dynamic>?> getCurrentSeekerCV() async {
+    DocumentSnapshot<Map<String, dynamic>?> _doc =
+        await _db.collection(CV_COLLECTION).doc(uid).get();
+
+    if (_doc.exists) {
+      currentSeekerCV = _doc.data() as Map;
+      print("Current CV : $currentSeekerCV");
       return _doc.data();
     } else {
       return null;
@@ -509,5 +528,54 @@ class FirebaseService {
         'uid': uid,
       },
     );
+  }
+
+
+
+  Future<List<Map<String, dynamic>>?> getVacanciesInPrefferedIndustry(
+      List<String> preferedIndustries) async {
+    int age = int.parse(currentSeekerCV!['age']);
+    
+    try {
+      if (currentSeekerCV!['gender'] == "Male") {
+        QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
+            .collection(VACANCY_COLLECTION)
+            .where('industry', whereIn: preferedIndustries)
+            .where('gender', isEqualTo: "male")
+            .where('age', isLessThanOrEqualTo: age)
+            .get();
+
+        if (_querySnapshot.docs.isNotEmpty) {
+          List<Map<String, dynamic>> vacancies =
+              _querySnapshot.docs.map((doc) => doc.data()).toList();
+          print("Male:Industry:age: $vacancies");
+          return vacancies;
+        } else {
+          print("1 No vacancies found.");
+          return []; // Return an empty list if there are no vacancies
+        }
+      } else if (currentSeekerCV!['gender'] == "Female") {
+        QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
+            .collection(VACANCY_COLLECTION)
+            .where('industry', whereIn: preferedIndustries)
+            .where('gender', isEqualTo: "female")
+            .where('age', isLessThanOrEqualTo: age)
+            .get();
+
+        if (_querySnapshot.docs.isNotEmpty) {
+          List<Map<String, dynamic>> vacancies =
+              _querySnapshot.docs.map((doc) => doc.data()).toList();
+          print("Female:Industry:age: $vacancies");
+          return vacancies;
+        } else {
+          print("1 No vacancies found.");
+          return []; // Return an empty list if there are no vacancies
+        }
+      }
+    } catch (error) {
+      print("Error fetching vacancies: $error");
+      return null; // Return null to indicate an error occurred
+    }
+    return null;
   }
 }
