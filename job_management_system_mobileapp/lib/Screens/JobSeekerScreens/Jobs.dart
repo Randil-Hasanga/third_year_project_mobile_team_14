@@ -18,14 +18,25 @@ class _JobsState extends State<Jobs> {
   TextEditingController searchController = TextEditingController();
 
   List<String> filteredSnapshot = []; // Declare the filteredSnapshot list here
+  QuerySnapshot? snapshot; // Add a variable to store the original snapshot
 
   double? _deviceWidth, _deviceHeight;
-  
-  // for the responsiveness of the device
 
   @override
   void initState() {
     super.initState();
+    FirebaseFirestore.instance.collection('vacancy').get().then((value) {
+      setState(() {
+        snapshot = value;
+        filteredSnapshot = value.docs.map((doc) {
+          String companyName = doc['company_name'] as String;
+          String jobPosition = doc['job_position'] as String;
+          String location = doc['location'] as String;
+
+          return 'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
+        }).toList();
+      });
+    });
   }
 
   @override
@@ -46,7 +57,8 @@ class _JobsState extends State<Jobs> {
         title: const Text(
           'Find Your Job Here',
           style: TextStyle(
-            color: Color.fromARGB(255, 248, 248, 248), // Add the desired color here
+            color: Color.fromARGB(
+                255, 248, 248, 248), // Add the desired color here
           ),
         ),
       ),
@@ -61,29 +73,38 @@ class _JobsState extends State<Jobs> {
               IconButton(
                 icon: const Icon(Icons.home, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const JobSeekerPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.settings, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfileJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.notifications, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const NotificationsJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.chat, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Chattings()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Chattings()));
                 },
               ),
             ],
@@ -101,7 +122,7 @@ class _JobsState extends State<Jobs> {
                 hintText: 'Search for jobs...',
                 prefixIcon: const Icon(Icons.search, color: Colors.orange),
                 filled: true,
-                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                fillColor: Color.fromARGB(255, 231, 211, 181),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
@@ -159,107 +180,80 @@ class _JobsState extends State<Jobs> {
             ),
           ),
           Expanded(
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('vacancy').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
-             
-      List<String> filteredSnapshot = snapshot.hasData ? snapshot.data!.docs.map((doc) {
-        String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
-        String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
-        String location = (doc.data() as Map<String, dynamic>)['location'] as String;
-
-        return 'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
-      }).toList() : [];
-
-                for (var doc in snapshot.data?.docs ?? []) {
-                  String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
-                  String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
-                  String location = (doc.data() as Map<String, dynamic>)['location'] as String;
-
-                  String job =
-                      'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
-
-                  if (filteredSnapshot.isEmpty) {
-                    filteredSnapshot.add(job);
-                  } else {
-                    bool added = false;
-                    for (String filteredJob in filteredSnapshot) {
-                      if (filteredJob.contains(jobPosition) &&
-                          filteredJob.contains(companyName) &&
-                          filteredJob.contains(location)) {
-                        added = true;
-                        break;
-                      }
-                    }
-                    if (!added) {
-                      filteredSnapshot.add(job);
-                    }
-                  }
-                }
-
-                return filteredSnapshot.isEmpty
-    ? const Center(
-        child: Text('Not Found'),
-      )
-    : ListView.builder(
-        itemCount: filteredSnapshot.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            elevation: 3.0,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(filteredSnapshot[index]),
-            ),
-          );
-        },
-      );
-              },
-            ),
+            child: filteredSnapshot.isEmpty
+                ? Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade100,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: const Text(
+                        'Not Found',
+                        style: TextStyle(color: Colors.grey, fontSize: 20),
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: filteredSnapshot.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange
+                              .shade100, // Set the desired background color
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Card(
+                          elevation: 3.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(filteredSnapshot[index]),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
     );
   }
 
-  
+  void filterJobs(String query) {
+    setState(() {
+      filteredSnapshot.clear();
+      if (snapshot != null) {
+        for (var doc in snapshot!.docs) {
+          String companyName = doc['company_name'] as String;
+          String jobPosition = doc['job_position'] as String;
+          String location = doc['location'] as String;
 
- void filterJobs(String query) {
-  setState(() {
-    filteredSnapshot.clear();
-    var snapshot;
-    for (var doc in snapshot.data?.docs ?? []) {
-      String companyName = (doc.data() as Map<String, dynamic>)['company_name'] as String;
-      String jobPosition = (doc.data() as Map<String, dynamic>)['job_position'] as String;
-      String location = (doc.data() as Map<String, dynamic>)['location'] as String;
+          String job =
+              'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
 
-      String job =
-          'Company Name: $companyName\nJob Position: $jobPosition\nLocation: $location';
-
-      if (job.toLowerCase().contains(query.toLowerCase()) && _passesFilter(job)) {
-        filteredSnapshot.add(job);
+          if (job.toLowerCase().contains(query.toLowerCase()) &&
+              _passesFilter(job)) {
+            filteredSnapshot.add(job);
+          }
+        }
       }
-    }
-  });
-}
-
- bool _passesFilter(String job) {
-  if (selectedFilters.isEmpty) {
-    return true;
+    });
   }
-  for (String filter in selectedFilters) {
-    if (job.toLowerCase().contains(filter.toLowerCase())) {
+
+  bool _passesFilter(String job) {
+    if (selectedFilters.isEmpty) {
       return true;
     }
+    for (String filter in selectedFilters) {
+      if (job.toLowerCase().contains(filter.toLowerCase())) {
+        return true;
+      }
+    }
+    return false;
   }
-  return false;
-}}
+}

@@ -144,10 +144,7 @@ class FirebaseService {
     String? gender,
     String nic,
     DateTime? dateOfBirth,
-    String? nationality,
-    String specialNeeds,
     String? district,
-    String divisionalSecretariatController,
     String contact,
   ) {
     return ProfileJobSeeker.add({
@@ -157,10 +154,7 @@ class FirebaseService {
       'gender': gender,
       'nic': nic,
       'dateOfBirth': dateOfBirth,
-      'nationality': nationality,
-      'specialNeeds': specialNeeds,
       'district': district,
-      'divisionalSecretariat': divisionalSecretariatController,
       'contact': contact
     });
   }
@@ -440,6 +434,9 @@ class FirebaseService {
       }).toList();
     });
   }
+
+
+  
 
   //Create a message
   Future<void> sendMessage(String receiverID, message) async {
