@@ -109,18 +109,26 @@ class FirebaseService {
   //create add new vacancy
   Future<void> addVacancy(
     String companyName,
+    String industryType,
     String jobPosition,
     String description,
-    String salary,
+    String gender,
+    int minimumAge,
+    String maxEducarion,
+    double salary,
     String location,
     DateTime date,
   ) {
     return vacancyCollection.add(
       {
         'company_name': companyName,
+        'industry': industryType,
         'job_position': jobPosition,
         'description': description,
-        'salary': salary,
+        'gender': gender,
+        'minimum_age': minimumAge,
+        'max_education': maxEducarion,
+        'minimum_salary': salary,
         'location': location,
         'uid': uid,
         'date': date,
