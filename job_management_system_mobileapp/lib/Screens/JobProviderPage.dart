@@ -67,6 +67,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
   Widget build(BuildContext context) {
     _userName = _firebaseService!.currentUser!['username'];
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     // You can adjust this factor according to your preference
     double fontSize = screenWidth * 0.04; // Example factor
 
@@ -263,7 +264,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                             companyName = (vacancyData as Map<
                                                     String,
                                                     dynamic>)['company_name']
-                                                as String, // Assuming 'company_name' is a field in your Firestore document
+                                                as String,
                                             style:
                                                 const TextStyle(fontSize: 20),
                                           ),

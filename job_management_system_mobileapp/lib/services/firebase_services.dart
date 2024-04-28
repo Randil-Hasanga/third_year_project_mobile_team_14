@@ -530,12 +530,10 @@ class FirebaseService {
     );
   }
 
-
-
   Future<List<Map<String, dynamic>>?> getVacanciesInPrefferedIndustry(
       List<String> preferedIndustries) async {
     int age = int.parse(currentSeekerCV!['age']);
-    
+
     try {
       if (currentSeekerCV!['gender'] == "Male") {
         QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
