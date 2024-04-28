@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -30,6 +32,8 @@ class _vacanciesState extends State<vacancies> {
 
   final _locationController = TextEditingController();
 
+  final _industrytypeController = TextEditingController();
+
   String? selectedLocation;
 
   FirebaseService? firebaseSerice;
@@ -41,6 +45,12 @@ class _vacanciesState extends State<vacancies> {
   DateTime issuedDate = DateTime.now();
 
   Map<String, dynamic>? _jobProviderDetails;
+
+  String _gender = 'Male';
+
+  String _educationLevel = 'O/L';
+
+  double _minimumAge = 18;
 
   @override
   void initState() {
@@ -219,23 +229,8 @@ class _vacanciesState extends State<vacancies> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //Input for Company Name
-                  /*TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "please enter company name";
-                      }
-                      return null;
-                    },
-                    controller: _companyNameController,
-                    decoration: const InputDecoration(
-                        labelText: 'Company Name',
-                        hintText: 'Company Name',
-                        border: OutlineInputBorder()),
-                  ),*/
-
                   SizedBox(
-                    height: screenHeight * 0.02,
+                    height: screenHeight * 0.08,
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('provider_details')
@@ -269,15 +264,25 @@ class _vacanciesState extends State<vacancies> {
                                 children: [
                                   Row(
                                     children: [
+                                      const Icon(Icons.business),
+                                      const SizedBox(width: 8),
                                       Text(
                                         _companyNameController.text =
                                             (providerData as Map<String,
                                                     dynamic>)['company_name']
                                                 as String,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                  SizedBox(height: screenHeight * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(_industrytypeController.text =
+                                          (providerData as Map<String,
+                                              dynamic>)['industry'] as String),
                                     ],
                                   ),
                                 ],
@@ -288,7 +293,7 @@ class _vacanciesState extends State<vacancies> {
                       },
                     ),
                   ),
-                  SizedBox(height: screenHeight * 0.06),
+                  SizedBox(height: screenHeight * 0.02),
 
                   //Input for Job Position
                   Autocomplete<String>(
@@ -354,17 +359,104 @@ class _vacanciesState extends State<vacancies> {
 
                   SizedBox(height: screenHeight * 0.02),
 
+                  DropdownButtonFormField<String>(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "please select required gender";
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Gender',
+                      hintText: 'Male',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: _gender,
+                    items:
+                        <String>['Male', 'Female', 'Any'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _gender = newValue!;
+                      });
+                    },
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+
+                  const Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('Select Minimum Age:'),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  Slider(
+                    min: 18,
+                    max: 30,
+                    value: _minimumAge,
+                    onChanged: (value) {
+                      setState(() {
+                        _minimumAge = value;
+                      });
+                    },
+                    divisions: 6,
+                    label: "$_minimumAge",
+                  ),
+
+                  SizedBox(height: screenHeight * 0.02),
+
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Required Education Level',
+                      hintText: 'O/L',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: _educationLevel,
+                    items: <String>[
+                      'O/L',
+                      'A/L',
+                      'Undergraduate',
+                      'Graduate',
+                      'PostGraduate'
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _educationLevel = newValue!;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "please select education level";
+                      }
+                      return null;
+                    },
+                  ),
+
+                  SizedBox(height: screenHeight * 0.02),
+
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "please enter description";
+                        return "please enter salary";
                       }
                       return null;
                     },
                     controller: _salaryController,
                     decoration: const InputDecoration(
-                        labelText: 'Salary',
-                        hintText: 'Salary',
+                        labelText: 'Minimum Salary',
+                        hintText: 'Minimum Salary',
                         border: OutlineInputBorder()),
                   ),
 
@@ -402,9 +494,13 @@ class _vacanciesState extends State<vacancies> {
                       if (_formKey.currentState!.validate()) {
                         firebaseSerice!.addVacancy(
                           _companyNameController.text,
+                          _industrytypeController.text,
                           _jobPositionController.text,
                           _descriptionController.text,
-                          _salaryController.text,
+                          _gender,
+                          _minimumAge.toInt(),
+                          _educationLevel,
+                          double.tryParse(_salaryController.text) ?? 0.0,
                           _locationController.text,
                           issuedDate,
                         );
