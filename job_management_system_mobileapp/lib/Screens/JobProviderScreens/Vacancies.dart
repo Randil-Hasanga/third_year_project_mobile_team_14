@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
@@ -35,12 +36,29 @@ class _vacanciesState extends State<vacancies> {
 
   String selectedJobPosition = '';
 
+  String? _companyname;
+
   DateTime issuedDate = DateTime.now();
+
+  Map<String, dynamic>? _jobProviderDetails;
 
   @override
   void initState() {
     super.initState();
     firebaseSerice = GetIt.instance.get<FirebaseService>();
+  }
+
+  void _getProvider() async {
+    _jobProviderDetails = await firebaseSerice!.getCurrentProviderData();
+
+    if (_jobProviderDetails != null) {
+      setState(() {
+        _companyNameController.text =
+            _jobProviderDetails!['company_name'] ?? '';
+      });
+    }
+
+    _companyname = _jobProviderDetails!['company_name'];
   }
 
   final List<String> items = [
@@ -202,7 +220,7 @@ class _vacanciesState extends State<vacancies> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //Input for Company Name
-                  TextFormField(
+                  /*TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "please enter company name";
@@ -214,9 +232,63 @@ class _vacanciesState extends State<vacancies> {
                         labelText: 'Company Name',
                         hintText: 'Company Name',
                         border: OutlineInputBorder()),
-                  ),
+                  ),*/
 
-                  SizedBox(height: screenHeight * 0.02),
+                  SizedBox(
+                    height: screenHeight * 0.02,
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('provider_details')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var providerData =
+                                snapshot.data?.docs[index].data();
+                            String companyName = '';
+
+                            if (providerData != null) {
+                              companyName = (providerData
+                                      as Map<String, dynamic>)['company_name']
+                                  as String;
+                            }
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        _companyNameController.text =
+                                            (providerData as Map<String,
+                                                    dynamic>)['company_name']
+                                                as String,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.06),
 
                   //Input for Job Position
                   Autocomplete<String>(

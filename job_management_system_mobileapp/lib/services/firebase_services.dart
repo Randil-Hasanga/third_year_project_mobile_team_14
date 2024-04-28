@@ -18,6 +18,7 @@ const String USER_COLLECTION = 'users';
 const String PROVIDER_DETAILS_COLLECTION = 'provider_details';
 const String POSTS_COLLECTION = 'posts';
 const String CV_COLLECTION = 'CVDetails';
+//String companyName = '';
 
 class FirebaseService {
   var value;
@@ -485,4 +486,6 @@ class FirebaseService {
       },
     );
   }
+
+  //get company Name
 }
