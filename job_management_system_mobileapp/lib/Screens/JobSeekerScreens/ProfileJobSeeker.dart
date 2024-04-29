@@ -1,4 +1,3 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,19 +19,16 @@ class ProfileJobSeeker extends StatefulWidget {
 }
 
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _selectedGender;
   final TextEditingController _nicController = TextEditingController();
   DateTime? _selectedDate;
-  final TextEditingController _nationalityController = TextEditingController();
-  final TextEditingController _specialNeedsController = TextEditingController();
-  String? _selectedDistrict;
-  String? _selectedMaritalStatus;
 
-  final TextEditingController _divisionalSecretariatController =
-      TextEditingController();
+  String? _selectedDistrict;
+
   final TextEditingController _contactNumberController =
       TextEditingController();
 
@@ -141,216 +137,204 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
 
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: <Widget>[
-            TextFormField(
-              controller: _fullNameController,
-              decoration: const InputDecoration(
-                labelText: 'Full Name',
-                hintText: 'Full name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email Address',
-                hintText: 'Email address',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextFormField(
-              controller: _addressController,
-              maxLines:
-                  2, // Set to null or any number greater than 1 for multiple lines
-              decoration: const InputDecoration(
-                labelText: 'Address',
-                hintText: 'Address',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Gender',
-                border: OutlineInputBorder(),
-              ),
-              value: _selectedGender,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedGender = newValue;
-                });
-              },
-              items: <String>['Male', 'Female']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _nicController,
-              maxLines:
-                  1, // Set to null or any number greater than 1 for multiple lines
-              decoration: const InputDecoration(
-                labelText: 'NIC',
-                hintText: 'NIC',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              readOnly: true,
-              controller: TextEditingController(
-                text: _selectedDate != null
-                    ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                    : '',
-              ),
-              onTap: () => _selectDate(context),
-              decoration: const InputDecoration(
-                labelText: 'Date of Birth',
-                hintText: 'Date of Birth',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _nationalityController,
-              maxLines:
-                  1, // Set to null or any number greater than 1 for multiple lines
-              decoration: const InputDecoration(
-                labelText: 'Nationality',
-                hintText: 'Ex: SriLanka',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _specialNeedsController,
-              decoration: const InputDecoration(
-                labelText: 'Special needs',
-                hintText: 'Special needs',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'District',
-                border: OutlineInputBorder(),
-              ),
-              value: _selectedDistrict,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedDistrict = newValue;
-                });
-              },
-              items: <String>[
-                'Matara',
-                'Galle',
-                'Kalutara',
-                'Colombo',
-                'Gampaha',
-                'Kandy',
-                'Matale',
-                'Nuwara Eliya',
-                'Hambantota',
-                'Jaffna',
-                'Kilinochchi',
-                'Mannar',
-                'Mullaitivu',
-                'Vavuniya',
-                'Batticaloa',
-                'Ampara',
-                'Trincomalee',
-                'Kurunegala',
-                'Puttalam',
-                'Anuradhapura',
-                'Polonnaruwa',
-                'Badulla',
-                'Moneragala',
-                'Ratnapura',
-                'Kegalle'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _divisionalSecretariatController,
-              decoration: const InputDecoration(
-                labelText: 'Divisional Secretariat',
-                hintText: 'Divisional Secretariat',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _contactNumberController,
-              decoration: const InputDecoration(
-                labelText: 'Contact Number',
-                hintText: 'Contact Number',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    // Format the date as a string
-                    String formattedDate = _selectedDate != null
-                        ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                        : '';
-
-                    // Call the function to add job seeker profile
-                    FirebaseService().addJobSeekerProfile(
-                      _fullNameController.text,
-                      _emailController.text,
-                      _addressController.text,
-                      _selectedGender!,
-                      _nicController.text,
-                      _selectedDate,
-                      _nationalityController.text,
-                      _specialNeedsController.text,
-                      _selectedDistrict!,
-                      _divisionalSecretariatController.text,
-                      _contactNumberController.text,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange.shade800, // Background color
-                    elevation: 4, // Elevation (shadow)
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Rounded corners
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 32), // Button padding
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(
-                        color: Colors.white, fontSize: 19), // Text color
-                  ), // Background color
+        child: Form(
+          key: _formKey, // Provide a GlobalKey<FormState> for form validation
+          child: ListView(
+            children: <Widget>[
+              TextFormField(
+                controller: _fullNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Full Name',
+                  hintText: 'Full name',
+                  border: OutlineInputBorder(),
                 ),
-              ],
-            ),
-          ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your full name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email Address',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Email Address is required';
+                  }
+                  // Regular expression pattern for email validation
+                  RegExp regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                  if (!regex.hasMatch(value)) {
+                    return 'Enter a valid email address';
+                  }
+                  return null; // Return null if the input is valid
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _addressController,
+                maxLines:
+                    2, // Set to null or any number greater than 1 for multiple lines
+                decoration: const InputDecoration(
+                  labelText: 'Address',
+                  hintText: 'Address',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Gender',
+                  border: OutlineInputBorder(),
+                ),
+                value: _selectedGender,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedGender = newValue;
+                  });
+                },
+                items: <String>['Male', 'Female']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _nicController,
+                maxLines:
+                    1, // Set to null or any number greater than 1 for multiple lines
+                decoration: const InputDecoration(
+                  labelText: 'NIC',
+                  hintText: 'NIC',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                readOnly: true,
+                controller: TextEditingController(
+                  text: _selectedDate != null
+                      ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                      : '',
+                ),
+                onTap: () => _selectDate(context),
+                decoration: const InputDecoration(
+                  labelText: 'Date of Birth',
+                  hintText: 'Date of Birth',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'District',
+                  border: OutlineInputBorder(),
+                ),
+                value: _selectedDistrict,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedDistrict = newValue;
+                  });
+                },
+                items: <String>[
+                  'Matara',
+                  'Galle',
+                  'Kalutara',
+                  'Colombo',
+                  'Gampaha',
+                  'Kandy',
+                  'Matale',
+                  'Nuwara Eliya',
+                  'Hambantota',
+                  'Jaffna',
+                  'Kilinochchi',
+                  'Mannar',
+                  'Mullaitivu',
+                  'Vavuniya',
+                  'Batticaloa',
+                  'Ampara',
+                  'Trincomalee',
+                  'Kurunegala',
+                  'Puttalam',
+                  'Anuradhapura',
+                  'Polonnaruwa',
+                  'Badulla',
+                  'Moneragala',
+                  'Ratnapura',
+                  'Kegalle'
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _contactNumberController,
+                decoration: const InputDecoration(
+                  labelText: 'Contact Number',
+                  hintText: 'Contact Number',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // If the form is valid, proceed with form submission
+                        // Format the date as a string
+                        String formattedDate = _selectedDate != null
+                            ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                            : '';
+
+                        // Call the function to add job seeker profile
+                        FirebaseService().addJobSeekerProfile(
+                          _fullNameController.text,
+                          _emailController.text,
+                          _addressController.text,
+                          _selectedGender!,
+                          _nicController.text,
+                          _selectedDate,
+                          _selectedDistrict!,
+                          _contactNumberController.text,
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.orange.shade800, // Background color
+                      elevation: 4, // Elevation (shadow)
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // Rounded corners
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 32), // Button padding
+                    ),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: 19), // Text color
+                    ), // Background color
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

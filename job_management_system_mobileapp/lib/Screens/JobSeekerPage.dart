@@ -124,9 +124,14 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/Default.png'),
+                    GestureDetector(
+                      onTap: () {
+                        // Add code here to handle the edit functionality
+                      },
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage('assets/Default.png'),
+                      ),
                     ),
                     const SizedBox(width: 10),
                     Column(
@@ -249,83 +254,90 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                 return Text('Error: ${snapshot.error}');
                               }
 
-                              return Row(
-                                children: List.generate(
-                                  snapshot.data?.docs.length ?? 0,
-                                  (index) {
-                                    var vacancyData =
-                                        snapshot.data?.docs[index].data();
-                                    String companyName = '';
+                              return Container(
+                                color: Color.fromARGB(255, 231, 164,
+                                    110), // Background color for the list
+                                child: Row(
+                                  children: List.generate(
+                                    snapshot.data?.docs.length ?? 0,
+                                    (index) {
+                                      var vacancyData =
+                                          snapshot.data?.docs[index].data();
+                                      String companyName = '';
 
-                                    if (vacancyData != null) {
-                                      companyName = (vacancyData as Map<String,
-                                          dynamic>)['company_name'] as String;
-                                    }
-                                    return Container(
-                                      margin: const EdgeInsets.all(8),
-                                      width: 250,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade200,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(25.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                const Icon(Icons.business),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  companyName = (vacancyData
-                                                              as Map<String,
-                                                                  dynamic>)[
-                                                          'company_name']
-                                                      as String, // Assuming 'company_name' is a field in your Firestore document
-                                                  style: const TextStyle(
-                                                      fontSize: 20,
-                                                      color: Colors.blue),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 6),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.work),
-                                                SizedBox(width: 8),
-                                                Flexible(
-                                                  child: Text(
-                                                    (vacancyData['job_position']
-                                                        as String),
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 6),
-                                            Row(
-                                              children: [
-                                                const Icon(Icons.location_on),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  companyName =
-                                                      (vacancyData)['location']
-                                                          as String,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                      if (vacancyData != null) {
+                                        companyName = (vacancyData as Map<
+                                            String,
+                                            dynamic>)['company_name'] as String;
+                                      }
+                                      return Container(
+                                        margin: const EdgeInsets.all(8),
+                                        width: 250,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(25.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.business),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    companyName = (vacancyData
+                                                                as Map<String,
+                                                                    dynamic>)[
+                                                            'company_name']
+                                                        as String, // Assuming 'company_name' is a field in your Firestore document
+                                                    style: const TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 6),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.work),
+                                                  SizedBox(width: 8),
+                                                  Flexible(
+                                                    child: Text(
+                                                      (vacancyData[
+                                                              'job_position']
+                                                          as String),
+                                                      style: TextStyle(
+                                                          fontSize: 20),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 6),
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.location_on),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    companyName = (vacancyData)[
+                                                        'location'] as String,
+                                                    style: const TextStyle(
+                                                        fontSize: 20),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               );
                             },
@@ -395,60 +407,84 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                           dynamic>)['company_name'] as String;
                                     }
                                     return Container(
-                                      margin: const EdgeInsets.all(8),
+                                      margin: const EdgeInsets.all(1),
                                       width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade200,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(25.0),
+                                        padding: const EdgeInsets.all(7.0),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              children: [
-                                                const Icon(Icons.business),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  companyName = (vacancyData
-                                                              as Map<String,
-                                                                  dynamic>)[
-                                                          'company_name']
-                                                      as String, // Assuming 'company_name' is a field in your Firestore document
-                                                  style: const TextStyle(
-                                                      fontSize: 20,
-                                                      color: Colors.blue),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(255,231,164,10), // Background color for data
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                            Icons.business),
+                                                        const SizedBox(
+                                                            width: 8),
+                                                        Text(
+                                                          companyName = (vacancyData
+                                                                  as Map<String,
+                                                                      dynamic>)[
+                                                              'company_name'] as String,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 20,
+                                                                  color: Colors
+                                                                      .blue),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height:1),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.work),
+                                                        const SizedBox(
+                                                            width: 8),
+                                                        Text(
+                                                          companyName =
+                                                              (vacancyData)[
+                                                                      'job_position']
+                                                                  as String,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 20),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height:1),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                            Icons.location_on),
+                                                        const SizedBox(
+                                                            width: 8),
+                                                        Text(
+                                                          companyName =
+                                                              (vacancyData)[
+                                                                      'location']
+                                                                  as String,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 20),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 6),
-                                            Row(
-                                              children: [
-                                                const Icon(Icons.work),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  companyName = (vacancyData)[
-                                                      'job_position'] as String,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 6),
-                                            Row(
-                                              children: [
-                                                const Icon(Icons.location_on),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  companyName =
-                                                      (vacancyData)['location']
-                                                          as String,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
-                                                ),
-                                              ],
+                                              ),
                                             ),
                                           ],
                                         ),
