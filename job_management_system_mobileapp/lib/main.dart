@@ -9,11 +9,14 @@ import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
+import 'package:job_management_system_mobileapp/Screens/job_matching.dart';
 import 'package:job_management_system_mobileapp/Screens/splash_screen.dart';
 import 'package:job_management_system_mobileapp/firebase_options.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:job_management_system_mobileapp/widgets/listViewWidgets.dart';
+import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
 
 // void main() => runApp(const MaterialApp(
 //       debugShowCheckedModeBanner: false,
@@ -32,14 +35,22 @@ void main() async {
   GetIt.instance.registerSingleton<EmailService>(
     EmailService(),
   );
-  await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(false);
+  GetIt.instance.registerSingleton<RichTextWidget>(
+    RichTextWidget(),
+  );
+  GetIt.instance.registerSingleton<ListViewWidgets>(
+    ListViewWidgets(),
+  );
+
+  // );
+  // await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(false);
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static void setLocale(BuildContext context, Locale locale){
+  static void setLocale(BuildContext context, Locale locale) {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(locale);
   }
@@ -49,10 +60,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   Locale? _locale;
 
-  void setLocale(Locale locale){
+  void setLocale(Locale locale) {
     setState(() {
       _locale = locale;
     });
@@ -85,14 +95,12 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       debugShowCheckedModeBanner: false,
-
       title: 'Job Management System',
       theme: ThemeData(
         useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
-        
       ),
-      initialRoute: 'splash',
+      initialRoute: 'login',
       routes: {
         'splash': (context) => const SplashScreen(),
         'fogot_pwd': (context) => const ForgotPasswordPage(),
@@ -100,6 +108,7 @@ class _MyAppState extends State<MyApp> {
         'login': (context) => const LogInPage(),
         // 'home': (context) => HomePage(),
         'editProviderProfile': (context) => JobProviderProfile(),
+        'job_matching': (context) => JobMatchingScreen(),
       },
     );
   }

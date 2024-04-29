@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Jobs.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
+import 'package:job_management_system_mobileapp/Screens/job_matching.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/main.dart';
@@ -221,7 +221,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Jobs()),
+                                    builder: (context) => JobMatchingScreen()),
                               );
                             },
                             child: Text(
@@ -544,7 +544,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Jobs()),
+                  MaterialPageRoute(builder: (context) =>  JobMatchingScreen()),
                 );
               },
             ),
