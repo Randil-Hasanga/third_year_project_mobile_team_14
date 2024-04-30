@@ -163,7 +163,6 @@ class FirebaseService {
         'minimum_salary': salary,
         'location': location,
         'date': date,
-        'uid': uid,
       },
     );
   }
@@ -488,9 +487,6 @@ class FirebaseService {
       }).toList();
     });
   }
-
-
-  
 
   //Create a message
   Future<void> sendMessage(String receiverID, message) async {

@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/interview_scheduler.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/updateVacancy.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
@@ -285,12 +286,6 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                         ],
                                       ),
                                       SizedBox(height: 6),
-                                      /* Text(
-                                        companyName = (vacancyData as Map<
-                                                String, dynamic>)['salary']
-                                            as String, 
-                                        style: const TextStyle(fontSize: 8),
-                                      ),*/
                                       Row(
                                         children: [
                                           const Icon(Icons.location_on),
@@ -308,7 +303,13 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                         children: [
                                           IconButton(
                                             onPressed: () {
-                                              //add edit logic
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      VacancyUpdaterUI(),
+                                                ),
+                                              );
                                             },
                                             icon: const Icon(Icons.edit),
                                           ),
