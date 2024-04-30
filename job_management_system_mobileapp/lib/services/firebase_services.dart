@@ -141,6 +141,33 @@ class FirebaseService {
     return vacancyCollection.doc(vId).delete();
   }
 
+  //Udpate vacancy
+  Future<void> updateVacancy(
+    String vId,
+    String jobPosition,
+    String description,
+    String gender,
+    int minimumAge,
+    String maxEducation,
+    double salary,
+    String location,
+    DateTime date,
+  ) {
+    return vacancyCollection.doc(vId).update(
+      {
+        'job_position': jobPosition,
+        'description': description,
+        'gender': gender,
+        'minimum_age': minimumAge,
+        'max_education': maxEducation,
+        'minimum_salary': salary,
+        'location': location,
+        'date': date,
+        'uid': uid,
+      },
+    );
+  }
+
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++get collection of details: Job seeker
 
   final CollectionReference ProfileJobSeeker =
