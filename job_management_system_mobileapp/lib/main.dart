@@ -11,11 +11,12 @@ import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/Screens/job_matching.dart';
 import 'package:job_management_system_mobileapp/Screens/splash_screen.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/firebase_options.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
-import 'package:job_management_system_mobileapp/widgets/listViewWidgets.dart';
+import 'package:job_management_system_mobileapp/widgets/buttons.dart';
 import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
 
 // void main() => runApp(const MaterialApp(
@@ -38,8 +39,8 @@ void main() async {
   GetIt.instance.registerSingleton<RichTextWidget>(
     RichTextWidget(),
   );
-  GetIt.instance.registerSingleton<ListViewWidgets>(
-    ListViewWidgets(),
+  GetIt.instance.registerSingleton<ButtonWidgets>(
+    ButtonWidgets(),
   );
 
   // );
@@ -97,6 +98,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Job Management System',
       theme: ThemeData(
+        scaffoldBackgroundColor: ScaffoldColor,
         useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
@@ -104,9 +106,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         'splash': (context) => const SplashScreen(),
         'fogot_pwd': (context) => const ForgotPasswordPage(),
-        // 'register': (context) => RegisterPage(),
         'login': (context) => const LogInPage(),
-        // 'home': (context) => HomePage(),
         'editProviderProfile': (context) => JobProviderProfile(),
         'job_matching': (context) => JobMatchingScreen(),
       },

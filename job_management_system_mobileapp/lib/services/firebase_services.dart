@@ -114,12 +114,12 @@ class FirebaseService {
     String description,
     String gender,
     int minimumAge,
-    String maxEducarion,
+    String maxEducation,
     double salary,
     String location,
     DateTime date,
-  ) {
-    return vacancyCollection.add(
+  ) async {
+    DocumentReference vacancyRef = await vacancyCollection.add(
       {
         'company_name': companyName,
         'industry': industryType,
@@ -127,13 +127,19 @@ class FirebaseService {
         'description': description,
         'gender': gender,
         'minimum_age': minimumAge,
-        'max_education': maxEducarion,
+        'max_education': maxEducation,
         'minimum_salary': salary,
         'location': location,
         'uid': uid,
         'date': date,
       },
     );
+
+    // Get the generated ID
+    String vacancyId = vacancyRef.id;
+
+    // Update the document with the generated ID
+    await vacancyRef.update({'vacancy_id': vacancyId});
   }
 
   //delete vacancy
@@ -349,7 +355,8 @@ class FirebaseService {
       'refeeOne': refeeOne,
       'refeeTwo': refeeTwo,
       'preferredJobs': preferredJobs,
-      'selectPrefArea': selectPrefArea
+      'selectPrefArea': selectPrefArea,
+      'uid': uid,
     }, SetOptions(merge: true));
   }
 
@@ -561,14 +568,15 @@ class FirebaseService {
   Future<List<Map<String, dynamic>>?> getVacanciesInPrefferedIndustry(
       List<String> preferedIndustries) async {
     int age = int.parse(currentSeekerCV!['age']);
+    print(preferedIndustries);
 
     try {
       if (currentSeekerCV!['gender'] == "Male") {
         QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
             .collection(VACANCY_COLLECTION)
             .where('industry', whereIn: preferedIndustries)
-            .where('gender', isEqualTo: "male")
-            .where('age', isLessThanOrEqualTo: age)
+            .where('gender', isEqualTo: "Male")
+            .where('minimum_age', isLessThanOrEqualTo: age)
             .get();
 
         if (_querySnapshot.docs.isNotEmpty) {
@@ -584,7 +592,7 @@ class FirebaseService {
         QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
             .collection(VACANCY_COLLECTION)
             .where('industry', whereIn: preferedIndustries)
-            .where('gender', isEqualTo: "female")
+            .where('gender', isEqualTo: "Female")
             .where('age', isLessThanOrEqualTo: age)
             .get();
 
@@ -603,5 +611,30 @@ class FirebaseService {
       return null; // Return null to indicate an error occurred
     }
     return null;
+  }
+
+  Future<void> applyForVacancy(String vacancy_id, String seeker_id) async {
+    try {
+      await _db.collection(VACANCY_COLLECTION).doc(vacancy_id).update({
+        'applied_by': FieldValue.arrayUnion(
+          [seeker_id],
+        )
+      });
+    } catch (e) {
+      print("Error applying for vacancies: $e");
+    }
+  }
+
+  Future<void> removeSeekerFromVacancy(
+      String vacancy_id, String seeker_id) async {
+    try {
+      await _db.collection(VACANCY_COLLECTION).doc(vacancy_id).update({
+        'applied_by': FieldValue.arrayRemove(
+          [seeker_id],
+        )
+      });
+    } catch (e) {
+      print("Error removing seeker from vacancies: $e");
+    }
   }
 }
