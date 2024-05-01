@@ -355,7 +355,7 @@ class FirebaseService {
       'refeeOne': refeeOne,
       'refeeTwo': refeeTwo,
       'preferredJobs': preferredJobs,
-      'selectPrefArea': selectPrefArea,
+      'prefferedDistrict': selectPrefArea,
       'uid': uid,
     }, SetOptions(merge: true));
   }
@@ -571,46 +571,25 @@ class FirebaseService {
     print(preferedIndustries);
 
     try {
-      if (currentSeekerCV!['gender'] == "Male") {
-        QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
-            .collection(VACANCY_COLLECTION)
-            .where('industry', whereIn: preferedIndustries)
-            .where('gender', isEqualTo: "Male")
-            .where('minimum_age', isLessThanOrEqualTo: age)
-            .get();
+      QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
+          .collection(VACANCY_COLLECTION)
+          .where('industry', whereIn: preferedIndustries)
+          .where('minimum_age', isLessThanOrEqualTo: age)
+          .get();
 
-        if (_querySnapshot.docs.isNotEmpty) {
-          List<Map<String, dynamic>> vacancies =
-              _querySnapshot.docs.map((doc) => doc.data()).toList();
-          print("Male:Industry:age: $vacancies");
-          return vacancies;
-        } else {
-          print("1 No vacancies found.");
-          return []; // Return an empty list if there are no vacancies
-        }
-      } else if (currentSeekerCV!['gender'] == "Female") {
-        QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
-            .collection(VACANCY_COLLECTION)
-            .where('industry', whereIn: preferedIndustries)
-            .where('gender', isEqualTo: "Female")
-            .where('age', isLessThanOrEqualTo: age)
-            .get();
-
-        if (_querySnapshot.docs.isNotEmpty) {
-          List<Map<String, dynamic>> vacancies =
-              _querySnapshot.docs.map((doc) => doc.data()).toList();
-          print("Female:Industry:age: $vacancies");
-          return vacancies;
-        } else {
-          print("1 No vacancies found.");
-          return []; // Return an empty list if there are no vacancies
-        }
+      if (_querySnapshot.docs.isNotEmpty) {
+        List<Map<String, dynamic>> vacancies =
+            _querySnapshot.docs.map((doc) => doc.data()).toList();
+        print("Male:Industry:age: $vacancies");
+        return vacancies;
+      } else {
+        print("1 No vacancies found.");
+        return []; // Return an empty list if there are no vacancies
       }
     } catch (error) {
       print("Error fetching vacancies: $error");
       return null; // Return null to indicate an error occurred
     }
-    return null;
   }
 
   Future<void> applyForVacancy(String vacancy_id, String seeker_id) async {
