@@ -28,7 +28,10 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       seekerProvice,
       seeker_education,
       seeker_expected_salary,
-      seeker_gender;
+      seeker_gender,
+      seeker_prefered_org_type;
+
+  Color iconColor = Color.fromARGB(255, 0, 0, 0);
 
   Map<String, dynamic>? _CV_details;
   List<Map<String, dynamic>>? vacancies;
@@ -37,6 +40,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
   List<Map<String, dynamic>>? filteredVacanciesByDistrict,
       filteredVacanciesByProvince,
       filteredVacanciesByEducation,
+      filteredVacanciesBySalary,
+      filteredVacanciesByOrgType,
       bestMatchingVacancies;
 
   @override
@@ -65,6 +70,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
           seeker_education = _CV_details!['EduQalification'];
           seeker_expected_salary = _CV_details!['salary'];
           seeker_gender = _CV_details!['gender'];
+          seeker_prefered_org_type = _CV_details!['workingSection'];
           expected_salary = double.parse(seeker_expected_salary!);
           print(seeker_education);
         });
@@ -81,6 +87,465 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
 
   Future<Map<String, dynamic>?> _getCV() async {
     return await _firebaseService!.getCurrentSeekerCV();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: _richTextWidget!
+            .simpleText("Featured Jobs", 23, Colors.black87, FontWeight.w700),
+        backgroundColor: appBarColor,
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Info'),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      "All the results are shown according to your curriculum vitae (CV).\n\n",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.red),
+                                ),
+                                TextSpan(
+                                  text: "Best Matching Vacancies\n\n",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "Best Matching Vacancies are filtered by your gender, age, preferred industries, preferred district, prefered organization type, expected minimum salary, and your highest education.\n\n",
+                                ),
+                                TextSpan(
+                                  text: "Vacancies by Preferred Area\n\n",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "Vacancies by Preferred Area are filtered by your district or province, gender, age, preferred industries and highest education level, regardless of your expected salary\n\n",
+                                ),
+                                TextSpan(
+                                  text: "Vacancies by Highest Education\n\n",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "Vacancies by Highest Education are filtered by your gender, age, and highest education level.\nYou can see vacancies according to your education level, regardless of company location and your expected salary.\n\n",
+                                ),
+                                TextSpan(
+                                  text: "Vacancies by Expected Salary\n\n",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "Vacancies by Expected salary are filtered by your gender, age, highest education level and your expected salary.\nYou can see vacancies that offer salary greater than or equals to your expected salary, regardless of company location.\n\n",
+                                ),
+                                TextSpan(
+                                  text:
+                                      "Vacancies by Prefered organization type\n\n",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "Vacancies by Prefered organization type are filtered by your gender, age, highest education level and your Prefered organization type regardless of your prefered location and expected salary.",
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: Icon(
+              Icons.info,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.04),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (seekerID != null && !(_isLoading)) ...{
+                      SizedBox(
+                        height: _deviceHeight! * 0.01,
+                      ),
+                      applyForVacanciesListWidget("Best Matching Vacancies",
+                          bestMatchingVacancies, seekerID!, _deviceHeight),
+                      SizedBox(
+                        height: _deviceHeight! * 0.02,
+                      ),
+                      const Divider(
+                        thickness: 3,
+                      ),
+                      _locationDropDown(),
+                      if (_selectedItem == "District") ...{
+                        applyForVacanciesListWidget(
+                            null,
+                            filteredVacanciesByDistrict,
+                            seekerID!,
+                            _deviceHeight),
+                      } else if (_selectedItem == "Province") ...{
+                        applyForVacanciesListWidget(
+                            null,
+                            filteredVacanciesByProvince,
+                            seekerID!,
+                            _deviceHeight),
+                      },
+                      SizedBox(
+                        height: _deviceHeight! * 0.02,
+                      ),
+                      const Divider(
+                        thickness: 3,
+                      ),
+                      applyForVacanciesListWidget(
+                          "By Highest Education",
+                          filteredVacanciesByEducation,
+                          seekerID!,
+                          _deviceHeight),
+                      SizedBox(
+                        height: _deviceHeight! * 0.02,
+                      ),
+                      const Divider(
+                        thickness: 3,
+                      ),
+                      applyForVacanciesListWidget(
+                        "By Salary",
+                        filteredVacanciesBySalary,
+                        seekerID!,
+                        _deviceHeight,
+                      ),
+                      SizedBox(
+                        height: _deviceHeight! * 0.02,
+                      ),
+                      const Divider(
+                        thickness: 3,
+                      ),
+                      applyForVacanciesListWidget(
+                        "By Organization Type",
+                        filteredVacanciesByOrgType,
+                        seekerID!,
+                        _deviceHeight,
+                      ),
+                    }
+                  ],
+                ),
+              ),
+            ),
+            if (_isLoading)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _locationDropDown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _richTextWidget!.simpleText(
+            "By Prefered Area", 21, Colors.black87, FontWeight.w600),
+        DropdownButton<String>(
+          value: _selectedItem,
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedItem = newValue!;
+            });
+          },
+          underline: Container(),
+          items: <String>['District', 'Province'].map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: _richTextWidget!
+                  .simpleText(value, 16, Colors.black87, FontWeight.w600),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget applyForVacanciesListWidget(
+    String? text,
+    List<Map<String, dynamic>>? list,
+    String seekerId,
+    double? _deviceHeight,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: _deviceHeight! * 0.01,
+        ),
+        if (text != null) ...{
+          _richTextWidget!
+              .simpleText(text!, 21, Colors.black87, FontWeight.w600),
+          SizedBox(
+            height: _deviceHeight * 0.01,
+          ),
+        },
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: cardBackgroundColorLayer4,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                //blurRadius: 5,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+          height: 278,
+          child: _buildList(list, seekerId),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildList(
+    List<Map<String, dynamic>>? list,
+    String seekerId,
+  ) {
+    if (list == null || list.isEmpty) {
+      return const Center(
+        child: Text(
+          'No matching vacancies found',
+          style: TextStyle(fontSize: 18),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          Map<String, dynamic>? listItem = list[index];
+          if (listItem != null) {
+            return _buildItem(
+              seekerId,
+              listItem,
+            );
+          } else {
+            return const SizedBox(); // Return an empty SizedBox if vacancy is null
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildItem(
+    String seeker_id,
+    Map<String, dynamic> listItem,
+  ) {
+    bool isApplied = false;
+
+    List appliedByList = listItem['applied_by'];
+
+    if (appliedByList != null && appliedByList.contains(seeker_id)) {
+      isApplied = true;
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Card(
+        color: cardBackgroundColorLayer3,
+        margin: EdgeInsets.all(7),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _richTextWidget!.simpleTextWithIconLeft(
+                      Icons.work,
+                      listItem['job_position'],
+                      25,
+                      Colors.black,
+                      FontWeight.w700,
+                      iconColor),
+                  _richTextWidget!.simpleTextWithIconLeft(
+                      Icons.business,
+                      listItem['company_name'],
+                      18,
+                      Colors.black,
+                      FontWeight.w700,
+                      iconColor),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 30,
+                      ),
+                      _richTextWidget!.simpleTextWithIconLeft(
+                          Icons.construction,
+                          listItem['industry'],
+                          15,
+                          Colors.black,
+                          FontWeight.w600,
+                          iconColor),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 30,
+                      ),
+                      _richTextWidget!.simpleTextWithIconLeft(
+                          Icons.account_balance,
+                          listItem['org_type'],
+                          15,
+                          Colors.black,
+                          FontWeight.w600,
+                          iconColor),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _richTextWidget!.simpleTextWithIconLeft(
+                              Icons.location_pin,
+                              listItem['location'],
+                              15,
+                              Colors.black,
+                              FontWeight.w700,
+                              iconColor),
+                        ],
+                      ),
+                      _richTextWidget!.simpleTextWithIconLeft(
+                          Icons.school,
+                          listItem['max_education'],
+                          15,
+                          Colors.black,
+                          FontWeight.w700,
+                          iconColor),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _richTextWidget!.simpleTextWithIconLeft(
+                              Icons.currency_exchange,
+                              "Rs. ${listItem['minimum_salary']}",
+                              20,
+                              const Color.fromARGB(255, 146, 0, 0),
+                              FontWeight.w700,
+                              iconColor),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  if (isApplied) ...{
+                    _buttonWidgets!.simpleElevatedButtonWidget(
+                        onPressed: () async {
+                          await _firebaseService!.removeSeekerFromVacancy(
+                              listItem['vacancy_id'], seeker_id);
+
+                          print("Removed from vacancy");
+                          _loadVacanciesInPrefferedIndustry();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 120, 255, 124),
+                        ),
+                        buttonText: "Applied"),
+                  } else ...{
+                    _buttonWidgets!.simpleElevatedButtonWidget(
+                        onPressed: () async {
+                          await _firebaseService!.applyForVacancy(
+                              listItem['vacancy_id'], seeker_id);
+
+                          print("Applied for vacancy");
+                          _loadVacanciesInPrefferedIndustry();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 185, 120),
+                        ),
+                        buttonText: "Apply"),
+                  }
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _loadVacanciesInPrefferedIndustry() async {
@@ -113,8 +578,20 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
             bestMatchingVacancies = _filterByGender(
               _filterBySalary(
                 _filterByDistrict(
-                  _filterByEducation(vacancies),
+                  _filterByEducation(
+                    _filterByOrgType(vacancies),
+                  ),
                 ),
+              ),
+            );
+            filteredVacanciesBySalary = _filterByGender(
+              _filterByEducation(
+                _filterBySalary(vacancies),
+              ),
+            );
+            filteredVacanciesByOrgType = _filterByGender(
+              _filterByEducation(
+                _filterByOrgType(vacancies),
               ),
             );
 
@@ -148,6 +625,21 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return ((vacancy['gender'] == seeker_gender) ||
             (vacancy['gender'] == "Any"));
+      }).toList();
+
+      print("Filtered vacancies by Gender: $filteredVacancies");
+      return filteredVacancies;
+    } else {
+      print("Cannot filter");
+      return null;
+    }
+  }
+
+  List<Map<String, dynamic>>? _filterByOrgType(
+      List<Map<String, dynamic>>? list) {
+    if (list != null) {
+      List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
+        return (vacancy['org_type'] == seeker_prefered_org_type);
       }).toList();
 
       print("Filtered vacancies by Gender: $filteredVacancies");
@@ -318,377 +810,5 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       print("Cannot filter");
       return null;
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: _richTextWidget!
-            .simpleText("Featured Jobs", 23, Colors.black87, FontWeight.w700),
-        backgroundColor: appBarColor,
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Info'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                            children: [
-                              TextSpan(
-                                text:
-                                    "All the results are shown according to your curriculum vitae (CV).\n\n",
-                              ),
-                              TextSpan(
-                                text: "Best Matching Vacancies\n",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text:
-                                    "Best Matching Vacancies are filtered by your gender, age, preferred industries, preferred district, expected minimum salary, and your highest education.\n\n",
-                              ),
-                              TextSpan(
-                                text: "Vacancies by Preferred Area\n",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text:
-                                    "Vacancies by Preferred Area are filtered by your district or province, gender, and highest education level.\n\n",
-                              ),
-                              TextSpan(
-                                text: "Vacancies by Highest Education\n",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text:
-                                    "Vacancies by Highest Education are filtered by your gender, age, and highest education level.\nYou can see vacancies according to your education level, regardless of company location.",
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Close the dialog
-                        },
-                        child: Text('OK'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            icon: Icon(
-              Icons.info,
-              color: Colors.black87,
-            ),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.04),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (seekerID != null && !(_isLoading)) ...{
-                      SizedBox(
-                        height: _deviceHeight! * 0.01,
-                      ),
-                      applyForVacanciesListWidget("Best Matching Vacancies",
-                          bestMatchingVacancies, seekerID!, _deviceHeight),
-                      SizedBox(
-                        height: _deviceHeight! * 0.02,
-                      ),
-                      const Divider(
-                        thickness: 3,
-                      ),
-                      _locationDropDown(),
-                      if (_selectedItem == "District") ...{
-                        applyForVacanciesListWidget(
-                            null,
-                            filteredVacanciesByDistrict,
-                            seekerID!,
-                            _deviceHeight),
-                      } else if (_selectedItem == "Province") ...{
-                        applyForVacanciesListWidget(
-                            null,
-                            filteredVacanciesByProvince,
-                            seekerID!,
-                            _deviceHeight),
-                      },
-                      SizedBox(
-                        height: _deviceHeight! * 0.02,
-                      ),
-                      const Divider(
-                        thickness: 3,
-                      ),
-                      applyForVacanciesListWidget(
-                          "By Highest Education",
-                          filteredVacanciesByEducation,
-                          seekerID!,
-                          _deviceHeight),
-                    }
-                  ],
-                ),
-              ),
-            ),
-            if (_isLoading)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _locationDropDown() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _richTextWidget!.simpleText(
-            "By Prefered Area", 21, Colors.black87, FontWeight.w600),
-        DropdownButton<String>(
-          value: _selectedItem,
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedItem = newValue!;
-            });
-          },
-          underline: Container(),
-          items: <String>['District', 'Province'].map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: _richTextWidget!
-                  .simpleText(value, 16, Colors.black87, FontWeight.w600),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget applyForVacanciesListWidget(
-    String? text,
-    List<Map<String, dynamic>>? list,
-    String seekerId,
-    double? _deviceHeight,
-  ) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: _deviceHeight! * 0.01,
-        ),
-        if (text != null) ...{
-          _richTextWidget!
-              .simpleText(text!, 21, Colors.black87, FontWeight.w600),
-          SizedBox(
-            height: _deviceHeight * 0.01,
-          ),
-        },
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: cardBackgroundColorLayer4,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                //blurRadius: 5,
-                offset: Offset(0, 0),
-              ),
-            ],
-          ),
-          height: _deviceHeight * 0.31196,
-          child: _buildList(list, _deviceHeight, seekerId),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildList(
-    List<Map<String, dynamic>>? list,
-    double _deviceHeight,
-    String seekerId,
-  ) {
-    if (list == null || list.isEmpty) {
-      return const Center(
-        child: Text(
-          'No matching vacancies found',
-          style: TextStyle(fontSize: 18),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: EdgeInsets.all(_deviceHeight! * 0.015),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          Map<String, dynamic>? listItem = list[index];
-          if (listItem != null) {
-            return _buildItem(
-              seekerId,
-              listItem,
-            );
-          } else {
-            return const SizedBox(); // Return an empty SizedBox if vacancy is null
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildItem(
-    String seeker_id,
-    Map<String, dynamic> listItem,
-  ) {
-    bool isApplying = false;
-    bool isApplied = false;
-
-    List appliedByList = listItem['applied_by'];
-
-    if (appliedByList != null && appliedByList.contains(seeker_id)) {
-      isApplied = true;
-    }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Card(
-        color: cardBackgroundColorLayer3,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _richTextWidget!.simpleTextWithIconLeft(
-                      Icons.work,
-                      listItem['job_position'],
-                      25,
-                      Colors.black,
-                      FontWeight.w700),
-                  _richTextWidget!.simpleTextWithIconLeft(
-                      Icons.business,
-                      listItem['company_name'],
-                      15,
-                      Colors.black,
-                      FontWeight.w700),
-                  _richTextWidget!.simpleTextWithIconLeft(Icons.construction,
-                      listItem['industry'], 15, Colors.black, FontWeight.w700),
-                ],
-              ),
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _richTextWidget!.simpleTextWithIconLeft(
-                              Icons.location_pin,
-                              listItem['location'],
-                              15,
-                              Colors.black,
-                              FontWeight.w700),
-                        ],
-                      ),
-                      _richTextWidget!.simpleTextWithIconLeft(
-                          Icons.school,
-                          listItem['max_education'],
-                          15,
-                          Colors.black,
-                          FontWeight.w700),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          _richTextWidget!.simpleTextWithIconLeft(
-                              Icons.currency_exchange,
-                              "Rs. ${listItem['minimum_salary']}",
-                              20,
-                              const Color.fromARGB(255, 146, 0, 0),
-                              FontWeight.w700),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  if (isApplied) ...{
-                    _buttonWidgets!.simpleElevatedButtonWidget(
-                        onPressed: () async {
-                          await _firebaseService!.removeSeekerFromVacancy(
-                              listItem['vacancy_id'], seeker_id);
-
-                          print("Removed from vacancy");
-                          _loadVacanciesInPrefferedIndustry();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 120, 255, 124),
-                        ),
-                        buttonText: "Applied"),
-                  } else ...{
-                    _buttonWidgets!.simpleElevatedButtonWidget(
-                        onPressed: () async {
-                          await _firebaseService!.applyForVacancy(
-                              listItem['vacancy_id'], seeker_id);
-
-                          print("Applied for vacancy");
-                          _loadVacanciesInPrefferedIndustry();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 185, 120),
-                        ),
-                        buttonText: "Apply"),
-                  }
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

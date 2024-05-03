@@ -108,17 +108,17 @@ class FirebaseService {
 
   //create add new vacancy
   Future<void> addVacancy(
-    String companyName,
-    String industryType,
-    String jobPosition,
-    String description,
-    String gender,
-    int minimumAge,
-    String maxEducation,
-    double salary,
-    String location,
-    DateTime date,
-  ) async {
+      String companyName,
+      String industryType,
+      String jobPosition,
+      String description,
+      String gender,
+      int minimumAge,
+      String maxEducation,
+      double salary,
+      String location,
+      DateTime date,
+      String orgType) async {
     DocumentReference vacancyRef = await vacancyCollection.add(
       {
         'company_name': companyName,
@@ -131,7 +131,8 @@ class FirebaseService {
         'minimum_salary': salary,
         'location': location,
         'uid': uid,
-        'date': date,
+        'created_at': date,
+        'org_type': orgType,
       },
     );
 
@@ -593,11 +594,13 @@ class FirebaseService {
   }
 
   Future<void> applyForVacancy(String vacancy_id, String seeker_id) async {
+    DateTime currentDate = DateTime.now();
     try {
       await _db.collection(VACANCY_COLLECTION).doc(vacancy_id).update({
         'applied_by': FieldValue.arrayUnion(
           [seeker_id],
-        )
+        ),
+        'applied_at': currentDate,
       });
     } catch (e) {
       print("Error applying for vacancies: $e");
@@ -610,7 +613,8 @@ class FirebaseService {
       await _db.collection(VACANCY_COLLECTION).doc(vacancy_id).update({
         'applied_by': FieldValue.arrayRemove(
           [seeker_id],
-        )
+        ),
+        'applied_at': FieldValue.delete(),
       });
     } catch (e) {
       print("Error removing seeker from vacancies: $e");

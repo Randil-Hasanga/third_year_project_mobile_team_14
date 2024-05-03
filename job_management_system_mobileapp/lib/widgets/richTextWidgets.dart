@@ -21,15 +21,18 @@ class RichTextWidget {
   }
 
   Widget simpleTextWithIconLeft(IconData icon, String text, double? fontSize,
-      Color color, FontWeight? fontweight) {
+      Color color, FontWeight? fontweight, Color iconColor) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon),
+        Icon(
+          icon,
+          color: iconColor,
+        ),
         SizedBox(
-          width: 10,
+          width: 15,
         ),
         RichText(
           softWrap: true,
