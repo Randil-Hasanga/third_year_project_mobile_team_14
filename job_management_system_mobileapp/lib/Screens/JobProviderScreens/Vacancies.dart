@@ -45,6 +45,7 @@ class _vacanciesState extends State<vacancies> {
   DateTime issuedDate = DateTime.now();
 
   Map<String, dynamic>? _jobProviderDetails;
+  String? orgType;
 
   String _gender = 'Male';
 
@@ -65,6 +66,7 @@ class _vacanciesState extends State<vacancies> {
       setState(() {
         _companyNameController.text =
             _jobProviderDetails!['company_name'] ?? '';
+        orgType = _jobProviderDetails!['org_type'];
       });
     }
 
@@ -504,6 +506,7 @@ class _vacanciesState extends State<vacancies> {
                           double.tryParse(_salaryController.text) ?? 0.0,
                           _locationController.text,
                           issuedDate,
+                          orgType!,
                         );
 
                         _companyNameController.clear();
