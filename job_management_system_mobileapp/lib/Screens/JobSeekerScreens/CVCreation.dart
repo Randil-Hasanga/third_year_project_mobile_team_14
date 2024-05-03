@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -132,7 +133,7 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _refeeOneController = TextEditingController();
   final TextEditingController _refeeTwoController = TextEditingController();
   String? selectPrefIndustry;
-  String? selectPrefAreaToWork;
+  String? selectPrefferedDistrict;
 
   double? _deviceWidth, _deviceHeight;
 
@@ -523,7 +524,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         onTap: () => _selectDate(context),
                         decoration: const InputDecoration(
-                          labelText: 'Date of Birth',
+                          labelText: 'Select Date of Birth',
                           hintText: 'Date of Birth',
                           border: OutlineInputBorder(),
                         ),
@@ -859,16 +860,20 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Year is required';
+                            // Return null if the field is empty (validation passed)
+                            return null;
                           }
                           // Regular expression pattern to match only numbers
                           RegExp regex = RegExp(r'^[0-9]+$');
                           if (!regex.hasMatch(value)) {
+                            // Return an error message if the value doesn't match the pattern
                             return 'Enter a valid year (numbers only)';
                           }
-                          return null; // Return null if the input is valid
+                          // Return null if the input is valid
+                          return null;
                         },
                       ),
+                      /*  */
 
                       const SizedBox(height: 10),
                       TextFormField(
@@ -879,14 +884,17 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Index No is required';
+                            // Return null if the field is empty (validation passed)
+                            return null;
                           }
                           // Regular expression pattern to match only numbers
                           RegExp regex = RegExp(r'^[0-9]+$');
                           if (!regex.hasMatch(value)) {
+                            // Return an error message if the value doesn't match the pattern
                             return 'Enter a valid index number (numbers only)';
                           }
-                          return null; // Return null if the input is valid
+                          // Return null if the input is valid
+                          return null;
                         },
                       ),
 
@@ -900,14 +908,17 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Medium is required';
+                            // Return null if the field is empty (validation passed)
+                            return " ";
                           }
                           // Regular expression pattern to match only letters
                           RegExp regex = RegExp(r'^[a-zA-Z]+$');
                           if (!regex.hasMatch(value)) {
+                            // Return an error message if the value doesn't match the pattern
                             return 'Enter a valid medium (letters only)';
                           }
-                          return null; // Return null if the input is valid
+                          // Return null if the input is valid
+                          return null;
                         },
                       ),
 
@@ -919,10 +930,10 @@ class _CVCreationState extends State<CVCreation> {
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
+                          if (value != null && value.isEmpty) {
                             return 'School is required';
                           }
-                          return null; // Return null if the input is valid
+                          return null; // Return null if the input is valid or null
                         },
                       ),
 
@@ -936,7 +947,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Attempt is required';
+                            return null; // Return null if the field is empty
                           }
                           // Regular expression pattern to match only numbers
                           RegExp regex = RegExp(r'^[0-9]+$');
@@ -988,7 +999,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Year is required';
+                            return null; // Return null if the field is empty
                           }
                           // You can add additional validation rules here if needed
                           return null; // Return null if the input is valid
@@ -1003,7 +1014,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Index No is required';
+                            return null; // Return null if the field is empty
                           }
                           // You can add additional validation rules here if needed
                           return null; // Return null if the input is valid
@@ -1019,7 +1030,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Medium is required';
+                            return null; // Return null if the field is empty
                           }
                           // You can add additional validation rules here if needed
                           return null; // Return null if the input is valid
@@ -1034,7 +1045,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'School is required';
+                            return null; // Return null if the field is empty
                           }
                           // You can add additional validation rules here if needed
                           return null; // Return null if the input is valid
@@ -1050,7 +1061,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Attempt is required';
+                            return null; // Return null if the field is empty
                           }
                           // Regular expression pattern to match only numbers
                           RegExp regex = RegExp(r'^[0-9]+$');
@@ -1101,7 +1112,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Qualification Name is required';
+                            return null; // Return null if the field is empty
                           }
                           return null; // Return null if the input is valid
                         },
@@ -1116,7 +1127,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Institute Name is required';
+                            return null; // Return null if the field is empty
                           }
                           return null; // Return null if the input is valid
                         },
@@ -1131,14 +1142,12 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Duration is required';
+                            return null; // Return null if the field is empty
                           }
                           return null; // Return null if the input is valid
                         },
                       ),
-
                       const SizedBox(height: 10),
-
                       const Text(
                         'Professional Qualifications: section 02',
                         style: TextStyle(
@@ -1483,10 +1492,10 @@ class _CVCreationState extends State<CVCreation> {
                             labelText: 'District',
                             border: OutlineInputBorder(),
                           ),
-                          value: selectPrefAreaToWork,
+                          value: selectPrefferedDistrict,
                           onChanged: (String? newValue) {
                             setState(() {
-                              selectPrefAreaToWork = newValue;
+                              selectPrefferedDistrict = newValue;
                             });
                           },
                           items: <String>[
@@ -1603,7 +1612,7 @@ class _CVCreationState extends State<CVCreation> {
                                     _refeeOneController.text,
                                     _refeeTwoController.text,
                                     selectPrefIndustry!,
-                                    selectPrefAreaToWork!,
+                                    selectPrefferedDistrict!,
                                   );
                                   // _selectedtitle!.clear();
                                   //_selectedgender.clear();
@@ -1672,13 +1681,13 @@ class _CVCreationState extends State<CVCreation> {
                                   // _refeeOneController.clear();
                                   // _refeeTwoController.clear();
                                   // _preferredJobsController.clear();
-                                  //selectPrefAreaToWork!,
+                                  //selectPrefferedDistrict!,
                                   showAlert();
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:  const Color.fromARGB(
-                                    255, 9, 116, 41),// Background color
+                                backgroundColor: const Color.fromARGB(
+                                    255, 9, 116, 41), // Background color
                                 elevation: 4, // Elevation (shadow)
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
@@ -1869,523 +1878,507 @@ Future<void> generatePdfFromFirebase() async {
   final firebaseService = FirebaseService();
 
   // Fetch user details from Firestore
-  final userDetails = await firebaseService.getCVDetails('CVDetails');
+  final user = FirebaseAuth.instance.currentUser;
+  final uid = user?.uid;
+  final userDetails = await firebaseService.getCVDetails(uid!);
   if (userDetails != null) {
     // Add a page to the PDF document
-    final pdf = pw.Document();
-
-// Create an instance of FirebaseService
-    final firebaseService = FirebaseService();
-
-// Fetch user details from Firestore
-    final userDetails = await firebaseService.getCVDetails('CVDetails');
-    if (userDetails != null) {
-      // Add a page to the PDF document
-      final page1 = pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color: PdfColors.white, // Color for the title row
-                child: pw.Header(
-                  level: 1,
-                  text: '${userDetails['title']} ${userDetails['fullname']}',
-                  textStyle: pw.TextStyle(
-                    fontSize: 20,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.black, // Text color
+    final page1 = pw.Page(
+      build: (pw.Context context) {
+        return pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for the title row
+              child: pw.Header(
+                level: 1,
+                text: '${userDetails['title']} ${userDetails['fullname']}',
+                textStyle: pw.TextStyle(
+                  fontSize: 20,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.black, // Text color
+                ),
+              ),
+            ),
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for personal information section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  //
+                  // Contact information fields
+                  pw.Paragraph(
+                    text: '${userDetails['email']}',
                   ),
-                ),
+                  pw.Paragraph(
+                    text: '${userDetails['contactMobile']}',
+                  ),
+                  pw.Paragraph(
+                    text: '${userDetails['address']}',
+                  ),
+                ],
               ),
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color:
-                    PdfColors.white, // Color for personal information section
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    //
-                    // Contact information fields
-                    pw.Paragraph(
-                      text: '${userDetails['email']}',
+            ),
+            //career Objectives
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for personal information section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 1,
+                    text: 'Career Objectives',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.black, // Text color
                     ),
-                    pw.Paragraph(
-                      text: '${userDetails['contactMobile']}',
-                    ),
-                    pw.Paragraph(
-                      text: '${userDetails['address']}',
-                    ),
-                  ],
-                ),
+                  ),
+                  // Personal information fields
+                  pw.Paragraph(
+                    text: userDetails['careerObjective'],
+                  ),
+                  // Add more personal information fields here
+                ],
               ),
-              //career Objectives
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color:
-                    PdfColors.white, // Color for personal information section
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Header(
-                      level: 1,
-                      text: 'Career Objectives',
-                      textStyle: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.black, // Text color
-                      ),
+            ),
+            // Educational Details
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for educational details section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 1,
+                    text: 'Educational Details',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.black, // Text color
                     ),
-                    // Personal information fields
-                    pw.Paragraph(
-                      text: userDetails['careerObjective'],
-                    ),
-                    // Add more personal information fields here
-                  ],
-                ),
-              ),
-              // Educational Details
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color: PdfColors.white, // Color for educational details section
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Header(
-                      level: 1,
-                      text: 'Educational Details',
-                      textStyle: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.black, // Text color
-                      ),
-                    ),
-                    // Educational details fields
+                  ),
+                  // Educational details fields
 
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Paragraph(
-                          text: 'GCE O/L Exam:',
-                          style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold,
-                            fontSize: 15,
-                          ),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Paragraph(
+                        text: 'GCE O/L Exam:',
+                        style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 15,
                         ),
-                        pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: [
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Paragraph(
-                                  text: 'Year: ${userDetails['OLYear']}',
-                                ),
-                                pw.Paragraph(
-                                  text:
-                                      'Index Number: ${userDetails['OLIndex']}',
-                                ),
-                              ],
-                            ),
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Paragraph(
-                                  text: 'Medium: ${userDetails['OLMedium']}',
-                                ),
-                                pw.Paragraph(
-                                  text: 'School: ${userDetails['OLSchool']}',
-                                ),
-                              ],
-                            ),
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Paragraph(
-                                  text: 'Attempt: ${userDetails['OLAttempt']}',
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        pw.Paragraph(
-                          text: 'GCE A/L Exam:',
-                          style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: [
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Paragraph(
-                                  text: 'Year: ${userDetails['ALYear']}',
-                                ),
-                                pw.Paragraph(
-                                  text:
-                                      'Index Number: ${userDetails['ALIndex']}',
-                                ),
-                              ],
-                            ),
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Paragraph(
-                                  text: 'Medium: ${userDetails['ALMedium']}',
-                                ),
-                                pw.Paragraph(
-                                  text: 'School: ${userDetails['ALSchool']}',
-                                ),
-                              ],
-                            ),
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Paragraph(
-                                  text: 'Attempt: ${userDetails['ALAttempt']}',
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    pw.Paragraph(
-                      text: 'Professional qualification:',
-                      style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: 15,
                       ),
-                    ),
-                    pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: [
-                        pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            if (userDetails['sec01Name'] != null &&
-                                userDetails['sec01Ins'] != null &&
-                                userDetails['sec01duration'] != null)
-                              pw.Paragraph(
-                                text:
-                                    '1. ${userDetails['sec01Name']}, ${userDetails['sec01Ins']} (${userDetails['sec01duration']})',
-                              ),
-                            if (userDetails['sec02Name'] != null &&
-                                userDetails['sec02Ins'] != null &&
-                                userDetails['sec02duration'] != null)
-                              pw.Paragraph(
-                                text:
-                                    '2. ${userDetails['sec02Name']}, ${userDetails['sec02Ins']} (${userDetails['sec02duration']})',
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      );
-
-      final page2 = pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              //Skills
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color: PdfColors.white, // Color for skills section
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Header(
-                      level: 1,
-                      text: 'Skills',
-                      textStyle: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.black, // Text color
-                      ),
-                    ),
-                    // Skills fields
-                    // Year of Experience
-
-                    // Computer Skills
-
-                    pw.Container(
-                      padding: const pw.EdgeInsets.all(10),
-                      color: PdfColors
-                          .white, // Color for personal information section
-                      child: pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
-                          pw.Row(
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
-                              pw.Expanded(
-                                child: pw.Column(
-                                  crossAxisAlignment:
-                                      pw.CrossAxisAlignment.start,
-                                  children: [
-                                    if (userDetails['computerSkill'] != null)
-                                      pw.Paragraph(
-                                        text:
-                                            'Computer Skills: ${userDetails['computerSkill']}',
-                                      ),
-                                    if (userDetails['specialSkill'] != null)
-                                      pw.Paragraph(
-                                        text:
-                                            'Special Skills: ${userDetails['specialSkill']}',
-                                      ),
-                                  ],
-                                ),
+                              pw.Paragraph(
+                                text: 'Year: ${userDetails['OLYear']}',
                               ),
-                              pw.Expanded(
-                                child: pw.Column(
-                                  mainAxisAlignment:
-                                      pw.MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment:
-                                      pw.CrossAxisAlignment.start,
-                                  children: [
-                                    // Other Skills
-                                    if (userDetails['otherSkill'] != null)
-                                      pw.Paragraph(
-                                        text:
-                                            'Other Skills: ${userDetails['otherSkill']}',
-                                      ),
-                                  ],
-                                ),
+                              pw.Paragraph(
+                                text: 'Index Number: ${userDetails['OLIndex']}',
                               ),
                             ],
                           ),
-                          pw.Paragraph(
-                            text: 'Language Skills',
-                            style: pw.TextStyle(
-                              fontWeight: pw.FontWeight.bold,
-                              fontSize: 15,
-                            ),
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Paragraph(
+                                text: 'Medium: ${userDetails['OLMedium']}',
+                              ),
+                              pw.Paragraph(
+                                text: 'School: ${userDetails['OLSchool']}',
+                              ),
+                            ],
+                          ),
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Paragraph(
+                                text: 'Attempt: ${userDetails['OLAttempt']}',
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ),
-
-                    pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: [
-                        // pw.Column(
-                        //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        //   children: [
-                        //     if (userDetails['sinhalaSpeaking'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'Sinhala Speaking: ${userDetails['sinhalaSpeaking']}',
-                        //       ),
-                        //     if (userDetails['sinhalaReading'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'Sinhala Reading: ${userDetails['sinhalaReading']}',
-                        //       ),
-                        //     if (userDetails['sinhalaWriting'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'Sinhala Writing: ${userDetails['sinhalaWriting']}',
-                        //       ),
-                        //   ],
-                        // ),
-                        // pw.Column(
-                        //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        //   children: [
-                        //     if (userDetails['englishSpeaking'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'English Speaking: ${userDetails['englishSpeaking']}',
-                        //       ),
-                        //     if (userDetails['englishReading'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'English Reading: ${userDetails['englishReading']}',
-                        //       ),
-                        //     if (userDetails['englishWriting'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'English Writing: ${userDetails['englishWriting']}',
-                        //       ),
-                        //   ],
-                        // ),
-                        // pw.Column(
-                        //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        //   children: [
-                        //     if (userDetails['tamilSpeaking'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'Tamil Speaking: ${userDetails['tamilSpeaking']}',
-                        //       ),
-                        //     if (userDetails['tamilReading'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'Tamil Reading: ${userDetails['tamilReading']}',
-                        //       ),
-                        //     if (userDetails['tamilWriting'] != null)
-                        //       pw.Paragraph(
-                        //         text:
-                        //             'Tamil Writing: ${userDetails['tamilWriting']}',
-                        //       ),
-                        //   ],
-                        // ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color: PdfColors.white, // Color for job prospects section
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Header(
-                      level: 1,
-                      text: 'Honors and Achievements',
-                      textStyle: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.black, // Text color
-                      ),
-                    ),
-                    // Job prospects fields
-                    pw.Row(
-                      children: [
-                        pw.Column(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Text('1.${userDetails['achievements']}'),
-                            pw.Text('2.${userDetails['extraCurricular']}'),
-                            // pw.Text('${userDetails['yearOfExperience']}'),
-                          ],
+                      pw.Paragraph(
+                        text: 'GCE A/L Exam:',
+                        style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 15,
                         ),
-                        pw.SizedBox(
-                            width: 20), // Add some space between the columns
-                      ],
-                    )
-
-                    // Add more job prospects fields here
-                  ],
-                ),
-              ),
-
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color: PdfColors.white, // Color for job prospects section
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Header(
-                      level: 1,
-                      text: 'Experience',
-                      textStyle: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.black, // Text color
                       ),
-                    ),
-                    // Job prospects fields
-                    pw.Row(
-                      children: [
-                        pw.Column(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Text(
-                                'Year of Job Experience: ${userDetails['yearOfExperience']} at ${userDetails['currentEmployee']} in ${userDetails['currentJobPosition']} (${userDetails['dateOfJoin']})'),
-                            // pw.Text('${userDetails['yearOfExperience']}'),
-                          ],
-                        ),
-                        pw.SizedBox(
-                            width: 20), // Add some space between the columns
-                      ],
-                    )
-
-                    // Add more job prospects fields here
-                  ],
-                ),
-              ),
-              // Job Prospects
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                color: PdfColors.white, // Color for job prospects section
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Header(
-                      level: 1,
-                      text: 'References',
-                      textStyle: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.black, // Text color
-                      ),
-                    ),
-                    // Job prospects fields
-                    pw.Row(
-                      children: [
-                        pw.Expanded(
-                          child: pw.Column(
-                            mainAxisAlignment:
-                                pw.MainAxisAlignment.spaceBetween,
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
-                              pw.Text('Refee[1]:'),
-                              pw.Text('${userDetails['refeeOne']}'),
+                              pw.Paragraph(
+                                text: 'Year: ${userDetails['ALYear']}',
+                              ),
+                              pw.Paragraph(
+                                text: 'Index Number: ${userDetails['ALIndex']}',
+                              ),
                             ],
                           ),
-                        ),
-                        pw.SizedBox(
-                          width: 20,
-                        ), // Add some space between the columns
-                        pw.Expanded(
-                          child: pw.Column(
-                            mainAxisAlignment:
-                                pw.MainAxisAlignment.spaceBetween,
+                          pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
-                              pw.Text('Refee[2]:'),
-                              pw.Text('${userDetails['refeeTwo']}'),
+                              pw.Paragraph(
+                                text: 'Medium: ${userDetails['ALMedium']}',
+                              ),
+                              pw.Paragraph(
+                                text: 'School: ${userDetails['ALSchool']}',
+                              ),
                             ],
+                          ),
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Paragraph(
+                                text: 'Attempt: ${userDetails['ALAttempt']}',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  pw.Paragraph(
+                    text: 'Professional qualification:',
+                    style: pw.TextStyle(
+                      fontWeight: pw.FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          if (userDetails['sec01Name'] != null &&
+                              userDetails['sec01Ins'] != null &&
+                              userDetails['sec01duration'] != null)
+                            pw.Paragraph(
+                              text:
+                                  '1. ${userDetails['sec01Name']}, ${userDetails['sec01Ins']} (${userDetails['sec01duration']})',
+                            ),
+                          if (userDetails['sec02Name'] != null &&
+                              userDetails['sec02Ins'] != null &&
+                              userDetails['sec02duration'] != null)
+                            pw.Paragraph(
+                              text:
+                                  '2. ${userDetails['sec02Name']}, ${userDetails['sec02Ins']} (${userDetails['sec02duration']})',
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    final page2 = pw.Page(
+      build: (pw.Context context) {
+        return pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            //Skills
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for skills section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 1,
+                    text: 'Skills',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.black, // Text color
+                    ),
+                  ),
+                  // Skills fields
+                  // Year of Experience
+
+                  // Computer Skills
+
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(10),
+                    color: PdfColors
+                        .white, // Color for personal information section
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Row(
+                          children: [
+                            pw.Expanded(
+                              child: pw.Column(
+                                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                children: [
+                                  if (userDetails['computerSkill'] != null)
+                                    pw.Paragraph(
+                                      text:
+                                          'Computer Skills: ${userDetails['computerSkill']}',
+                                    ),
+                                  if (userDetails['specialSkill'] != null)
+                                    pw.Paragraph(
+                                      text:
+                                          'Special Skills: ${userDetails['specialSkill']}',
+                                    ),
+                                ],
+                              ),
+                            ),
+                            pw.Expanded(
+                              child: pw.Column(
+                                mainAxisAlignment:
+                                    pw.MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                children: [
+                                  // Other Skills
+                                  if (userDetails['otherSkill'] != null)
+                                    pw.Paragraph(
+                                      text:
+                                          'Other Skills: ${userDetails['otherSkill']}',
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.Paragraph(
+                          text: 'Language Skills',
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                            fontSize: 15,
                           ),
                         ),
                       ],
                     ),
+                  ),
 
-                    // Add more job prospects fields here
-                  ],
-                ),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      // pw.Column(
+                      //   crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      //   children: [
+                      //     if (userDetails['sinhalaSpeaking'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'Sinhala Speaking: ${userDetails['sinhalaSpeaking']}',
+                      //       ),
+                      //     if (userDetails['sinhalaReading'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'Sinhala Reading: ${userDetails['sinhalaReading']}',
+                      //       ),
+                      //     if (userDetails['sinhalaWriting'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'Sinhala Writing: ${userDetails['sinhalaWriting']}',
+                      //       ),
+                      //   ],
+                      // ),
+                      // pw.Column(
+                      //   crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      //   children: [
+                      //     if (userDetails['englishSpeaking'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'English Speaking: ${userDetails['englishSpeaking']}',
+                      //       ),
+                      //     if (userDetails['englishReading'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'English Reading: ${userDetails['englishReading']}',
+                      //       ),
+                      //     if (userDetails['englishWriting'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'English Writing: ${userDetails['englishWriting']}',
+                      //       ),
+                      //   ],
+                      // ),
+                      // pw.Column(
+                      //   crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      //   children: [
+                      //     if (userDetails['tamilSpeaking'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'Tamil Speaking: ${userDetails['tamilSpeaking']}',
+                      //       ),
+                      //     if (userDetails['tamilReading'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'Tamil Reading: ${userDetails['tamilReading']}',
+                      //       ),
+                      //     if (userDetails['tamilWriting'] != null)
+                      //       pw.Paragraph(
+                      //         text:
+                      //             'Tamil Writing: ${userDetails['tamilWriting']}',
+                      //       ),
+                      //   ],
+                      // ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          );
-        },
-      );
+            ),
 
-      pdf.addPage(page1);
-      pdf.addPage(page2);
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for job prospects section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 1,
+                    text: 'Honors and Achievements',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.black, // Text color
+                    ),
+                  ),
+                  // Job prospects fields
+                  pw.Row(
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text('1.${userDetails['achievements']}'),
+                          pw.Text('2.${userDetails['extraCurricular']}'),
+                          // pw.Text('${userDetails['yearOfExperience']}'),
+                        ],
+                      ),
+                      pw.SizedBox(
+                          width: 20), // Add some space between the columns
+                    ],
+                  )
 
-      // Save the PDF file
-      final output = await getTemporaryDirectory();
-      final file = File('${output.path}/cv_from_firebase.pdf');
-      await file.writeAsBytes(await pdf.save());
+                  // Add more job prospects fields here
+                ],
+              ),
+            ),
 
-      // Print the PDF
-      final bytes = await file.readAsBytes();
-      await Printing.sharePdf(bytes: bytes, filename: 'cv_from_firebase.pdf');
-    } else {
-      print('User details not found');
-    }
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for job prospects section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 1,
+                    text: 'Experience',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.black, // Text color
+                    ),
+                  ),
+                  // Job prospects fields
+                  pw.Row(
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text(
+                              'Year of Job Experience: ${userDetails['yearOfExperience']} at ${userDetails['currentEmployee']} in ${userDetails['currentJobPosition']} (${userDetails['dateOfJoin']})'),
+                          // pw.Text('${userDetails['yearOfExperience']}'),
+                        ],
+                      ),
+                      pw.SizedBox(
+                          width: 20), // Add some space between the columns
+                    ],
+                  )
+
+                  // Add more job prospects fields here
+                ],
+              ),
+            ),
+            // Job Prospects
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              color: PdfColors.white, // Color for job prospects section
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Header(
+                    level: 1,
+                    text: 'References',
+                    textStyle: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.black, // Text color
+                    ),
+                  ),
+                  // Job prospects fields
+                  pw.Row(
+                    children: [
+                      pw.Expanded(
+                        child: pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text('Refee[1]:'),
+                            pw.Text('${userDetails['refeeOne'] ?? ''}'),
+                          ],
+                        ),
+                      ),
+                      pw.SizedBox(
+                        width: 20,
+                      ), // Add some space between the columns
+                      pw.Expanded(
+                        child: pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text('Refee[2]:'),
+                            pw.Text('${userDetails['refeeTwo'] ?? ''}'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Add more job prospects fields here
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    pdf.addPage(page1);
+    pdf.addPage(page2);
+
+    // Save the PDF file
+    final output = await getTemporaryDirectory();
+    final file = File('${output.path}/cv_from_firebase.pdf');
+    await file.writeAsBytes(await pdf.save());
+
+    // Print the PDF
+    final bytes = await file.readAsBytes();
+    await Printing.sharePdf(bytes: bytes, filename: 'cv_from_firebase.pdf');
+  } else {
+    print('User details not found');
   }
 }

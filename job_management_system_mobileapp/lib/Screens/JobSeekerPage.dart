@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
@@ -237,7 +238,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: SizedBox(
-                          height: 160, // Adjust the height as needed
+                          height: 130, // Adjust the height as needed
                           child: StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection('vacancy')
@@ -255,8 +256,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               }
 
                               return Container(
-                                color: Color.fromARGB(255, 231, 164,
-                                    110), // Background color for the list
+                                color: Color.fromARGB(255, 255, 255,255), // Background color for the list
                                 child: Row(
                                   children: List.generate(
                                     snapshot.data?.docs.length ?? 0,
@@ -270,69 +270,78 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                             String,
                                             dynamic>)['company_name'] as String;
                                       }
-                                      return Container(
-                                        margin: const EdgeInsets.all(8),
-                                        width: 250,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(25.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Icon(Icons.business),
-                                                  const SizedBox(width: 8),
-                                                  Text(
-                                                    companyName = (vacancyData
-                                                                as Map<String,
-                                                                    dynamic>)[
-                                                            'company_name']
-                                                        as String, // Assuming 'company_name' is a field in your Firestore document
-                                                    style: const TextStyle(
-                                                      fontSize: 20,
-                                                      color: Colors.blue,
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                8.0), // Added padding horizontally
+                                        child: Container(
+                                          width: 250,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade200,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(
+                                                15.0), // Adjusted padding
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Icon(Icons.business),
+                                                    const SizedBox(width: 8),
+                                                    Flexible(
+                                                      child: Text(
+                                                        companyName,
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.blue,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 6),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.work),
-                                                  SizedBox(width: 8),
-                                                  Flexible(
-                                                    child: Text(
-                                                      (vacancyData[
-                                                              'job_position']
-                                                          as String),
-                                                      style: TextStyle(
-                                                          fontSize: 20),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                  ],
+                                                ),
+                                                SizedBox(height: 6),
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.work),
+                                                    SizedBox(width: 8),
+                                                    Flexible(
+                                                      child: Text(
+                                                        (vacancyData?[
+                                                                'job_position']
+                                                            as String),
+                                                        style: TextStyle(
+                                                            fontSize: 15),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 6),
-                                              Row(
-                                                children: [
-                                                  const Icon(Icons.location_on),
-                                                  const SizedBox(width: 8),
-                                                  Text(
-                                                    companyName = (vacancyData)[
-                                                        'location'] as String,
-                                                    style: const TextStyle(
-                                                        fontSize: 20),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                                  ],
+                                                ),
+                                                SizedBox(height: 6),
+                                                Row(
+                                                  children: [
+                                                    const Icon(
+                                                        Icons.location_on),
+                                                    const SizedBox(width: 8),
+                                                    Flexible(
+                                                      child: Text(
+                                                        (vacancyData?[
+                                                                'location']
+                                                            as String),
+                                                        style: const TextStyle(
+                                                            fontSize: 15),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );
@@ -417,7 +426,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: Color.fromARGB(255,231,164,10), // Background color for data
+                                                color: Color.fromARGB(255, 234, 232, 232), // Background color for data
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
@@ -441,13 +450,13 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                               'company_name'] as String,
                                                           style:
                                                               const TextStyle(
-                                                                  fontSize: 20,
+                                                                  fontSize: 15,
                                                                   color: Colors
                                                                       .blue),
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(height:1),
+                                                    SizedBox(height: 1),
                                                     Row(
                                                       children: [
                                                         const Icon(Icons.work),
@@ -460,11 +469,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                                   as String,
                                                           style:
                                                               const TextStyle(
-                                                                  fontSize: 20),
+                                                                  fontSize: 15),
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(height:1),
+                                                    SizedBox(height: 1),
                                                     Row(
                                                       children: [
                                                         const Icon(
@@ -478,7 +487,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                                   as String,
                                                           style:
                                                               const TextStyle(
-                                                                  fontSize: 20),
+                                                                  fontSize: 15),
                                                         ),
                                                       ],
                                                     ),
@@ -544,7 +553,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>  JobMatchingScreen()),
+                  MaterialPageRoute(builder: (context) => JobMatchingScreen()),
                 );
               },
             ),

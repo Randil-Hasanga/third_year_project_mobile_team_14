@@ -278,7 +278,7 @@ class FirebaseService {
       String refeeOne,
       String refeeTwo,
       String preferredJobs,
-      String? selectPrefArea) async {
+      String? selectPrefferedDistrict) async {
     _db.collection(CV_COLLECTION).doc(uid).set({
       'title': title,
       'gender': gender,
@@ -355,32 +355,31 @@ class FirebaseService {
       'refeeOne': refeeOne,
       'refeeTwo': refeeTwo,
       'preferredJobs': preferredJobs,
-      'prefferedDistrict': selectPrefArea,
+      'prefferedDistrict': selectPrefferedDistrict,
       'uid': uid,
     }, SetOptions(merge: true));
   }
 
 // CV PDF genarating
 
-  final CollectionReference cvDetailsCollection =
+ final CollectionReference cvDetailsCollection =
       FirebaseFirestore.instance.collection('CVDetails');
 
   // Method to get details of a CV from Firestore
-  Future<DocumentSnapshot?> getCVDetails(String s) async {
+  Future<DocumentSnapshot?> getCVDetails(String uid) async {
     try {
-      // Query the "CVDetails" collection to retrieve all documents
-      QuerySnapshot querySnapshot = await cvDetailsCollection.get();
+      // Query the "CVDetails" collection to retrieve the document with the given user ID
+      DocumentSnapshot querySnapshot = await cvDetailsCollection.doc(uid).get();
 
-      // Check if any documents are returned
-      if (querySnapshot.docs.isNotEmpty) {
-        // Return the first document found (assuming there's only one matching document)
-        return querySnapshot.docs.first;
+      // Check if the document exists
+      if (querySnapshot.exists) {
+        return querySnapshot;
       } else {
-        print('No CVDetails documents found');
+        print('No CVDetails document found for user $uid');
         return null;
       }
     } catch (error) {
-      print('Error getting CVDetails: $error');
+      print('Error getting CVDetails for user $uid: $error');
       return null;
     }
   }
