@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
@@ -11,8 +12,6 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 class ProfileJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
   ProfileJobSeeker({super.key});
-
-  final FirebaseService firebaseService = FirebaseService();
 
   @override
   _ProfileJobSeekerState createState() => _ProfileJobSeekerState();
@@ -39,7 +38,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   @override
   void initState() {
     super.initState();
-    _firebaseService = widget.firebaseService;
+    _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -302,7 +301,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                             : '';
 
                         // Call the function to add job seeker profile
-                        FirebaseService().addJobSeekerProfile(
+                        _firebaseService.addJobSeekerProfile(
                           _fullNameController.text,
                           _emailController.text,
                           _addressController.text,
