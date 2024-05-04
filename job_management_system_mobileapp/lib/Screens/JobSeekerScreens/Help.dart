@@ -1,4 +1,4 @@
-import 'dart:js';
+//import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,7 +77,8 @@ class Help extends StatelessWidget {
             title: const Text('Facebook'),
             subtitle: InkWell(
               onTap: () {
-                _launchURL(context, 'https://www.facebook.com/share/G99Wj1gb3AEcZfuD/?mibextid=qi2Omg');
+                _launchURL(context,
+                    'https://www.facebook.com/share/G99Wj1gb3AEcZfuD/?mibextid=qi2Omg');
               },
               child: Row(
                 children: [
