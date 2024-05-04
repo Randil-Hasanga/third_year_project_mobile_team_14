@@ -24,8 +24,8 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
   final _topicController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  String selectedParticipant = "0";
-  String selectedParticipantName = 'Select Participant';
+  String selectedvacancy = "0";
+  String selectedvacancyName = 'Select vacancy';
 
   DateTime _selectedDateTime = DateTime.now();
 
@@ -160,7 +160,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 Row(
                   children: [
                     const Text(
-                      "Select Participant:",
+                      "Select Vacancy:",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -168,29 +168,29 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     const SizedBox(width: 30.0),
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
-                          .collection('profileJobSeeker')
+                          .collection('vacancy')
                           .snapshots(),
                       builder: (context, snapshot) {
-                        List<DropdownMenuItem> participantItems = [];
+                        List<DropdownMenuItem> vacancyItems = [];
 
                         if (!snapshot.hasData) {
                           const CircularProgressIndicator();
                         } else {
-                          final participants =
+                          final Vacancies =
                               snapshot.data?.docs.reversed.toList();
-                          participantItems.add(
+                          vacancyItems.add(
                             const DropdownMenuItem(
                               value: "0",
-                              child: Text('Select Participant'),
+                              child: Text('Select Vacancy'),
                             ),
                           );
 
-                          for (var participant in participants!) {
-                            participantItems.add(
+                          for (var vacancy in Vacancies!) {
+                            vacancyItems.add(
                               DropdownMenuItem(
-                                value: participant.id,
+                                value: vacancy.id,
                                 child: Text(
-                                  participant['fullname'],
+                                  vacancy['job_position'],
                                 ),
                               ),
                             );
@@ -198,19 +198,19 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         }
                         return DropdownButton(
                           menuMaxHeight: screenWidth * 0.5,
-                          items: participantItems,
-                          onChanged: (participantValue) {
-                            selectedParticipantName = participantItems
+                          items: vacancyItems,
+                          onChanged: (vacancyValue) {
+                            selectedvacancyName = vacancyItems
                                 .firstWhere(
-                                    (item) => item.value == participantValue)
+                                    (item) => item.value == vacancyValue)
                                 .child
                                 .toString();
 
-                            selectedParticipant = participantValue;
+                            selectedvacancy = vacancyValue;
 
-                            print(participantValue);
+                            print(vacancyValue);
                           },
-                          value: selectedParticipant,
+                          value: selectedvacancy,
                           isExpanded: false,
                         );
                       },
@@ -317,7 +317,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                       firebaseSerice?.addInterviewDetails(
                         _topicController.text,
                         _descriptionController.text,
-                        selectedParticipant,
+                        selectedvacancy,
                         groupValue,
                         _linkController.text,
                         _selectedDateTime.toString(),
@@ -326,7 +326,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
 
                       _topicController.clear();
                       _descriptionController.clear();
-                      selectedParticipant = "0";
+                      selectedvacancy = "0";
                       groupValue = "";
                       _linkController.clear();
                       _selectedDateTime = DateTime.now();
