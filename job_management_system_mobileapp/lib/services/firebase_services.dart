@@ -549,7 +549,7 @@ class FirebaseService {
   Future<void> addInterviewDetails(
     String topic,
     String description,
-    String participant,
+    String vacancy_id,
     String type,
     String link,
     String date_time,
@@ -558,7 +558,7 @@ class FirebaseService {
       {
         'topic': topic,
         'description': description,
-        'participant': participant,
+        'vacancy_id': vacancy_id,
         'type': type,
         'link': link,
         'date_time': date_time,
