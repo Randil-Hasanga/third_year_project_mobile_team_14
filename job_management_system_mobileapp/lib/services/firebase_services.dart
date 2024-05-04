@@ -19,6 +19,7 @@ const String PROVIDER_DETAILS_COLLECTION = 'provider_details';
 const String POSTS_COLLECTION = 'posts';
 const String CV_COLLECTION = 'CVDetails';
 const String VACANCY_COLLECTION = 'vacancy';
+const String SEEKER_PROFILE_DETAILS_COLLECTION = 'profileJobSeeker';
 
 class FirebaseService {
   var value;
@@ -176,9 +177,6 @@ class FirebaseService {
 
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++get collection of details: Job seeker
 
-  final CollectionReference ProfileJobSeeker =
-      FirebaseFirestore.instance.collection('profileJobSeeker');
-
 //add profile details of job seeker
 
   Future<void> addJobSeekerProfile(
@@ -191,7 +189,7 @@ class FirebaseService {
     String? district,
     String contact,
   ) {
-    return ProfileJobSeeker.add({
+    return _db.collection(SEEKER_PROFILE_DETAILS_COLLECTION).doc(uid).set({
       'fullname': fullName,
       'email': email,
       'address': address,
@@ -200,7 +198,7 @@ class FirebaseService {
       'dateOfBirth': dateOfBirth,
       'district': district,
       'contact': contact
-    });
+    }, SetOptions(merge: true));
   }
 
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++CV creatoion:
@@ -363,7 +361,7 @@ class FirebaseService {
 
 // CV PDF genarating
 
- final CollectionReference cvDetailsCollection =
+  final CollectionReference cvDetailsCollection =
       FirebaseFirestore.instance.collection('CVDetails');
 
   // Method to get details of a CV from Firestore
