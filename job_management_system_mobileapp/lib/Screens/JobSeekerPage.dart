@@ -599,10 +599,10 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: const Text("Help"),
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Help()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Help()),
+                );
               },
             ),
             ListTile(
