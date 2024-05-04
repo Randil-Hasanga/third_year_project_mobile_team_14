@@ -1,27 +1,105 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_ui.dart';
+import 'package:flutter/widgets.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
+import 'package:job_management_system_mobileapp/componets/chat_bubble.dart';
+import 'package:job_management_system_mobileapp/componets/custom_textfield.dart';
 import 'package:job_management_system_mobileapp/componets/user_title.dart';
+import 'package:job_management_system_mobileapp/services/chat_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
-class ChatPage extends StatelessWidget {
-  ChatPage({super.key});
+class ChatPage extends StatefulWidget {
+  final String receiverEmail;
+  final String receiverID;
+
+  ChatPage({super.key, required this.receiverEmail, required this.receiverID});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _messageController = TextEditingController();
 
   final FirebaseService firebaseService = FirebaseService();
+  final ChatService _chatService = ChatService();
+
+  // text feild focus
+  FocusNode myFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    //add listener to focus node
+    myFocusNode.addListener(() {
+      if (myFocusNode.hasFocus) {
+        Future.delayed(
+          const Duration(
+            milliseconds: 500,
+          ),
+          () => scrollDown(),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    _messageController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  //scroll controller
+  final ScrollController _scrollController = ScrollController();
+
+  void scrollDown() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+  }
+
+  void sendMessage() async {
+    //if somthing in the textfield
+    if (_messageController.text.isNotEmpty) {
+      //send the message
+      await _chatService.sendMessage(
+          widget.receiverID, _messageController.text);
+
+      //clear the textfield
+      _messageController.clear();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Messages'), // Set the title of the app bar
+        title: Text(widget.receiverEmail), // Set the title of the app bar
         backgroundColor: const Color.fromARGB(255, 255, 136, 0),
       ),
-      body: _buildJobSeekerList(),
+      body: Column(
+        children: [
+          Expanded(
+            //display all messages
+            child: _buildMessageList(),
+          ),
+
+          //user input
+          _buildUserInput(),
+        ],
+      ),
     );
   }
 
-  Widget _buildJobSeekerList() {
+  //biuld message list
+  Widget _buildMessageList() {
+    String senderID = firebaseService.getCurrentUserChat()!.uid;
     return StreamBuilder(
-      stream: firebaseService.getJobSeekerStream(),
+      stream: _chatService.getMessages(widget.receiverID, senderID),
       builder: ((context, snapshot) {
         //error
         if (snapshot.hasError) {
@@ -29,39 +107,70 @@ class ChatPage extends StatelessWidget {
         }
         //Loading
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Text('Loading');
         }
 
         return ListView(
-          children: snapshot.data!
-              .map<Widget>(
-                  (userData) => _buildJobSeekerListItem(userData, context))
-              .toList(),
+          controller: _scrollController,
+          children:
+              snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
         );
       }),
     );
   }
 
-  // Individual list item for job seeker
-  Widget _buildJobSeekerListItem(
-      Map<String, dynamic> userData, BuildContext context) {
-    return JobSeekerTitle(
-        text: userData['email'],
-        onTap: () {
-          if (userData.containsKey('uid')) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatUI(
-                  reciverEmail: userData['email'],
-                  reciverID: userData['uid'],
-                ),
+  //build message item
+  Widget _buildMessageItem(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    //is current user
+    bool isCurrentUser =
+        data['senderID'] == firebaseService.getCurrentUserChat()!.uid;
+
+    //algin message to right if current user
+    var alignment =
+        isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+
+    return Container(
+      alignment: alignment,
+      child: Column(
+        crossAxisAlignment:
+            isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          ChatBubble(message: data['message'], isCurrentUser: isCurrentUser),
+        ],
+      ),
+    );
+  }
+
+  //usser input
+  Widget _buildUserInput() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 50.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: CustomTextfield(
+                hintText: "Tpye a message", controller: _messageController),
+          ),
+
+          //send button
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.green,
+              shape: BoxShape.circle,
+            ),
+            margin: const EdgeInsets.only(right: 25),
+            child: IconButton(
+              onPressed: sendMessage,
+              icon: const Icon(
+                Icons.arrow_upward,
+                color: Colors.white,
               ),
-            );
-          } else {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('UID not found')));
-          }
-        });
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

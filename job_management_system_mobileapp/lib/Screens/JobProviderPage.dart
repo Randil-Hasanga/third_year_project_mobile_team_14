@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/interview_scheduler.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/updateVacancy.dart';
@@ -814,7 +815,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                 ),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ChatPage()));
+                      MaterialPageRoute(builder: (context) => ChatHome()));
                 },
               ),
             ],

@@ -34,6 +34,10 @@ class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  User? getCurrentUserChat() {
+    return _auth.currentUser;
+  }
+
   get instance => null;
 
   Future<bool> loginUser(
@@ -363,7 +367,7 @@ class FirebaseService {
 
 // CV PDF genarating
 
- final CollectionReference cvDetailsCollection =
+  final CollectionReference cvDetailsCollection =
       FirebaseFirestore.instance.collection('CVDetails');
 
   // Method to get details of a CV from Firestore
@@ -486,7 +490,7 @@ class FirebaseService {
   }
 
   //get stream of job seekers
-  Stream<List<Map<String, dynamic>>> getJobSeekerStream() {
+  /*Stream<List<Map<String, dynamic>>> getJobSeekerStream() {
     return _db.collection(USER_COLLECTION).snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final jobSeeker = doc.data();
@@ -538,7 +542,7 @@ class FirebaseService {
         .orderBy('timestamp')
         .snapshots();
   }
-
+*/
 // get collection of interview detials
   final CollectionReference interviewCollection =
       FirebaseFirestore.instance.collection('interview_details');
