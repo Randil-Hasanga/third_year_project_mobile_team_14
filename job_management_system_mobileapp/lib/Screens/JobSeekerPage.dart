@@ -120,33 +120,22 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               const SizedBox(
                 height: 2,
               ),
-              Padding(
-                padding: const EdgeInsets.all(10),
+              const Padding(
+                padding: EdgeInsets.all(10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        // Add code here to handle the edit functionality
-                      },
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('assets/Default.png'),
+                  children: [
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 64,
+                            backgroundImage:NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
+                          )
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("$_userName",
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 30)),
-                        const Text("BICT(HONS)",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                      ],
-                    ),
-                  ],
+
+
+                  ]
                 ),
               ),
               const SizedBox(height: 20),
@@ -246,7 +235,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return Center(
+                                return const Center(
                                   child: CircularProgressIndicator(),
                                 ); // Show loading indicator while fetching data
                               }
@@ -256,7 +245,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               }
 
                               return Container(
-                                color: Color.fromARGB(255, 255, 255,255), // Background color for the list
+                                color: const Color.fromARGB(255, 255, 255,255), // Background color for the list
                                 child: Row(
                                   children: List.generate(
                                     snapshot.data?.docs.length ?? 0,
@@ -303,17 +292,17 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(height: 6),
+                                                const SizedBox(height: 6),
                                                 Row(
                                                   children: [
-                                                    Icon(Icons.work),
-                                                    SizedBox(width: 8),
+                                                    const Icon(Icons.work),
+                                                    const SizedBox(width: 8),
                                                     Flexible(
                                                       child: Text(
                                                         (vacancyData?[
                                                                 'job_position']
                                                             as String),
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 15),
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -321,7 +310,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(height: 6),
+                                                const SizedBox(height: 6),
                                                 Row(
                                                   children: [
                                                     const Icon(
@@ -393,7 +382,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return Center(
+                                return const Center(
                                   child: CircularProgressIndicator(),
                                 ); // Show loading indicator while fetching data
                               }
@@ -426,7 +415,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: Color.fromARGB(255, 234, 232, 232), // Background color for data
+                                                color: const Color.fromARGB(255, 234, 232, 232), // Background color for data
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
@@ -456,7 +445,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(height: 1),
+                                                    const SizedBox(height: 1),
                                                     Row(
                                                       children: [
                                                         const Icon(Icons.work),
@@ -473,7 +462,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(height: 1),
+                                                    const SizedBox(height: 1),
                                                     Row(
                                                       children: [
                                                         const Icon(
@@ -601,7 +590,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Help()),
+                  MaterialPageRoute(builder: (context) => const Help()),
                 );
               },
             ),
