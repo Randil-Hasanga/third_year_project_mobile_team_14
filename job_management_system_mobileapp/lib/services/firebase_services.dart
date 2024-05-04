@@ -297,7 +297,7 @@ class FirebaseService {
       'selectedDate': selectedDate,
       'religion': religion,
       'age': age,
-      'email': email,
+      'cv_email': email,
       'contactMobile': contactMobile,
       'ContactHome': contactHome,
       'address': address,
