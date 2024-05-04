@@ -118,7 +118,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                 fontSize: 16,
                                 color: Colors.black,
                               ),
-                              children: [
+                              children: const [
                                 TextSpan(
                                   text:
                                       "All the results are shown according to your curriculum vitae (CV).\n\n",
@@ -140,7 +140,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Preferred Area are filtered by your district or province, gender, age, preferred industries and highest education level, regardless of your expected salary\n\n",
+                                      "Vacancies by Preferred Area are filtered by your district or province, gender, age, preferred industries and highest education level, regardless of your expected salary and prefered organization type\n\n",
                                 ),
                                 TextSpan(
                                   text: "Vacancies by Highest Education\n\n",
@@ -148,7 +148,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Highest Education are filtered by your gender, age, and highest education level.\nYou can see vacancies according to your education level, regardless of company location and your expected salary.\n\n",
+                                      "Vacancies by Highest Education are filtered by your gender, age, prefered industries and highest education level.\nYou can see vacancies according to your education level, regardless of your prefered location, prefered organization type and your expected salary.\n\n",
                                 ),
                                 TextSpan(
                                   text: "Vacancies by Expected Salary\n\n",
@@ -156,7 +156,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Expected salary are filtered by your gender, age, highest education level and your expected salary.\nYou can see vacancies that offer salary greater than or equals to your expected salary, regardless of company location.\n\n",
+                                      "Vacancies by Expected salary are filtered by your gender, age,prefered industries, highest education level and your expected salary.\nYou can see vacancies that offer salary greater than or equals to your expected salary, regardless of your prefered location and prefered organization type.\n\n",
                                 ),
                                 TextSpan(
                                   text:
@@ -165,7 +165,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Prefered organization type are filtered by your gender, age, highest education level and your Prefered organization type regardless of your prefered location and expected salary.",
+                                      "Vacancies by Prefered organization type are filtered by your gender, age, prefered industries, highest education level and your Prefered organization type regardless of your prefered location and expected salary.",
                                 ),
                               ],
                             ),
