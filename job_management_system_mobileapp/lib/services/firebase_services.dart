@@ -97,6 +97,18 @@ class FirebaseService {
           'disabled': false,
           'registered_date': currentDate,
         });
+
+        if (accountType == 'seeker') {
+          await _db
+              .collection(SEEKER_PROFILE_DETAILS_COLLECTION)
+              .doc(_userCredentials.user!.uid)
+              .set(
+            {
+              'registered_date': currentDate,
+            },
+            SetOptions(merge: true),
+          );
+        }
         return true;
       } else {
         return false;
