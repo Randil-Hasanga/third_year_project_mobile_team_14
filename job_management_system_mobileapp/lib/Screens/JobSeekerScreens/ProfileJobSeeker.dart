@@ -163,7 +163,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Email Address is required';
+                    return 'Please enter email address';
                   }
                   // Regular expression pattern for email validation
                   RegExp regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -176,13 +176,18 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _addressController,
-                maxLines:
-                    2, // Set to null or any number greater than 1 for multiple lines
+                maxLines: 2,
                 decoration: const InputDecoration(
                   labelText: 'Address',
                   hintText: 'Address',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your address';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(
                 height: 20,
@@ -198,6 +203,12 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                     _selectedGender = newValue;
                   });
                 },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select your gender';
+                  }
+                  return null;
+                },
                 items: <String>['Male', 'Female']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -207,13 +218,46 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
+              const SizedBox(
+                height: 20,
+              ),
               TextFormField(
                 controller: _nicController,
-                maxLines:
-                    1, // Set to null or any number greater than 1 for multiple lines
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your NIC';
+                  }
+
+                  // Remove any whitespaces
+                  value = value.replaceAll(' ', '');
+
+                  // Check if the input starts with digits
+                  if (!RegExp(r'^[0-9]').hasMatch(value)) {
+                    return 'Invalid NIC format';
+                  }
+
+                  // Check the length of the NIC
+                  if (value.length != 12 && value.length != 10) {
+                    return 'NIC must be 10 or 12 characters long';
+                  }
+
+                  // Check for old version NIC (9 digits + 'V' or 'X')
+                  if (value.length == 10 &&
+                      !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
+                    return 'Invalid NIC format';
+                  }
+
+                  // Check for new version NIC (12 digits)
+                  if (value.length == 12 &&
+                      !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
+                    return 'Invalid NIC format';
+                  }
+
+                  // Valid NIC
+                  return null;
+                },
                 decoration: const InputDecoration(
                   labelText: 'NIC',
-                  hintText: 'NIC',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -231,6 +275,12 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   hintText: 'Date of Birth',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (_selectedDate == null) {
+                    return 'Please select your date of birth';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               const SizedBox(height: 20),
@@ -244,6 +294,12 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   setState(() {
                     _selectedDistrict = newValue;
                   });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select a district';
+                  }
+                  return null;
                 },
                 items: <String>[
                   'Matara',
@@ -282,26 +338,31 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               TextFormField(
                 controller: _contactNumberController,
                 decoration: const InputDecoration(
-                  labelText: 'Contact Number',
-                  hintText: 'Contact Number',
+                  labelText: 'Tel (Mobile)',
+                  hintText: 'EX: +94718524560',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  // if (value == null || value.isEmpty) {
+                  //   return 'Please enter your contact number';
+                  // }
+                  // // Regular expression pattern for Sri Lankan mobile number format
+                  // RegExp regex =
+                  //     RegExp(r'^[+94]{1}[7]{1}[01245678]{1}[0-9]{7}$');
+                  // if (!regex.hasMatch(value)) {
+                  //   return 'Invalid mobile format. Please enter a valid Sri Lankan mobile number with a "+" sign and 11 digits (e.g., +94718524560).';
+                  // }
+                  return null; // Return null if the input is valid
+                },
               ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // If the form is valid, proceed with form submission
-                        // Format the date as a string
-                        String formattedDate = _selectedDate != null
-                            ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                            : '';
-
-                        // Call the function to add job seeker profile
-                        _firebaseService.addJobSeekerProfile(
+                        await _firebaseService.addJobSeekerProfile(
                           _fullNameController.text,
                           _emailController.text,
                           _addressController.text,
@@ -310,6 +371,22 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                           _selectedDate,
                           _selectedDistrict!,
                           _contactNumberController.text,
+                        );
+
+                        // Display success message
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.success,
+                          title: 'Success',
+                          text: 'Successfully added',
+                        );
+                      } else {
+                        // If the form is invalid, show an error message
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.error,
+                          title: 'Error',
+                          text: 'Please fill in all the required fields',
                         );
                       }
                     },
@@ -339,49 +416,3 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     );
   }
 }
-
-
-
-
-//  Widget _addCompanyLogo() {
-//     if (selectedImage != null) {
-//       return GestureDetector(
-//         onTap: () {
-//           _pickAndResizeImage();
-//         },
-//         child: Container(
-//           // width: _deviceWidth! * 0.3,
-//           // height: _deviceHeight! * 0.15,
-//           child: ClipRRect(
-//             borderRadius: BorderRadius.circular(10),
-//             child: Image.file(
-//               File(selectedImage!.path),
-//               width: 250,
-//               height: 125,
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//         ),
-//       );
-//     } else {
-//       return GestureDetector(
-//         onTap: () {
-//           _pickAndResizeImage();
-//         },
-//         child: Stack(
-//           children: [
-//             Container(
-//               width: _deviceWidth! * 0.3,
-//               height: _deviceHeight! * 0.15,
-//               child: SvgPicture.asset(
-//                 "assets/logo.svg",
-//                 width: 250,
-//                 height: 125,
-//               ),
-//             ),
-//             Icon(Icons.add_a_photo),
-//           ],
-//         ),
-//       );
-//     }
-//   }
