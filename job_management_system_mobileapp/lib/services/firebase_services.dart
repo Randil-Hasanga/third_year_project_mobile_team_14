@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
@@ -278,9 +279,9 @@ class FirebaseService {
       String trainingReq,
       //String prefferedArea,
       String careerGuidance,
-      String? sinhalaWriting,
-      String? sinhalaReading,
       String? sinhalaSpeaking,
+      String? sinhalaReading,
+      String? sinhalaWriting,
       String? englishSpeaking,
       String? englishReading,
       String? englishWriting,
@@ -292,8 +293,9 @@ class FirebaseService {
       String careerObjective,
       String refeeOne,
       String refeeTwo,
-      String preferredJobs,
+      List<String> preferredIndustries,
       String? selectPrefferedDistrict) async {
+         final preferredIndustriesString = jsonEncode(preferredIndustries);
     _db.collection(CV_COLLECTION).doc(uid).set({
       'title': title,
       'gender': gender,
@@ -354,11 +356,10 @@ class FirebaseService {
       'trainingReq': trainingReq,
       //'prefferedArea': prefferedArea,
       'careerGuidance': careerGuidance,
-      'sinhalaWriting': sinhalaWriting,
+      'sinhalaSpeaking': sinhalaSpeaking,
       'sinhalaReading': sinhalaReading,
       'sinhalaWriting': sinhalaWriting,
       'englishSpeaking': englishSpeaking,
-      'englishReading': englishReading,
       'englishReading': englishReading,
       'englishWriting': englishWriting,
       'tamilSpeaking': tamilSpeaking,
@@ -369,7 +370,7 @@ class FirebaseService {
       'careerObjective': careerObjective,
       'refeeOne': refeeOne,
       'refeeTwo': refeeTwo,
-      'preferredJobs': preferredJobs,
+      'prefered_industries': preferredIndustriesString,
       'prefferedDistrict': selectPrefferedDistrict,
       'uid': uid,
     }, SetOptions(merge: true));

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
@@ -132,7 +133,10 @@ class _CVCreationState extends State<CVCreation> {
       TextEditingController();
   final TextEditingController _refeeOneController = TextEditingController();
   final TextEditingController _refeeTwoController = TextEditingController();
-  String? selectPrefIndustry;
+
+  // ignore: non_constant_identifier_names
+  List<String> prefered_industries = [];
+
   String? selectPrefferedDistrict;
 
   double? _deviceWidth, _deviceHeight;
@@ -162,13 +166,6 @@ class _CVCreationState extends State<CVCreation> {
     //responsiveness of the device
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
-    void showAlert() {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        title: 'Your CV is already created\nPress "Create CV" ',
-      );
-    }
 
     return DefaultTabController(
       length: 4, // Number of tabs
@@ -442,7 +439,7 @@ class _CVCreationState extends State<CVCreation> {
                       TextFormField(
                         controller: _nationalityController,
                         decoration: const InputDecoration(
-                          labelText: 'Nationality (Eg: Srilanka)',
+                          labelText: 'Nationality (Eg: Srilankan)',
                           border: OutlineInputBorder(),
                         ),
                       ),
@@ -558,6 +555,10 @@ class _CVCreationState extends State<CVCreation> {
                       ),
                       TextFormField(
                         controller: _ageController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         decoration: const InputDecoration(
                           labelText: 'Age',
                           border: OutlineInputBorder(),
@@ -573,12 +574,10 @@ class _CVCreationState extends State<CVCreation> {
                           } catch (e) {
                             return 'Invalid age';
                           }
-                          // Check if age is a positive integer
-                          if (age <= 0) {
-                            return 'Age must be a positive integer';
+                          // Check if age is within the range of 1 to 99
+                          if (age <= 0 || age >= 100) {
+                            return 'Age must be between 1 and 99';
                           }
-                          // Additional validation if needed
-                          // ...
 
                           return null; // Return null if the input is valid
                         },
@@ -612,7 +611,7 @@ class _CVCreationState extends State<CVCreation> {
                         controller: _contactMobileController,
                         decoration: const InputDecoration(
                           labelText: 'Tel (Mobile)',
-                          hintText: 'EX: +947185245600',
+                          hintText: 'EX: +94718524560',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
@@ -623,7 +622,7 @@ class _CVCreationState extends State<CVCreation> {
                           RegExp regex = RegExp(
                               r'^(?:\+?94)?0?(7(?:[0125678]\d|9[0-4])\d{7})$');
                           if (!regex.hasMatch(value)) {
-                            return 'invalid mobile format';
+                            return 'Invalid mobile format';
                           }
                           return null; // Return null if the input is valid
                         },
@@ -635,12 +634,12 @@ class _CVCreationState extends State<CVCreation> {
                         controller: _contactHomeController,
                         decoration: const InputDecoration(
                           labelText: 'Tel (Home)',
-                          hintText: 'EX: +947185245600',
+                          hintText: 'EX: +94718524560',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'invalid mobile format';
+                            return 'Home number is required';
                           }
                           // Regular expression pattern for Sri Lankan home contact number format
                           RegExp regex = RegExp(r'^(?:\+?94)?0?([1-9]\d{8})$');
@@ -737,20 +736,28 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: _salaryController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         decoration: const InputDecoration(
                           labelText: 'Minimum Salary Expectation (LKR)',
-                          hintText: '25,000/=',
+                          hintText: '25000',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Minimum Salary Expectation is required';
                           }
-                          // Regular expression pattern to validate Sri Lankan salary format
-                          RegExp regex =
-                              RegExp(r'^\d{1,3}(,\d{3})*(\.\d+)?/=?$');
-                          if (!regex.hasMatch(value)) {
-                            return 'Enter a valid salary amount(e.g., 25,000/=)';
+                          int salary;
+                          try {
+                            salary = int.parse(value);
+                          } catch (e) {
+                            return 'Enter a valid salary amount (e.g., 25000)';
+                          }
+                          // Check if the salary meets the minimum expectation
+                          if (salary < 25000) {
+                            return 'Minimum Salary Expectation must be at least LKR 25,000';
                           }
                           return null; // Return null if the input is valid
                         },
@@ -1431,7 +1438,7 @@ class _CVCreationState extends State<CVCreation> {
 
                         const SizedBox(height: 20),
                         const Text(
-                          'Preferred Jobs:',
+                          'preferred Jobs:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -1439,43 +1446,56 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         const SizedBox(height: 10),
                         // Preferred Jobs fields
-                        DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(
-                            hintMaxLines: 2,
-                            labelText: 'preffered Industry',
-                            border: OutlineInputBorder(),
-                          ),
-                          value: selectPrefIndustry,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectPrefIndustry = newValue;
-                            });
-                          },
-                          items: <String>[
-                            '1. Agriculture Animal Husbandry\nand Forestry',
-                            '2. Fishing',
-                            '3. Mining and Quarrying',
-                            '4. Manufacturing',
-                            '5. Electricity Gas and Water Supply',
-                            '6. Construction',
-                            '7. Wholesale and Retail Trade',
-                            '8. Hotel and Restaurant',
-                            '9. Financial Services',
-                            '10.Real Estate Services',
-                            '11.Computer Related Services',
-                            '12.Research and Development Services',
-                            '13.Public Administration and Defence',
-                            '14.Health and Social Services',
-                            '15.Other Community,Social and Personal\nServices',
-                            '16.Private Householdwith Employed\nPersonals',
-                            '17.Extra Territorial Organizations',
-                            '18.Transportation and Storage',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value.trim()),
-                            );
-                          }).toList(),
+                        Column(
+                          children: <Widget>[
+                            const Text(
+                              'Select Preferred Industries',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold),
+                            ),
+                            Column(
+                              children: <Widget>[
+                                ...<String>[
+                                  'Agriculture, Animal Husbandry and Forestry',
+                                  'Fishing',
+                                  'Mining and Quarrying',
+                                  'Manufacturing',
+                                  'Electricity, Gas and Water Supply',
+                                  'Construction',
+                                  'Wholesale and Retail Trade',
+                                  'Hotel and Restaurant',
+                                  'Financial Services',
+                                  'Real Estate Services',
+                                  'Computer Related Services',
+                                  'Research and Development Services',
+                                  'Public Administration and Defence',
+                                  'Health and Social Services',
+                                  'Other Community, Social and Personal Services',
+                                  'Private Household with Employed Personals',
+                                  'Extra Territorial Organizations',
+                                  'Transportation and Storage',
+                                ].map<CheckboxListTile>((industry) {
+                                  return CheckboxListTile(
+                                    checkColor:
+                                        Color.fromARGB(255, 255, 183, 0),
+                                    activeColor: Colors.white,
+                                    value:
+                                        prefered_industries.contains(industry),
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        if (value == true) {
+                                          prefered_industries.add(industry);
+                                        } else {
+                                          prefered_industries.remove(industry);
+                                        }
+                                      });
+                                    },
+                                    title: Text(industry),
+                                  );
+                                }).toList(),
+                              ],
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 20),
                         const Text(
@@ -1536,15 +1556,10 @@ class _CVCreationState extends State<CVCreation> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // Format the date as a string
-                                  String formattedDate = _selectedDate != null
-                                      ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                                      : '';
-
                                   // Call the function to add job seeker profile
-                                  _firebaseService!.addCVdetails(
+                                  await _firebaseService!.addCVdetails(
                                     _selectedtitle!,
                                     _selectedgender!,
                                     _selectedjobType!,
@@ -1611,78 +1626,24 @@ class _CVCreationState extends State<CVCreation> {
                                     _careerObjectiveController.text,
                                     _refeeOneController.text,
                                     _refeeTwoController.text,
-                                    selectPrefIndustry!,
+                                    prefered_industries,
                                     selectPrefferedDistrict!,
                                   );
-                                  // _selectedtitle!.clear();
-                                  //_selectedgender.clear();
-                                  // _selectedjobType!,
-                                  // _selectedworkingSection!,
-                                  //_selectedmaritalStatus!,
-                                  //_selectedcurrentJobStatus!,
-                                  // _nameWithIniController.clear();
-                                  // _fullNameController.clear();
-                                  // _nationalityController.clear();
-                                  // _nicController.clear();
-                                  // _drivingLicenceController.clear();
-                                  // //_selectedDate!,
-                                  // _selectReligion!,
-                                  // _ageController.clear();
-                                  // _emailController.clear();
-                                  // _contactMobileController.clear();
-                                  // _contactHomeController.clear();
-                                  // _addressController.clear();
-                                  // //_selecteddistrict!,
-                                  // _divisionalSecController.clear();
-                                  // _salaryController.clear();
-                                  // //_selectEduQalification!,
-                                  // //_selectProfQualification!,
-                                  // _OLYearController.clear();
-                                  // _OLIndexController.clear();
-                                  // _OLMediumController.clear();
-                                  // _OLSchoolController.clear();
-                                  // _OLAttemptController.clear();
-                                  // //_selectOLStatus!,
-                                  // _ALYearController.clear();
-                                  // _ALIndexController.clear();
-                                  // _ALMediumController.clear();
-                                  // _ALSchoolController.clear();
-                                  // _ALAttemptController.clear();
-                                  // //_selectALStatus!,
-                                  // _sec01NameController.clear();
-                                  // _sec01InstituteController.clear();
-                                  // _sec01durationController.clear();
-                                  // _sec02NameController.clear();
-                                  // _sec02InstituteController.clear();
-                                  // _sec02durationController.clear();
-                                  // _yearOfExperienceController.clear();
-                                  // _currentJobPositionController.clear();
-                                  // _dateOfJoinController.clear();
-                                  // _companyController.clear();
-                                  // _responsibilitiesController.clear();
-                                  // _specialSkillController.clear();
-                                  // _computerSkillController.clear();
-                                  // _otherSkillController.clear();
-                                  // _achievementsController.clear();
-                                  // _extraCurricularController.clear();
-                                  // _trainingReqController.clear();
-                                  // _prefferedAreaController.clear();
-                                  // _careerGuidanceController.clear();
-                                  // //sinhalaWriting!,
-                                  // //sinhalaReading!,
-                                  // //sinhalaWriting!,
-                                  // //englishSpeaking!,
-                                  // // englishReading!,
-                                  // //englishWriting!,
-                                  // //tamilSpeaking!,
-                                  // // tamilReading!,
-                                  // //tamilWriting!,
-                                  // _careerObjectiveController.clear();
-                                  // _refeeOneController.clear();
-                                  // _refeeTwoController.clear();
-                                  // _preferredJobsController.clear();
-                                  //selectPrefferedDistrict!,
-                                  showAlert();
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.success,
+                                    title: 'Data confirmation Success',
+                                    text: 'Press "Create CV" button to download your CV',
+                                  );
+                                } else {
+                                  // If the form is invalid, show an error message
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.error,
+                                    title: 'Error',
+                                    text:
+                                        'Please fill in all the required fields',
+                                  );
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -1698,7 +1659,7 @@ class _CVCreationState extends State<CVCreation> {
                                     horizontal: 32), // Button padding
                               ),
                               child: const Text(
-                                'Submit',
+                                'Confirm your Data',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 19), // Text color
@@ -1910,7 +1871,7 @@ Future<void> generatePdfFromFirebase() async {
                   //
                   // Contact information fields
                   pw.Paragraph(
-                    text: '${userDetails['email']}',
+                    text: '${userDetails['cv_email']}',
                   ),
                   pw.Paragraph(
                     text: '${userDetails['contactMobile']}',
@@ -2171,70 +2132,88 @@ Future<void> generatePdfFromFirebase() async {
                     ),
                   ),
 
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      // pw.Column(
-                      //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      //   children: [
-                      //     if (userDetails['sinhalaSpeaking'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'Sinhala Speaking: ${userDetails['sinhalaSpeaking']}',
-                      //       ),
-                      //     if (userDetails['sinhalaReading'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'Sinhala Reading: ${userDetails['sinhalaReading']}',
-                      //       ),
-                      //     if (userDetails['sinhalaWriting'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'Sinhala Writing: ${userDetails['sinhalaWriting']}',
-                      //       ),
-                      //   ],
-                      // ),
-                      // pw.Column(
-                      //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      //   children: [
-                      //     if (userDetails['englishSpeaking'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'English Speaking: ${userDetails['englishSpeaking']}',
-                      //       ),
-                      //     if (userDetails['englishReading'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'English Reading: ${userDetails['englishReading']}',
-                      //       ),
-                      //     if (userDetails['englishWriting'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'English Writing: ${userDetails['englishWriting']}',
-                      //       ),
-                      //   ],
-                      // ),
-                      // pw.Column(
-                      //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      //   children: [
-                      //     if (userDetails['tamilSpeaking'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'Tamil Speaking: ${userDetails['tamilSpeaking']}',
-                      //       ),
-                      //     if (userDetails['tamilReading'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'Tamil Reading: ${userDetails['tamilReading']}',
-                      //       ),
-                      //     if (userDetails['tamilWriting'] != null)
-                      //       pw.Paragraph(
-                      //         text:
-                      //             'Tamil Writing: ${userDetails['tamilWriting']}',
-                      //       ),
-                      //   ],
-                      // ),
-                    ],
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(10),
+                    color: PdfColors.white, // Color for language skills section
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Header(
+                          level: 1,
+                          text: 'Language Skills',
+                          textStyle: pw.TextStyle(
+                            fontSize: 24,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.black, // Text color
+                          ),
+                        ),
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                if (userDetails['sinhalaSpeaking'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'Sinhala Speaking: ${userDetails['sinhalaSpeaking']}',
+                                  ),
+                                if (userDetails['sinhalaReading'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'Sinhala Reading: ${userDetails['sinhalaReading']}',
+                                  ),
+                                if (userDetails['sinhalaWriting'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'Sinhala Writing: ${userDetails['sinhalaWriting']}',
+                                  ),
+                              ],
+                            ),
+                            pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                if (userDetails['englishSpeaking'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'English Speaking: ${userDetails['englishSpeaking']}',
+                                  ),
+                                if (userDetails['englishReading'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'English Reading: ${userDetails['englishReading']}',
+                                  ),
+                                if (userDetails['englishWriting'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'English Writing: ${userDetails['englishWriting']}',
+                                  ),
+                              ],
+                            ),
+                            pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                if (userDetails['tamilSpeaking'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'Tamil Speaking: ${userDetails['tamilSpeaking']}',
+                                  ),
+                                if (userDetails['tamilReading'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'Tamil Reading: ${userDetails['tamilReading']}',
+                                  ),
+                                if (userDetails['tamilWriting'] != null)
+                                  pw.Paragraph(
+                                    text:
+                                        'Tamil Writing: ${userDetails['tamilWriting']}',
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
