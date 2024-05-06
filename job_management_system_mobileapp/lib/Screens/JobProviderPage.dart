@@ -237,18 +237,26 @@ class _JobProviderPageState extends State<JobProviderPage> {
                               return Text('Error: ${snapshot.error}');
                             }
 
+                            List<DocumentSnapshot> vacancies =
+                                snapshot.data!.docs;
+
                             return ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data?.docs.length,
+                              itemCount: vacancies.length,
                               itemBuilder: (context, index) {
-                                var vacancyData =
-                                    snapshot.data?.docs[index].data();
-                                String companyName = '';
+                                String vacancyID = vacancies[index].id;
+                                /* var vacancyData =
+                                    snapshot.data?.docs[index].data();*/
+                                String companyName =
+                                    vacancies[index]['company_name'];
+                                String jobPosition =
+                                    vacancies[index]['job_position'];
+                                String location = vacancies[index]['location'];
 
-                                if (vacancyData != null) {
+                                /*if (vacancyData != null) {
                                   companyName = (vacancyData as Map<String,
                                       dynamic>)['company_name'] as String;
-                                }
+                                }*/
                                 return Container(
                                   margin: const EdgeInsets.all(8),
                                   width: 250,
@@ -263,10 +271,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           const Icon(Icons.business),
                                           const SizedBox(width: 8),
                                           Text(
-                                            companyName = (vacancyData as Map<
-                                                    String,
-                                                    dynamic>)['company_name']
-                                                as String,
+                                            companyName,
                                             style:
                                                 const TextStyle(fontSize: 20),
                                           ),
@@ -278,9 +283,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           const Icon(Icons.work),
                                           const SizedBox(width: 8),
                                           Text(
-                                            companyName =
-                                                (vacancyData)['job_position']
-                                                    as String,
+                                            jobPosition,
                                             style:
                                                 const TextStyle(fontSize: 15),
                                           ),
@@ -292,9 +295,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           const Icon(Icons.location_on),
                                           const SizedBox(width: 8),
                                           Text(
-                                            companyName =
-                                                (vacancyData)['location']
-                                                    as String,
+                                            location,
                                             style:
                                                 const TextStyle(fontSize: 15),
                                           ),
@@ -308,7 +309,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      VacancyUpdaterUI(),
+                                                      VacancyUpdaterUI(
+                                                    vacancyId: vacancyID,
+                                                  ),
                                                 ),
                                               );
                                             },

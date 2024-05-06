@@ -57,6 +57,7 @@ class _vacanciesState extends State<vacancies> {
   void initState() {
     super.initState();
     firebaseSerice = GetIt.instance.get<FirebaseService>();
+    _getProvider();
   }
 
   void _getProvider() async {
@@ -66,11 +67,12 @@ class _vacanciesState extends State<vacancies> {
       setState(() {
         _companyNameController.text =
             _jobProviderDetails!['company_name'] ?? '';
-        orgType = _jobProviderDetails!['org_type'];
+        orgType = _jobProviderDetails!['org_type'] ?? '';
       });
     }
 
     _companyname = _jobProviderDetails!['company_name'];
+    orgType = _jobProviderDetails!['org_type'];
   }
 
   final List<String> items = [
@@ -246,49 +248,21 @@ class _vacanciesState extends State<vacancies> {
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         }
-                        return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            var providerData =
-                                snapshot.data?.docs[index].data();
-                            String companyName = '';
 
-                            if (providerData != null) {
-                              companyName = (providerData
-                                      as Map<String, dynamic>)['company_name']
-                                  as String;
-                            }
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.business),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        _companyNameController.text =
-                                            (providerData as Map<String,
-                                                    dynamic>)['company_name']
-                                                as String,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: screenHeight * 0.005),
-                                  Row(
-                                    children: [
-                                      Text(_industrytypeController.text =
-                                          (providerData as Map<String,
-                                              dynamic>)['industry'] as String),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                        List<DocumentSnapshot> providerDetails =
+                            snapshot.data!.docs;
+
+                        return ListView.builder(
+                          itemCount: providerDetails.length,
+                          itemBuilder: (context, index) {
+                            _companyNameController.text =
+                                providerDetails[index]['company_name'] ?? '';
+                            _industrytypeController.text =
+                                providerDetails[index]['industry'] ?? '';
+
+                            return ListTile(
+                              title: Text(_companyNameController.text),
+                              subtitle: Text(_industrytypeController.text),
                             );
                           },
                         );

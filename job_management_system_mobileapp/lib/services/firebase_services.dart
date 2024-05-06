@@ -172,7 +172,7 @@ class FirebaseService {
     String jobPosition,
     String description,
     String gender,
-    int minimumAge,
+    double minimumAge,
     String maxEducation,
     double salary,
     String location,
@@ -580,60 +580,6 @@ class FirebaseService {
     }
   }
 
-  //get stream of job seekers
-  /*Stream<List<Map<String, dynamic>>> getJobSeekerStream() {
-    return _db.collection(USER_COLLECTION).snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final jobSeeker = doc.data();
-        return jobSeeker;
-      }).toList();
-    });
-  }
-
-  //Create a message
-  Future<void> sendMessage(String receiverID, message) async {
-    //get current Job Provider
-    final String currentUserID = _auth.currentUser!.uid.toString();
-    final String currentUserEmail = _auth.currentUser!.email.toString();
-    final Timestamp timestamp = Timestamp.now();
-
-    //send message
-    Message newMessage = Message(
-      senderID: currentUserEmail!,
-      senderEmail: currentUserID,
-      receiverID: receiverID,
-      message: message,
-      timestamp: timestamp.toString(),
-    );
-
-    //Construct chat room id for two persons
-    List<String> ids = [currentUserID, receiverID];
-    ids.sort(); // two person chat room id should be same for both users
-    String chatRoomID = ids.join('_');
-
-    // messages add to databse
-    await _db
-        .collection("chat_rooms")
-        .doc(chatRoomID)
-        .collection("messages")
-        .add(newMessage.toMap());
-  }
-
-  //get messages
-  Stream<QuerySnapshot> getMessages(String userID, otherUserID) {
-    //contruct chat room id for two persons
-    List<String> ids = [userID, otherUserID];
-    ids.sort();
-    String chatRoomID = ids.join('_');
-
-    return _db
-        .collection("chat_rooms")
-        .doc(chatRoomID)
-        .collection("messages")
-        .orderBy('timestamp')
-        .snapshots();
-  }
-*/
 // get collection of interview detials
   final CollectionReference interviewCollection =
       FirebaseFirestore.instance.collection('interview_details');
