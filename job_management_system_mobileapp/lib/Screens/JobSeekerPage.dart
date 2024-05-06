@@ -123,20 +123,18 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               const Padding(
                 padding: EdgeInsets.all(10),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Stack(
                         children: [
                           CircleAvatar(
                             radius: 64,
-                            backgroundImage:NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
+                            backgroundImage: NetworkImage(
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
                           )
                         ],
                       ),
-
-
-                  ]
-                ),
+                    ]),
               ),
               const SizedBox(height: 20),
               Container(
@@ -245,7 +243,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               }
 
                               return Container(
-                                color: const Color.fromARGB(255, 255, 255,255), // Background color for the list
+                                color: const Color.fromARGB(255, 255, 255,
+                                    255), // Background color for the list
                                 child: Row(
                                   children: List.generate(
                                     snapshot.data?.docs.length ?? 0,
@@ -415,7 +414,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: const Color.fromARGB(255, 234, 232, 232), // Background color for data
+                                                color: const Color.fromARGB(
+                                                    255,
+                                                    234,
+                                                    232,
+                                                    232), // Background color for data
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
@@ -539,11 +542,33 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   color: Color.fromARGB(
                       255, 255, 137, 2)), // Icon for finding jobs
               title: const Text('Find Jobs'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => JobMatchingScreen()),
-                );
+              onTap: () async {
+                bool isCvExist = await _firebaseService!.checkCVExist();
+                if (isCvExist) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => JobMatchingScreen()),
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Alert"),
+                        content: Text("Please create CV and try again."),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
             ),
             ListTile(
