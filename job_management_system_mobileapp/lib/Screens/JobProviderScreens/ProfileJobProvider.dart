@@ -11,8 +11,11 @@ import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:job_management_system_mobileapp/widgets/buttons.dart';
+import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -25,6 +28,8 @@ class JobProviderProfile extends StatefulWidget {
 
 class _JobProviderProfileState extends State<JobProviderProfile> {
   FirebaseService? _firebaseService;
+  final RichTextWidget _richTextWidget = RichTextWidget();
+  final ButtonWidgets _buttonWidgets = ButtonWidgets();
   double? _deviceWidth, _deviceHeight;
 
   final GlobalKey<FormState> _companyDetailsFormKey = GlobalKey<FormState>();
@@ -46,9 +51,11 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       _selectedOrgFull,
       _selectedOrgType,
       _selectedIndustry,
-      _logo;
+      _logo,
+      _businessRegistrationPDFLink;
 
   XFile? selectedImage;
+  File? _businessRegistrationPDF;
 
   TextEditingController _districtController = TextEditingController();
   final TextEditingController _industryController = TextEditingController();
@@ -112,6 +119,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     _selectedDistrict = _jobProviderDetails?['district'];
     _selectedOrgType = _jobProviderDetails?['org_type'];
     _selectedIndustry = _jobProviderDetails?['industry'];
+    _businessRegistrationPDFLink = _jobProviderDetails?['businessRegDoc'];
   }
 
   @override
@@ -192,7 +200,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                   children: [
                     Text(
                       DemoLocalization.of(context).getTranslatedValue('logo')!,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                     Container(
                       height: 1,
@@ -214,7 +222,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                   SizedBox(
                     height: _deviceHeight! * 0.02,
                   ),
-                  Divider(),
+                  const Divider(),
                   SizedBox(
                     height: _deviceHeight! * 0.02,
                   ),
@@ -223,6 +231,95 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _companyDetailsForm() {
+    return Container(
+      child: Form(
+        key: _companyDetailsFormKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _memberNumberTextField(), // mona wage format ekakda thiyenne kiyala ahanna
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _companyNameTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _filePicker(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _companyAddressTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _districtTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            if (_selectedIndustry != null) ...{
+              _showSelectedIndustry(),
+            },
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _industryListView(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            if (_selectedOrgType != null) ...{
+              _showSelectedORG(),
+            },
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _orgTypeWidget(),
+            SizedBox(
+              height: _deviceHeight! * 0.03,
+            ),
+            _agentNameTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _agentPositionTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _agentTelephoneNumberTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _agentMobileNumberTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _faxNumberTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            _emailTextField(),
+            SizedBox(
+              height: _deviceHeight! * 0.02,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _clearButton(),
+                _submitButton(),
+              ],
+            ),
+            SizedBox(
+              height: _deviceHeight! * 0.01,
+            ),
+          ],
         ),
       ),
     );
@@ -283,7 +380,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
               width: _deviceHeight! * 0.05,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: Color.fromARGB(161, 204, 130, 33)),
+                  color: const Color.fromARGB(161, 204, 130, 33)),
               child: GestureDetector(
                 onTap: () => _pickAndResizeImage(),
                 child: const Icon(
@@ -322,7 +419,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
               width: _deviceHeight! * 0.05,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: Color.fromARGB(161, 204, 130, 33)),
+                  color: const Color.fromARGB(161, 204, 130, 33)),
               child: GestureDetector(
                 onTap: () => _pickAndResizeImage(),
                 child: const Icon(
@@ -388,88 +485,15 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     return XFile(compressedImgPath);
   }
 
-  Widget _companyDetailsForm() {
-    return Container(
-      child: Form(
-        key: _companyDetailsFormKey,
-        child: Column(
-          children: [
-            _memberNumberTextField(), // mona wage format ekakda thiyenne kiyala ahanna
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _companyNameTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _companyAddressTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _districtTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _industryListView(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _orgTypeWidget(),
-            SizedBox(
-              height: _deviceHeight! * 0.03,
-            ),
-            _agentNameTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _agentPositionTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _agentTelephoneNumberTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _agentMobileNumberTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _faxNumberTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            _emailTextField(),
-            SizedBox(
-              height: _deviceHeight! * 0.02,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _clearButton(),
-                _submitButton(),
-              ],
-            ),
-            SizedBox(
-              height: _deviceHeight! * 0.01,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   bool isEnglish(String text) {
     final RegExp englishRegex = RegExp(r'^[a-zA-Z ]+$');
     return englishRegex.hasMatch(text);
   }
 
   bool isEnglishWithSymbols(String text) {
-  final RegExp englishRegex = RegExp(r'^[a-zA-Z ,.!?]+$');
-  return englishRegex.hasMatch(text);
-}
-
+    final RegExp englishRegex = RegExp(r'^[a-zA-Z ,.!?]+$');
+    return englishRegex.hasMatch(text);
+  }
 
   Widget _memberNumberTextField() {
     return TextFormField(
@@ -573,7 +597,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             focusNode: focusNode,
             onEditingComplete: onEditingComplete,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               label: Text(
                   DemoLocalization.of(context).getTranslatedValue('district')!),
             ),
@@ -588,6 +612,25 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           });
           print("$_selectedDistrict,$_selectedOrgType,$_selectedIndustry");
         },
+      ),
+    );
+  }
+
+  Widget _showSelectedORG() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _richTextWidget.simpleText("Selected Organization Type", 15,
+                Colors.black, FontWeight.w500),
+            _richTextWidget.simpleText(
+                _selectedOrgType!, 17, Colors.black, FontWeight.w700),
+          ],
+        ),
       ),
     );
   }
@@ -656,6 +699,25 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _showSelectedIndustry() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _richTextWidget.simpleText(
+                "Selected Industry", 15, Colors.black, FontWeight.w500),
+            _richTextWidget.simpleText(
+                _selectedIndustry!, 17, Colors.black, FontWeight.w700),
+          ],
         ),
       ),
     );
@@ -933,7 +995,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       },
       child: Text(
         DemoLocalization.of(context).getTranslatedValue('clear')!,
-        style: TextStyle(fontWeight: FontWeight.w600),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -948,42 +1010,123 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       },
       child: Text(
         DemoLocalization.of(context).getTranslatedValue('save')!,
-        style: TextStyle(fontWeight: FontWeight.w600),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
     );
   }
 
+  Widget _filePicker() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        _richTextWidget.simpleText(
+            "Business Resistration", 17, Colors.black, FontWeight.w700),
+        _buttonWidgets.simpleElevatedButtonWidget(
+            onPressed: () {
+              _pickPDF(context);
+            },
+            buttonText: "Pick PDF",
+            style: null)
+      ],
+    );
+  }
+
+  void _pickPDF(BuildContext context) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        String? filePath = result.files.first.path;
+        _businessRegistrationPDF = File(result.files.first.path!);
+        if (filePath != null) {
+          // Do something with the file path, like storing it in a variable
+          print("Picked PDF file: $filePath");
+        }
+      } else {
+        // User canceled the picker or no files were selected
+        print("User canceled the picker or no files were selected");
+      }
+    } catch (e) {
+      print("Error picking PDF file: $e");
+    }
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: appBarColor,
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.green[100], // Customize the background color
+          title: const Text(
+            "Success",
+            style: TextStyle(color: Colors.green), // Customize the text color
+          ),
+          content: Text(
+            "Provider Details Successfully Updated",
+            style:
+                TextStyle(color: Colors.green[900]), // Customize the text color
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _getProvider();
+              },
+              child: const Text(
+                'OK',
+                style:
+                    TextStyle(color: Colors.green), // Customize the text color
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorMessage(BuildContext context, String message) {
+    _showSnackBar(context, message, Colors.red);
+  }
+
   void _validateAndSave() async {
     if (_selectedDistrict == null || _selectedDistrict!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "District Field Empty or Invalid",
-            textAlign: TextAlign.center,
-            selectionColor: Color.fromARGB(255, 230, 255, 2),
-          ),
-        ),
-      );
+      _showErrorMessage(context, "District Field Empty or Invalid");
     } else if (!sriLankanDistricts
         .any((district) => district == _districtFull)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Insert Valid District",
-            textAlign: TextAlign.center,
-            selectionColor: Color.fromARGB(255, 230, 255, 2),
-          ),
-        ),
-      );
+      _showErrorMessage(context, "Insert Valid District");
     } else {
-      if (_companyDetailsFormKey.currentState!.validate()) {
-        _companyDetailsFormKey.currentState!.save();
+      if (_businessRegistrationPDFLink != null ||
+          _businessRegistrationPDF != null) {
+        if (_companyDetailsFormKey.currentState!.validate()) {
+          _companyDetailsFormKey.currentState!.save();
+          _showLoadingDialog(context);
 
-        _firebaseService!.addJobProviderDetails(
+          await _firebaseService!.addJobProviderDetails(
             selectedImage,
             _logo,
             _membershipNumber!,
             _companyName!,
+            _businessRegistrationPDF,
+            _businessRegistrationPDFLink,
             _companyAddress!,
             _selectedDistrict!,
             _selectedIndustry!,
@@ -994,22 +1137,33 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             _agentMobile!,
             _faxNumber!,
             _email!,
-            _districtFull!);
+            _districtFull!,
+          );
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Color.fromARGB(255, 0, 255, 8),
-            content: Text(
-              "Provider Details Successfully Updated",
-              style: TextStyle(color: Colors.black),
-              textAlign: TextAlign.center,
-              selectionColor: Color.fromARGB(255, 230, 255, 2),
-            ),
-          ),
-        );
+          Navigator.of(context).pop(); // Dismiss the loading dialog
+          _showSuccessDialog(context);
+        }
+      } else {
+        Navigator.of(context).pop(); // Dismiss the loading dialog
+        _showErrorMessage(
+            context, "Please provide business registration document");
       }
     }
-    _getProvider();
+  }
+
+  void _showSnackBar(
+      BuildContext context, String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          style: const TextStyle(color: Colors.black),
+          message,
+          textAlign: TextAlign.center,
+          selectionColor: const Color.fromARGB(255, 230, 255, 2),
+        ),
+        backgroundColor: backgroundColor,
+      ),
+    );
   }
 
   static const List<String> orgtypes = [
