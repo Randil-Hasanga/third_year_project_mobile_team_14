@@ -697,10 +697,34 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.create,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: const Text('Create Vacancy'),
-              onTap: () {
+              onTap: () async {
+                bool isCompanyExist =
+                    await _firebaseService!.checkCompanyExist();
+
+                if (isCompanyExist) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => vacancies()));
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Alert"),
+                        content: Text(
+                            "Company is not registered or Account has been disabled\nPlease contact job center"),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
                 // Navigate to find jobs page
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => vacancies()));
               },
             ),
             ListTile(

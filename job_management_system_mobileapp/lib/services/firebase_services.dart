@@ -634,4 +634,62 @@ class FirebaseService {
       print("Error removing seeker from vacancies: $e");
     }
   }
+
+  Future<bool> checkCVExist() async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await FirebaseFirestore.instance
+              .collection(CV_COLLECTION)
+              .doc(uid)
+              .get();
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot2 =
+          await FirebaseFirestore.instance
+              .collection(USER_COLLECTION)
+              .doc(uid)
+              .get();
+
+      if (documentSnapshot.exists) {
+        bool isDisabled = documentSnapshot2.data()?['disabled'] ?? false;
+        return !isDisabled;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Error checking CV existence: $e");
+      return false;
+    }
+  }
+
+  Future<bool> checkCompanyExist() async {
+    try {
+      // Check if document exists in PROVIDER_DETAILS_COLLECTION
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await FirebaseFirestore.instance
+              .collection(PROVIDER_DETAILS_COLLECTION)
+              .doc(uid)
+              .get();
+
+      // If document exists, retrieve user document from USER_COLLECTION
+      if (documentSnapshot.exists) {
+        DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+            await FirebaseFirestore.instance
+                .collection(USER_COLLECTION)
+                .doc(uid)
+                .get();
+
+        // Check if user is disabled or pending
+        bool isDisabled = userSnapshot.data()?['disabled'] ?? false;
+        bool isPending = userSnapshot.data()?['pending'] ?? false;
+
+        // Return true if user is not disabled or pending
+        return !isDisabled && !isPending;
+      } else {
+        // Document does not exist in PROVIDER_DETAILS_COLLECTION
+        return false;
+      }
+    } catch (e) {
+      print("Error checking company existence: $e");
+      return false;
+    }
+  }
 }
