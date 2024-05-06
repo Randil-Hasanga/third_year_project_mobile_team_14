@@ -295,7 +295,7 @@ class FirebaseService {
       String refeeTwo,
       List<String> preferredIndustries,
       String? selectPrefferedDistrict) async {
-         final preferredIndustriesString = jsonEncode(preferredIndustries);
+    final preferredIndustriesString = jsonEncode(preferredIndustries);
     _db.collection(CV_COLLECTION).doc(uid).set({
       'title': title,
       'gender': gender,
@@ -407,6 +407,8 @@ class FirebaseService {
     String? logoLink,
     String membershipNumber,
     String companyName,
+    File? businessRegDoc,
+    String? businessRegistrationPDFLink,
     String companyAddress,
     String district,
     String industry,
@@ -419,20 +421,45 @@ class FirebaseService {
     String repEmail,
     String districtFull,
   ) async {
-    if (logo != null) {
-      try {
-        String _fileName = "logo" + p.extension(logo.path);
+    if (businessRegistrationPDFLink != null) {
+      if (logo != null) {
+        try {
+          String _imageName = "logo" + p.extension(logo.path);
 
-        UploadTask _task =
-            _storage.ref('images/$uid/$_fileName').putFile(File(logo.path));
+          UploadTask _task =
+              _storage.ref('images/$uid/$_imageName').putFile(File(logo.path));
 
-        return _task.then((_snapshot) async {
-          String _downloadURL = await _snapshot.ref
-              .getDownloadURL(); // get download url for the uploaded imageZz
+          return _task.then((_snapshot) async {
+            String _downloadURL = await _snapshot.ref.getDownloadURL();
+            // get download url for the uploaded imageZz
+            await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
+              "logo": _downloadURL,
+              "membership_number": membershipNumber,
+              "company_name": companyName,
+              "businessRegDoc": businessRegistrationPDFLink,
+              "company_address": companyAddress,
+              "district": district,
+              "industry": industry,
+              "org_type": orgType,
+              "repName": repName,
+              "repPost": repPost,
+              "repTelephone": repTelephone,
+              "repMobile": repMobile,
+              "repFax": repFax,
+              "repEmail": repEmail,
+              "districtFull": districtFull,
+            }, SetOptions(merge: true)); // set user document for new user
+          });
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        try {
           await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
-            "logo": _downloadURL,
+            "logo": logoLink,
             "membership_number": membershipNumber,
             "company_name": companyName,
+            "businessRegDoc": businessRegistrationPDFLink,
             "company_address": companyAddress,
             "district": district,
             "industry": industry,
@@ -444,31 +471,84 @@ class FirebaseService {
             "repFax": repFax,
             "repEmail": repEmail,
             "districtFull": districtFull,
-          }, SetOptions(merge: true)); // set user document for new user
-        });
-      } catch (e) {
-        print(e);
+          }, SetOptions(merge: true));
+        } catch (e) {
+          print(e);
+        }
       }
     } else {
-      try {
-        await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
-          "logo": logoLink,
-          "membership_number": membershipNumber,
-          "company_name": companyName,
-          "company_address": companyAddress,
-          "district": district,
-          "industry": industry,
-          "org_type": orgType,
-          "repName": repName,
-          "repPost": repPost,
-          "repTelephone": repTelephone,
-          "repMobile": repMobile,
-          "repFax": repFax,
-          "repEmail": repEmail,
-          "districtFull": districtFull,
-        }, SetOptions(merge: true));
-      } catch (e) {
-        print(e);
+      if (logo != null) {
+        try {
+          String fileName =
+              'pdf_BusinessReg${DateTime.now().millisecondsSinceEpoch}.pdf';
+          UploadTask _fileTask = _storage
+              .ref('BusinessRegistrations/$uid/$fileName')
+              .putFile(businessRegDoc!);
+
+          return _fileTask.then((snapshot) async {
+            String BrDocURL = await snapshot.ref.getDownloadURL();
+            String _imageName = "logo" + p.extension(logo.path);
+
+            UploadTask _task = _storage
+                .ref('images/$uid/$_imageName')
+                .putFile(File(logo.path));
+
+            return _task.then((_snapshot) async {
+              String _downloadURL = await _snapshot.ref.getDownloadURL();
+              // get download url for the uploaded imageZz
+              await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
+                "logo": _downloadURL,
+                "membership_number": membershipNumber,
+                "company_name": companyName,
+                "businessRegDoc": BrDocURL,
+                "company_address": companyAddress,
+                "district": district,
+                "industry": industry,
+                "org_type": orgType,
+                "repName": repName,
+                "repPost": repPost,
+                "repTelephone": repTelephone,
+                "repMobile": repMobile,
+                "repFax": repFax,
+                "repEmail": repEmail,
+                "districtFull": districtFull,
+              }, SetOptions(merge: true)); // set user document for new user
+            });
+          });
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        try {
+          String fileName =
+              'pdf_BusinessReg${DateTime.now().millisecondsSinceEpoch}.pdf';
+          UploadTask _fileTask = _storage
+              .ref('BusinessRegistrations/$uid/$fileName')
+              .putFile(businessRegDoc!);
+
+          return _fileTask.then((_snapshot) async {
+            String BrDocURL = await _snapshot.ref.getDownloadURL();
+            await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
+              "logo": logoLink,
+              "membership_number": membershipNumber,
+              "company_name": companyName,
+              "businessRegDoc": BrDocURL,
+              "company_address": companyAddress,
+              "district": district,
+              "industry": industry,
+              "org_type": orgType,
+              "repName": repName,
+              "repPost": repPost,
+              "repTelephone": repTelephone,
+              "repMobile": repMobile,
+              "repFax": repFax,
+              "repEmail": repEmail,
+              "districtFull": districtFull,
+            }, SetOptions(merge: true));
+          });
+        } catch (e) {
+          print(e);
+        }
       }
     }
   }
