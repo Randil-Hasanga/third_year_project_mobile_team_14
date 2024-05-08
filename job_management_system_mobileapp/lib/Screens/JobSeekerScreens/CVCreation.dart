@@ -1488,6 +1488,7 @@ class _CVCreationState extends State<CVCreation> {
                                         } else {
                                           prefered_industries.remove(industry);
                                         }
+                                        print(prefered_industries);
                                       });
                                     },
                                     title: Text(industry),
@@ -1582,19 +1583,19 @@ class _CVCreationState extends State<CVCreation> {
                                     _divisionalSecController.text,
                                     _salaryController.text,
                                     _selectEduQalification!,
-                                    _selectProfQualification!,
+                                    _selectProfQualification,
                                     _OLYearController.text,
                                     _OLIndexController.text,
                                     _OLMediumController.text,
                                     _OLSchoolController.text,
                                     _OLAttemptController.text,
-                                    _selectOLStatus!,
+                                    _selectOLStatus,
                                     _ALYearController.text,
                                     _ALIndexController.text,
                                     _ALMediumController.text,
                                     _ALSchoolController.text,
                                     _ALAttemptController.text,
-                                    _selectALStatus!,
+                                    _selectALStatus,
                                     _sec01NameController.text,
                                     _sec01InstituteController.text,
                                     _sec01durationController.text,
@@ -1633,7 +1634,8 @@ class _CVCreationState extends State<CVCreation> {
                                     context: context,
                                     type: QuickAlertType.success,
                                     title: 'Data confirmation Success',
-                                    text: 'Press "Create CV" button to download your CV',
+                                    text:
+                                        'Press "Create CV" button to download your CV',
                                   );
                                 } else {
                                   // If the form is invalid, show an error message
@@ -1659,10 +1661,10 @@ class _CVCreationState extends State<CVCreation> {
                                     horizontal: 32), // Button padding
                               ),
                               child: const Text(
-                                'Confirm your Data',
+                                'Submit',
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 19), // Text color
+                                    fontSize: 16), // Text color
                               ), // Background color
                             ),
                             ElevatedButton(
@@ -1681,7 +1683,7 @@ class _CVCreationState extends State<CVCreation> {
                                 ),
                               ),
                               child: const Text(
-                                'Create CV',
+                                'Get PDF',
                                 style: TextStyle(fontSize: 16), // Text style
                               ),
                             ),

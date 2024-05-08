@@ -137,6 +137,7 @@ class FirebaseService {
       String location,
       DateTime date,
       String orgType) async {
+    List<String> list = [];
     DocumentReference vacancyRef = await vacancyCollection.add(
       {
         'company_name': companyName,
@@ -151,6 +152,7 @@ class FirebaseService {
         'uid': uid,
         'created_at': date,
         'org_type': orgType,
+        'applied_by': list,
       },
     );
 
@@ -295,7 +297,6 @@ class FirebaseService {
       String refeeTwo,
       List<String> preferredIndustries,
       String? selectPrefferedDistrict) async {
-    final preferredIndustriesString = jsonEncode(preferredIndustries);
     _db.collection(CV_COLLECTION).doc(uid).set({
       'title': title,
       'gender': gender,
@@ -370,7 +371,7 @@ class FirebaseService {
       'careerObjective': careerObjective,
       'refeeOne': refeeOne,
       'refeeTwo': refeeTwo,
-      'prefered_industries': preferredIndustriesString,
+      'prefered_industries': preferredIndustries,
       'prefferedDistrict': selectPrefferedDistrict,
       'uid': uid,
     }, SetOptions(merge: true));

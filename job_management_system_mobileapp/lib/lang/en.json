@@ -5,7 +5,7 @@
     "suggested_seekers" : "Suggested Seekers",
     "create_vacancy" : "Create Vacancy",
 
-    "featured_jobs" : "Featured Jobs",
+    "featured_jobs" : "Matching Jobs",
     "recent_jobs" : "Recent Jobs",
     "see_all" : "See All",
     "edit_profile" : "Company Information",
@@ -23,6 +23,22 @@
     "logo" : "Logo",
     "district" : "District",
     "clear" : "Clear",
-    "save" : "Save"
+    "save" : "Save",
+    "create_CV" : "Create CV",
+    "notifications": "Notifications",
+    "profile_settings" : "Profile Settings",
+    "help" : "Help",
+    "log_out" : "Log Out",
+    "best_matching_vacancies" : "Best Matching Vacancies",
+    "by_highest_education" : "By Highest Education",
+    "by_salary" : "By Salary",
+    "by_organization_type" : "By Organization Type",
+    "by_prefered_area" : "By Prefered Area",
+    "CV_warning" : "All the results are shown according to your curriculum vitae (CV).",
+    "best_match_info" : "Best Matching Vacancies are filtered by your gender, age, preferred industries, preferred district, prefered organization type, expected minimum salary, and your highest education.",
+    "preffered_area_info" : "Vacancies by Preferred Area are filtered by your district or province, gender, age, preferred industries and highest education level, regardless of your expected salary and prefered organization type.",
+    "highest_edu_info" : "Vacancies by Highest Education are filtered by your gender, age, prefered industries and highest education level.\nYou can see vacancies according to your education level, regardless of your prefered location, prefered organization type and your expected salary.",
+    "expected_salary_info" : "Vacancies by Expected salary are filtered by your gender, age,prefered industries, highest education level and your expected salary.\nYou can see vacancies that offer salary greater than or equals to your expected salary, regardless of your prefered location and prefered organization type.",
+    "preffered_org_info" : "Vacancies by Prefered organization type are filtered by your gender, age, prefered industries, highest education level and your Prefered organization type regardless of your prefered location and expected salary."
 }
 
