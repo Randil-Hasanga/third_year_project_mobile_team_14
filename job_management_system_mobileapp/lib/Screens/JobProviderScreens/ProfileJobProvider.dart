@@ -204,7 +204,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                     ),
                     Container(
                       height: 1,
-                      width: _deviceWidth! * 0.7,
+                      width: _deviceWidth! * 0.6,
                       color: Colors.black,
                     ),
                   ],
@@ -251,7 +251,15 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
+            const Divider(),
+            SizedBox(
+              height: _deviceHeight! * 0.01,
+            ),
             _filePicker(),
+            SizedBox(
+              height: _deviceHeight! * 0.01,
+            ),
+            const Divider(),
             SizedBox(
               height: _deviceHeight! * 0.02,
             ),
@@ -625,8 +633,12 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            _richTextWidget.simpleText("Selected Organization Type", 15,
-                Colors.black, FontWeight.w500),
+            _richTextWidget.simpleText(
+                DemoLocalization.of(context)
+                    .getTranslatedValue('selcted_org_type')!,
+                15,
+                Colors.black,
+                FontWeight.w500),
             _richTextWidget.simpleText(
                 _selectedOrgType!, 17, Colors.black, FontWeight.w700),
           ],
@@ -714,7 +726,11 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _richTextWidget.simpleText(
-                "Selected Industry", 15, Colors.black, FontWeight.w500),
+                DemoLocalization.of(context)
+                    .getTranslatedValue('selected_industry')!,
+                15,
+                Colors.black,
+                FontWeight.w500),
             _richTextWidget.simpleText(
                 _selectedIndustry!, 17, Colors.black, FontWeight.w700),
           ],
@@ -1022,7 +1038,11 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       mainAxisSize: MainAxisSize.max,
       children: [
         _richTextWidget.simpleText(
-            "Business Resistration", 17, Colors.black, FontWeight.w700),
+            DemoLocalization.of(context)
+                .getTranslatedValue('business_resistration')!,
+            17,
+            Colors.black,
+            FontWeight.w700),
         _buttonWidgets.simpleElevatedButtonWidget(
             onPressed: () {
               _pickPDF(context);

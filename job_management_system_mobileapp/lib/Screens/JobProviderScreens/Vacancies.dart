@@ -18,8 +18,6 @@ class vacancies extends StatefulWidget {
 }
 
 class _vacanciesState extends State<vacancies> {
-  final FirebaseService firebaseService = FirebaseService();
-
   final _formKey = GlobalKey<FormState>();
 
   final _companyNameController = TextEditingController();
@@ -36,11 +34,11 @@ class _vacanciesState extends State<vacancies> {
 
   String? selectedLocation;
 
-  FirebaseService? firebaseSerice;
+  FirebaseService? _firebaseSerice;
 
   String selectedJobPosition = '';
 
-  String? _companyname;
+  String? _companyName;
 
   DateTime issuedDate = DateTime.now();
 
@@ -56,21 +54,24 @@ class _vacanciesState extends State<vacancies> {
   @override
   void initState() {
     super.initState();
-    firebaseSerice = GetIt.instance.get<FirebaseService>();
+    _firebaseSerice = GetIt.instance.get<FirebaseService>();
     _getProvider();
   }
 
   void _getProvider() async {
-    _jobProviderDetails = await firebaseSerice!.getCurrentProviderData();
+    _jobProviderDetails = await _firebaseSerice!.getCurrentProviderData();
 
     if (_jobProviderDetails != null) {
       setState(() {
-        _companyNameController.text =
-            _jobProviderDetails!['company_name'] ?? '';
-        orgType = _jobProviderDetails!['org_type'] ?? '';
-        _companyname = _jobProviderDetails!['company_name'];
-        _industry = _jobProviderDetails!['industry'];
+        if (mounted) {
+          _companyNameController.text =
+              _jobProviderDetails!['company_name'] ?? '';
+          orgType = _jobProviderDetails!['org_type'] ?? '';
+          _companyName = _jobProviderDetails!['company_name'];
+          _industry = _jobProviderDetails!['industry'];
+        }
       });
+      print(_companyName);
     }
 
     orgType = _jobProviderDetails!['org_type'];
@@ -234,16 +235,20 @@ class _vacanciesState extends State<vacancies> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  if ((_companyName != null) && (_industry != null)) ...{
+                    SizedBox(
                       height: screenHeight * 0.08,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_companyname!),
+                          Text(_companyName!),
                           Text(_industry!),
                         ],
-                      )),
+                      ),
+                    ),
+                  },
+
                   SizedBox(height: screenHeight * 0.02),
 
                   //Input for Job Position
@@ -447,8 +452,8 @@ class _vacanciesState extends State<vacancies> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            firebaseSerice!.addVacancy(
-                              _companyname!,
+                            _firebaseSerice!.addVacancy(
+                              _companyName!,
                               _industry!,
                               _jobPositionController.text,
                               _descriptionController.text,

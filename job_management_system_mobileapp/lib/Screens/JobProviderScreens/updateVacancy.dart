@@ -70,7 +70,7 @@ class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
       _genderController.text = data['gender'];
       _ageController.text = data['minimum_age'].toString();
       _eduLevelController.text = data['education_level'] ?? '';
-      _salaryController.text = data['salary'].toString();
+      _salaryController.text = data['minimum_salary'].toString();
       _locationController.text = data['location'];
     });
   }
