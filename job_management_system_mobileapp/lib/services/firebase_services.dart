@@ -72,6 +72,10 @@ class FirebaseService {
     }
   }
 
+  String getCurrentUserUid() {
+    return uid!;
+  }
+
   Future<bool> registerUser({
     required String email,
     required String password,

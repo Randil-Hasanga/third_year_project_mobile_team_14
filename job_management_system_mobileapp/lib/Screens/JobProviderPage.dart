@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
@@ -24,13 +25,15 @@ class JobProviderPage extends StatefulWidget {
 
 class _JobProviderPageState extends State<JobProviderPage> {
   FirebaseService? _firebaseService;
-  String? _userName;
+  String? _userName, uid;
+  Map<String, dynamic>? _jobProviderDetails;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    uid = _firebaseService!.getCurrentUserUid();
   }
 
   void _changeLanguage(Language? language) {
@@ -219,11 +222,12 @@ class _JobProviderPageState extends State<JobProviderPage> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 160,
+                      Container(
+                        height: 180,
                         child: StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
                               .collection('vacancy')
+                              .where('uid', isEqualTo: uid)
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
@@ -257,75 +261,81 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                   companyName = (vacancyData as Map<String,
                                       dynamic>)['company_name'] as String;
                                 }*/
-                                return Container(
-                                  margin: const EdgeInsets.all(8),
-                                  width: 250,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.business),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            companyName,
-                                            style:
-                                                const TextStyle(fontSize: 20),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 6),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.work),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            jobPosition,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 6),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.location_on),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            location,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      VacancyUpdaterUI(
-                                                    vacancyId: vacancyID,
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    margin: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.business),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              companyName,
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 6),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.work),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              jobPosition,
+                                              style:
+                                                  const TextStyle(fontSize: 15),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 6),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.location_on),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              location,
+                                              style:
+                                                  const TextStyle(fontSize: 15),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VacancyUpdaterUI(
+                                                      vacancyId: vacancyID,
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                          IconButton(
-                                            onPressed: () => FirebaseService()
-                                                .deleteVacancy(snapshot
-                                                    .data!.docs[index].id),
-                                            icon: const Icon(Icons.delete),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                                                );
+                                              },
+                                              icon: const Icon(Icons.edit),
+                                            ),
+                                            IconButton(
+                                              onPressed: () => FirebaseService()
+                                                  .deleteVacancy(snapshot
+                                                      .data!.docs[index].id),
+                                              icon: const Icon(Icons.delete),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
