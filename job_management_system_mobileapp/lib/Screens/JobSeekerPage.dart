@@ -15,6 +15,7 @@ import 'package:job_management_system_mobileapp/main.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens./Help.dart';
+import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
 
 class JobSeekerPage extends StatefulWidget {
   // ignore: use_super_parameters
@@ -30,6 +31,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
   FirebaseService? _firebaseService;
   String? _userName;
   double? _deviceWidth;
+  final RichTextWidget _richTextWidget = RichTextWidget();
 
   @override
   void initState() {
@@ -196,14 +198,17 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            DemoLocalization.of(context)
-                                .getTranslatedValue('featured_jobs')!,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: _deviceWidth! * 0.04,
-                                fontWeight: FontWeight.bold),
-                          ),
+                          _richTextWidget.simpleText(
+                              DemoLocalization.of(context)
+                                  .getTranslatedValue('featured_jobs')!,
+                              16,
+                              Colors.black,
+                              FontWeight.bold),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
                           TextButton(
                             onPressed: () {
                               Navigator.push(
@@ -212,13 +217,12 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                     builder: (context) => JobMatchingScreen()),
                               );
                             },
-                            child: Text(
-                              DemoLocalization.of(context)
-                                  .getTranslatedValue('see_all')!,
-                              style: TextStyle(
-                                  color: const Color.fromARGB(255, 255, 145, 0),
-                                  fontSize: _deviceWidth! * 0.03),
-                            ),
+                            child: _richTextWidget.simpleText(
+                                DemoLocalization.of(context)
+                                    .getTranslatedValue('see_all')!,
+                                15,
+                                const Color.fromARGB(255, 243, 117, 33),
+                                null),
                           ),
                         ],
                       ),
@@ -341,18 +345,23 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
+                      Divider(),
+                      const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            DemoLocalization.of(context)
-                                .getTranslatedValue('recent_jobs')!,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: _deviceWidth! * 0.04,
-                                fontWeight: FontWeight.bold),
-                          ),
+                          _richTextWidget.simpleText(
+                              DemoLocalization.of(context)
+                                  .getTranslatedValue('recent_jobs')!,
+                              16,
+                              Colors.black,
+                              FontWeight.bold),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
                           TextButton(
                             onPressed: () {
                               // Add your logic to navigate to see all recent jobs
@@ -363,7 +372,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               style: TextStyle(
                                   color:
                                       const Color.fromARGB(255, 243, 117, 33),
-                                  fontSize: _deviceWidth! * 0.03),
+                                  fontSize: 15),
                             ),
                           ),
                         ],
@@ -541,7 +550,12 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               leading: const Icon(Icons.search,
                   color: Color.fromARGB(
                       255, 255, 137, 2)), // Icon for finding jobs
-              title: const Text('Find Jobs'),
+              title: _richTextWidget.simpleText(
+                  DemoLocalization.of(context)
+                      .getTranslatedValue('featured_jobs')!,
+                  16,
+                  Colors.black,
+                  FontWeight.bold),
               onTap: () async {
                 bool isCvExist = await _firebaseService!.checkCVExist();
                 if (isCvExist) {
@@ -575,7 +589,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               leading: const Icon(Icons.create,
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-              title: const Text('Create CV'),
+              title: _richTextWidget.simpleText(
+                  DemoLocalization.of(context).getTranslatedValue('create_CV')!,
+                  16,
+                  Colors.black,
+                  FontWeight.bold),
               onTap: () {
                 Navigator.push(
                   context,
@@ -587,7 +605,12 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               leading: const Icon(Icons.notifications,
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-              title: const Text('Notifications'),
+              title: _richTextWidget.simpleText(
+                  DemoLocalization.of(context)
+                      .getTranslatedValue('notifications')!,
+                  16,
+                  Colors.black,
+                  FontWeight.bold),
               onTap: () {
                 Navigator.push(
                   context,
@@ -600,7 +623,12 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               leading: const Icon(Icons.settings,
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-              title: const Text('Profile Settings'),
+              title: _richTextWidget.simpleText(
+                  DemoLocalization.of(context)
+                      .getTranslatedValue('profile_settings')!,
+                  16,
+                  Colors.black,
+                  FontWeight.bold),
               onTap: () {
                 Navigator.push(
                   context,
@@ -611,7 +639,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
             ListTile(
               leading: const Icon(Icons.help,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text("Help"),
+              title: _richTextWidget.simpleText(
+                  DemoLocalization.of(context).getTranslatedValue('help')!,
+                  16,
+                  Colors.black,
+                  FontWeight.bold),
               onTap: () {
                 Navigator.push(
                   context,
@@ -622,7 +654,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
             ListTile(
               leading: const Icon(Icons.logout,
                   color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
-              title: const Text('Logout'),
+              title: _richTextWidget.simpleText(
+                  DemoLocalization.of(context).getTranslatedValue('log_out')!,
+                  16,
+                  Colors.black,
+                  FontWeight.bold),
               onTap: () {
                 Navigator.push(
                   context,

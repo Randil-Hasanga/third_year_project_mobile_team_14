@@ -45,7 +45,7 @@ class _vacanciesState extends State<vacancies> {
   DateTime issuedDate = DateTime.now();
 
   Map<String, dynamic>? _jobProviderDetails;
-  String? orgType;
+  String? orgType, _industry;
 
   String _gender = 'Male';
 
@@ -68,10 +68,11 @@ class _vacanciesState extends State<vacancies> {
         _companyNameController.text =
             _jobProviderDetails!['company_name'] ?? '';
         orgType = _jobProviderDetails!['org_type'] ?? '';
+        _companyname = _jobProviderDetails!['company_name'];
+        _industry = _jobProviderDetails!['industry'];
       });
     }
 
-    _companyname = _jobProviderDetails!['company_name'];
     orgType = _jobProviderDetails!['org_type'];
   }
 
@@ -230,45 +231,19 @@ class _vacanciesState extends State<vacancies> {
           child: Form(
             key: _formKey,
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: screenHeight * 0.08,
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('provider_details')
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-
-                        List<DocumentSnapshot> providerDetails =
-                            snapshot.data!.docs;
-
-                        return ListView.builder(
-                          itemCount: providerDetails.length,
-                          itemBuilder: (context, index) {
-                            _companyNameController.text =
-                                providerDetails[index]['company_name'] ?? '';
-                            _industrytypeController.text =
-                                providerDetails[index]['industry'] ?? '';
-
-                            return ListTile(
-                              title: Text(_companyNameController.text),
-                              subtitle: Text(_industrytypeController.text),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
+                      height: screenHeight * 0.08,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_companyname!),
+                          Text(_industry!),
+                        ],
+                      )),
                   SizedBox(height: screenHeight * 0.02),
 
                   //Input for Job Position
@@ -466,33 +441,38 @@ class _vacanciesState extends State<vacancies> {
 
                   SizedBox(height: screenHeight * 0.02),
 
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        firebaseSerice!.addVacancy(
-                          _companyNameController.text,
-                          _industrytypeController.text,
-                          _jobPositionController.text,
-                          _descriptionController.text,
-                          _gender,
-                          _minimumAge.toInt(),
-                          _educationLevel,
-                          double.tryParse(_salaryController.text) ?? 0.0,
-                          _locationController.text,
-                          issuedDate,
-                          orgType!,
-                        );
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            firebaseSerice!.addVacancy(
+                              _companyname!,
+                              _industry!,
+                              _jobPositionController.text,
+                              _descriptionController.text,
+                              _gender,
+                              _minimumAge.toInt(),
+                              _educationLevel,
+                              double.tryParse(_salaryController.text) ?? 0.0,
+                              _locationController.text,
+                              issuedDate,
+                              orgType!,
+                            );
 
-                        _companyNameController.clear();
-                        selectedJobPosition = '';
-                        _jobPositionController.clear();
-                        _descriptionController.clear();
-                        _salaryController.clear();
-                        _locationController.clear();
-                        showAlert();
-                      }
-                    },
-                    child: const Text('Add Vacancy'),
+                            _companyNameController.clear();
+                            selectedJobPosition = '';
+                            _jobPositionController.clear();
+                            _descriptionController.clear();
+                            _salaryController.clear();
+                            _locationController.clear();
+                            showAlert();
+                          }
+                        },
+                        child: const Text('Add Vacancy'),
+                      ),
+                    ],
                   )
                 ]),
           ),

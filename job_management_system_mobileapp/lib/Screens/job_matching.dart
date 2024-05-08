@@ -3,8 +3,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/colors/colors.dart';
+import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:job_management_system_mobileapp/widgets/buttons.dart';
 import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
@@ -96,8 +98,11 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: _richTextWidget!
-            .simpleText("Featured Jobs", 23, Colors.black87, FontWeight.w700),
+        title: _richTextWidget!.simpleText(
+            DemoLocalization.of(context).getTranslatedValue('featured_jobs')!,
+            23,
+            Colors.black87,
+            FontWeight.w700),
         backgroundColor: appBarColor,
         actions: [
           IconButton(
@@ -118,7 +123,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                 fontSize: 16,
                                 color: Colors.black,
                               ),
-                              children: const [
+                              children: [
                                 TextSpan(
                                   text:
                                       "All the results are shown according to your curriculum vitae (CV).\n\n",
@@ -127,45 +132,49 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                       color: Colors.red),
                                 ),
                                 TextSpan(
-                                  text: "Best Matching Vacancies\n\n",
+                                  text:
+                                      "${DemoLocalization.of(context).getTranslatedValue('best_matching_vacancies')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "Best Matching Vacancies are filtered by your gender, age, preferred industries, preferred district, prefered organization type, expected minimum salary, and your highest education.\n\n",
+                                      "${DemoLocalization.of(context).getTranslatedValue('best_match_info')!} \n\n",
                                 ),
                                 TextSpan(
-                                  text: "Vacancies by Preferred Area\n\n",
+                                  text:
+                                      "${DemoLocalization.of(context).getTranslatedValue('by_prefered_area')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Preferred Area are filtered by your district or province, gender, age, preferred industries and highest education level, regardless of your expected salary and prefered organization type\n\n",
+                                      "${DemoLocalization.of(context).getTranslatedValue('preffered_area_info')!} \n\n",
                                 ),
                                 TextSpan(
-                                  text: "Vacancies by Highest Education\n\n",
+                                  text:
+                                      "${DemoLocalization.of(context).getTranslatedValue('by_highest_education')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Highest Education are filtered by your gender, age, prefered industries and highest education level.\nYou can see vacancies according to your education level, regardless of your prefered location, prefered organization type and your expected salary.\n\n",
+                                      "${DemoLocalization.of(context).getTranslatedValue('highest_edu_info')!} \n\n",
                                 ),
                                 TextSpan(
-                                  text: "Vacancies by Expected Salary\n\n",
+                                  text:
+                                      "${DemoLocalization.of(context).getTranslatedValue('by_salary')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Expected salary are filtered by your gender, age,prefered industries, highest education level and your expected salary.\nYou can see vacancies that offer salary greater than or equals to your expected salary, regardless of your prefered location and prefered organization type.\n\n",
+                                      "${DemoLocalization.of(context).getTranslatedValue('expected_salary_info')!} \n\n",
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Prefered organization type\n\n",
+                                      "${DemoLocalization.of(context).getTranslatedValue('by_organization_type')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "Vacancies by Prefered organization type are filtered by your gender, age, prefered industries, highest education level and your Prefered organization type regardless of your prefered location and expected salary.",
+                                      "${DemoLocalization.of(context).getTranslatedValue('preffered_org_info')!} \n\n",
                                 ),
                               ],
                             ),
@@ -207,8 +216,12 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       SizedBox(
                         height: _deviceHeight! * 0.01,
                       ),
-                      applyForVacanciesListWidget("Best Matching Vacancies",
-                          bestMatchingVacancies, seekerID!, _deviceHeight),
+                      applyForVacanciesListWidget(
+                          DemoLocalization.of(context)
+                              .getTranslatedValue('best_matching_vacancies')!,
+                          bestMatchingVacancies,
+                          seekerID!,
+                          _deviceHeight),
                       SizedBox(
                         height: _deviceHeight! * 0.02,
                       ),
@@ -236,7 +249,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                         thickness: 3,
                       ),
                       applyForVacanciesListWidget(
-                          "By Highest Education",
+                          DemoLocalization.of(context)
+                              .getTranslatedValue('by_highest_education')!,
                           filteredVacanciesByEducation,
                           seekerID!,
                           _deviceHeight),
@@ -247,7 +261,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                         thickness: 3,
                       ),
                       applyForVacanciesListWidget(
-                        "By Salary",
+                        DemoLocalization.of(context)
+                            .getTranslatedValue('by_salary')!,
                         filteredVacanciesBySalary,
                         seekerID!,
                         _deviceHeight,
@@ -259,7 +274,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                         thickness: 3,
                       ),
                       applyForVacanciesListWidget(
-                        "By Organization Type",
+                        DemoLocalization.of(context)
+                            .getTranslatedValue('by_organization_type')!,
                         filteredVacanciesByOrgType,
                         seekerID!,
                         _deviceHeight,
@@ -285,8 +301,14 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _richTextWidget!.simpleText(
-            "By Prefered Area", 21, Colors.black87, FontWeight.w600),
+        Expanded(
+          child: _richTextWidget!.simpleText(
+              DemoLocalization.of(context)
+                  .getTranslatedValue('by_prefered_area')!,
+              21,
+              Colors.black87,
+              FontWeight.w600),
+        ),
         DropdownButton<String>(
           value: _selectedItem,
           onChanged: (String? newValue) {
@@ -323,7 +345,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
         ),
         if (text != null) ...{
           _richTextWidget!
-              .simpleText(text!, 21, Colors.black87, FontWeight.w600),
+              .simpleText(text, 21, Colors.black87, FontWeight.w600),
           SizedBox(
             height: _deviceHeight * 0.01,
           ),
