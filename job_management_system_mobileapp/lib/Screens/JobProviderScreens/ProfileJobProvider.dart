@@ -606,7 +606,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
-            color: const Color.fromARGB(232, 255, 202, 185),
+            color: buttonDefaultColorOrange,
             borderRadius: BorderRadius.circular(20)),
         child: ExpansionTile(
           title: Text(
@@ -698,7 +698,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(232, 255, 202, 185),
+          color: buttonDefaultColorOrange,
           borderRadius: BorderRadius.circular(20),
         ),
         child: ExpansionTile(
@@ -972,7 +972,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   Widget _submitButton() {
     return MaterialButton(
       minWidth: _deviceWidth! * 0.4,
-      color: Colors.orange,
+      color: buttonDefaultColorGreen,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       onPressed: () {
         _validateAndSave();

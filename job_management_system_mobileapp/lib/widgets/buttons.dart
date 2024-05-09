@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 
 class ButtonWidgets {
   ButtonWidgets();
@@ -12,7 +15,7 @@ class ButtonWidgets {
       onPressed: onPressed,
       style: style ??
           ElevatedButton.styleFrom(
-            backgroundColor: Color.fromARGB(255, 255, 181, 120),
+            backgroundColor: buttonDefaultColorOrange,
           ),
       child: Text(
         "$buttonText",
