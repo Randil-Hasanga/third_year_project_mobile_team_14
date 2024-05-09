@@ -6,6 +6,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:job_management_system_mobileapp/model/message.dart';
 import 'package:path/path.dart' as p;
@@ -29,18 +30,20 @@ class FirebaseService {
 
   Map? currentUser;
 
-  String? uid;
+  String? uid, email;
   Map? currentSeekerCV;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  User? getCurrentUserChat() {
-    return _auth.currentUser;
+  String getCurrentUserUid() {
+    return uid!;
   }
 
-  get instance => null;
+  String getCurrentUserAuthEmail() {
+    return email!;
+  }
 
   Future<bool> loginUser(
       {required String email, required String password}) async {
@@ -51,6 +54,7 @@ class FirebaseService {
       if (_userCredentials != null) {
         currentUser = await _getUserData(uid: _userCredentials.user!.uid);
         uid = _auth.currentUser?.uid;
+        this.email = email;
         return true;
       } else {
         return false;
@@ -70,10 +74,6 @@ class FirebaseService {
     } else {
       return null;
     }
-  }
-
-  String getCurrentUserUid() {
-    return uid!;
   }
 
   Future<bool> registerUser({
@@ -120,6 +120,34 @@ class FirebaseService {
       }
     } catch (e) {
       print(e);
+      return false;
+    }
+  }
+
+  //TODO: signal nati una
+
+  Future<bool> validateCurrentPassword(String oldPwd) async {
+    try {
+      final user = _auth.currentUser;
+      final credential = EmailAuthProvider.credential(
+        email: email!,
+        password: oldPwd,
+      );
+      await user!.reauthenticateWithCredential(credential);
+      return true;
+    } catch (e) {
+      print("Error in validate password $e");
+      return false;
+    }
+  }
+
+  Future<bool> changePassword(String newPwd) async {
+    try {
+      final user = _auth.currentUser;
+      await user!.updatePassword(newPwd);
+      return true;
+    } catch (e) {
+      print("Error in changing password $e");
       return false;
     }
   }
@@ -724,5 +752,9 @@ class FirebaseService {
       print("Error checking company existence: $e");
       return false;
     }
+  }
+
+  User? getCurrentUserChat() {
+    return _auth.currentUser;
   }
 }

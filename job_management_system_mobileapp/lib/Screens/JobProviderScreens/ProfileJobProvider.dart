@@ -14,6 +14,7 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Profile
 import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:job_management_system_mobileapp/widgets/appbar_widget.dart';
 import 'package:job_management_system_mobileapp/widgets/buttons.dart';
 import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,6 +31,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   FirebaseService? _firebaseService;
   final RichTextWidget _richTextWidget = RichTextWidget();
   final ButtonWidgets _buttonWidgets = ButtonWidgets();
+  final AppBarWidget _appBarWidget = AppBarWidget();
   double? _deviceWidth, _deviceHeight;
 
   final GlobalKey<FormState> _companyDetailsFormKey = GlobalKey<FormState>();
@@ -134,58 +136,9 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          DemoLocalization.of(context).getTranslatedValue('edit_profile')!,
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: _deviceWidth! * 0.04,
-              fontWeight: FontWeight.bold),
-        ), // Set the title of the app bar
-        backgroundColor: const Color.fromARGB(255, 255, 136, 0),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color.fromARGB(255, 255, 136, 0),
-        shape: const CircularNotchedRectangle(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.home),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => JobProviderPage()));
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileJobSeeker()));
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.notifications),
-                onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>const ));
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.chat),
-                onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>const ));
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: _appBarWidget.simpleAppBarWidget(
+          DemoLocalization.of(context).getTranslatedValue('edit_profile')!, 20),
+      bottomNavigationBar: _appBarWidget.bottomAppBarProvider(context),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.04),
         child: SingleChildScrollView(
