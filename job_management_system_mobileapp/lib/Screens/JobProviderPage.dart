@@ -224,11 +224,12 @@ class _JobProviderPageState extends State<JobProviderPage> {
                         child: StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
                               .collection('vacancy')
+                              .where('uid', isEqualTo: _firebaseService!.uid)
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(
+                              return const Center(
                                 child: CircularProgressIndicator(),
                               ); // Show loading indicator while fetching data
                             }
@@ -245,18 +246,12 @@ class _JobProviderPageState extends State<JobProviderPage> {
                               itemCount: vacancies.length,
                               itemBuilder: (context, index) {
                                 String vacancyID = vacancies[index].id;
-                                /* var vacancyData =
-                                    snapshot.data?.docs[index].data();*/
                                 String companyName =
                                     vacancies[index]['company_name'];
                                 String jobPosition =
                                     vacancies[index]['job_position'];
                                 String location = vacancies[index]['location'];
 
-                                /*if (vacancyData != null) {
-                                  companyName = (vacancyData as Map<String,
-                                      dynamic>)['company_name'] as String;
-                                }*/
                                 return Container(
                                   margin: const EdgeInsets.all(8),
                                   width: 250,
