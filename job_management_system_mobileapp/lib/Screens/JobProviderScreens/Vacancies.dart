@@ -47,6 +47,8 @@ class _vacanciesState extends State<vacancies> {
 
   String _gender = 'Male';
 
+  String jobType = 'Full Time';
+
   String _educationLevel = 'O/L';
 
   double _minimumAge = 18;
@@ -242,7 +244,10 @@ class _vacanciesState extends State<vacancies> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_companyName!),
+                          Text(
+                            _companyName!,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           Text(_industry!),
                         ],
                       ),
@@ -311,6 +316,35 @@ class _vacanciesState extends State<vacancies> {
                         labelText: 'Description',
                         hintText: 'Description',
                         border: OutlineInputBorder()),
+                  ),
+
+                  SizedBox(height: screenHeight * 0.02),
+
+                  DropdownButtonFormField<String>(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "please select job type";
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Job Type',
+                      hintText: 'Full Time',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: jobType,
+                    items:
+                        <String>['Full Time', 'Part Time'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        jobType = newValue!;
+                      });
+                    },
                   ),
 
                   SizedBox(height: screenHeight * 0.02),
@@ -458,6 +492,7 @@ class _vacanciesState extends State<vacancies> {
                               _jobPositionController.text,
                               _descriptionController.text,
                               _gender,
+                              jobType,
                               _minimumAge.toInt(),
                               _educationLevel,
                               double.tryParse(_salaryController.text) ?? 0.0,
