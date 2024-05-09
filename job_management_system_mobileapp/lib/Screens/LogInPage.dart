@@ -8,6 +8,7 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/SignUp.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key});
@@ -17,15 +18,46 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
+  SharedPreferences? _sharedPreferences;
   bool _isLoading = false;
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   String? _email, _password;
   FirebaseService? _firebaseService;
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    try {
+      _sharedPreferences = await SharedPreferences.getInstance();
+      _initAutoLogin();
+    } catch (e) {
+      print("Error initializing SharedPreferences: $e");
+    }
+  }
+
+  Future<void> saveCredentials(String email, String password) async {
+    await _sharedPreferences!.setString('email', email);
+    await _sharedPreferences!.setString('password', password);
+  }
+
+  Future<Map<String, String?>> getCredentials() async {
+    _sharedPreferences!.reload();
+    final email = _sharedPreferences!.getString('email');
+    final password = _sharedPreferences!.getString('password');
+    return {'email': email, 'password': password};
+  }
+
+  Future<void> clearCredentials() async {
+    await _sharedPreferences!.remove('email');
+    await _sharedPreferences!.remove('password');
   }
 
   @override
@@ -114,6 +146,7 @@ class _LogInPageState extends State<LogInPage> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         labelText: "Email",
                         prefixIcon: Icon(Icons.email),
@@ -149,6 +182,7 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: "Password",
@@ -235,9 +269,9 @@ class _LogInPageState extends State<LogInPage> {
                     "Forgot Password?",
                     style: TextStyle(color: Color.fromARGB(255, 255, 153, 0)),
                   ),
-                  
                 ),
-              ),const SizedBox(height: 150),
+              ),
+              const SizedBox(height: 150),
               const Text("Job Center, Matara"),
             ],
           ),
@@ -263,6 +297,7 @@ class _LogInPageState extends State<LogInPage> {
     );
 
     if (_result) {
+      await saveCredentials(_email!, _password!);
       if (_firebaseService!.currentUser!['type'] == 'seeker') {
         Navigator.push(
           context,
@@ -283,6 +318,55 @@ class _LogInPageState extends State<LogInPage> {
           ),
         ),
       );
+    }
+  }
+
+  Future<void> _initAutoLogin() async {
+    try {
+      final credentials = await getCredentials();
+      String? email = credentials['email'];
+      String? password = credentials['password'];
+
+      if (email != null && password != null) {
+        emailController.text = email;
+        passwordController.text = password;
+
+        setState(() {
+          _isLoading = true;
+        });
+
+        final bool success =
+            await _firebaseService!.loginUser(email: email, password: password);
+
+        if (success) {
+          if (_firebaseService!.currentUser!['type'] == 'seeker') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => JobSeekerPage()),
+            );
+          } else if (_firebaseService!.currentUser!['type'] == 'provider') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => JobProviderPage()),
+            );
+          }
+        } else {
+          await clearCredentials();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Auto-login failed. Please login manually.",
+                selectionColor: Color.fromARGB(255, 230, 255, 2),
+              ),
+            ),
+          );
+        }
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error during auto-login: $e");
     }
   }
 }
