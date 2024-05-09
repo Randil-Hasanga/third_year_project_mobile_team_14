@@ -7,7 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
+import 'package:job_management_system_mobileapp/Screens/change_password.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/Screens/job_matching.dart';
 import 'package:job_management_system_mobileapp/Screens/splash_screen.dart';
@@ -18,12 +21,6 @@ import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:job_management_system_mobileapp/widgets/buttons.dart';
 import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
-
-// void main() => runApp(const MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       theme: ,
-//       home: SplashScreen(),
-//     ));
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,9 +39,6 @@ void main() async {
   GetIt.instance.registerSingleton<ButtonWidgets>(
     ButtonWidgets(),
   );
-
-  // );
-  // await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(false);
   runApp(const MyApp());
 }
 
@@ -72,13 +66,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en', 'US'),
         Locale('si', 'LK'),
         Locale('ta', 'LK'),
       ],
       locale: _locale,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         DemoLocalization.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -108,7 +102,11 @@ class _MyAppState extends State<MyApp> {
         'fogot_pwd': (context) => const ForgotPasswordPage(),
         'login': (context) => const LogInPage(),
         'editProviderProfile': (context) => JobProviderProfile(),
+        'provider_dashboard': (context) => JobProviderPage(),
+        'seeker_dashboard': (context) => JobSeekerPage(),
+        'edit_seeker_profile': (context) => ProfileJobSeeker(),
         'job_matching': (context) => JobMatchingScreen(),
+        'change_pwd': (context) => ChangePassword(),
       },
     );
   }

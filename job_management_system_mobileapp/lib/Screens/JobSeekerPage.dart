@@ -8,6 +8,7 @@ import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
+import 'package:job_management_system_mobileapp/Screens/change_password.dart';
 import 'package:job_management_system_mobileapp/Screens/job_matching.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
@@ -633,6 +634,19 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProfileJobSeeker()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.security,
+                  color:
+                      Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
+              title: _richTextWidget.simpleText(
+                  "Change Password", 16, Colors.black, FontWeight.bold),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChangePassword()),
                 );
               },
             ),
