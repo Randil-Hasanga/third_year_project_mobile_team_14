@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -17,6 +19,7 @@ import 'package:job_management_system_mobileapp/services/firebase_services.dart'
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens./Help.dart';
 import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JobSeekerPage extends StatefulWidget {
   // ignore: use_super_parameters
@@ -29,6 +32,7 @@ class JobSeekerPage extends StatefulWidget {
 final FirebaseService firebaseService = FirebaseService();
 
 class _JobSeekerPageState extends State<JobSeekerPage> {
+  SharedPreferences? _sharedPreferences;
   FirebaseService? _firebaseService;
   String? _userName;
   double? _deviceWidth;
@@ -39,6 +43,25 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     // TODO: implement initState
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    try {
+      _sharedPreferences = await SharedPreferences.getInstance();
+    } catch (e) {
+      print("Error initializing SharedPreferences: $e");
+    }
+  }
+
+  Future<void> clearCredentials() async {
+    try {
+      await _sharedPreferences!.remove('email');
+      await _sharedPreferences!.remove('password');
+    } catch (e) {
+      print("Error clearing credentials: $e");
+      // Handle the error, if needed
+    }
   }
 
 //language navigation
@@ -673,7 +696,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   16,
                   Colors.black,
                   FontWeight.bold),
-              onTap: () {
+              onTap: () async {
+                await clearCredentials();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const LogInPage()),
@@ -737,13 +761,6 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
           ),
         ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Add your logic for the floating action button here
-      //   },
-      //  child: const Icon(Icons.add,color: Color.fromARGB(255, 2, 71, 36)),
-      // ),
     );
   }
 }

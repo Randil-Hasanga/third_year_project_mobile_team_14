@@ -13,6 +13,7 @@ import 'package:job_management_system_mobileapp/classes/language.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/main.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JobProviderPage extends StatefulWidget {
   JobProviderPage({super.key});
@@ -27,6 +28,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
   FirebaseService? _firebaseService;
   String? _userName, uid;
   Map<String, dynamic>? _jobProviderDetails;
+  SharedPreferences? _sharedPreferences;
 
   @override
   void initState() {
@@ -34,6 +36,25 @@ class _JobProviderPageState extends State<JobProviderPage> {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
     uid = _firebaseService!.getCurrentUserUid();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    try {
+      _sharedPreferences = await SharedPreferences.getInstance();
+    } catch (e) {
+      print("Error initializing SharedPreferences: $e");
+    }
+  }
+
+  Future<void> clearCredentials() async {
+    try {
+      await _sharedPreferences!.remove('email');
+      await _sharedPreferences!.remove('password');
+    } catch (e) {
+      print("Error clearing credentials: $e");
+      // Handle the error, if needed
+    }
   }
 
   void _changeLanguage(Language? language) {
@@ -776,13 +797,11 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.power_settings_new,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: const Text('Log out'),
-              onTap: () {
-                // Navigate to create CV page
+              onTap: () async {
+                await clearCredentials();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => LogInPage(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const LogInPage()),
                 );
               },
             ),
