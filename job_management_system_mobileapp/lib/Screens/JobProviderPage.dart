@@ -778,12 +778,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.comment,
+              leading: const Icon(Icons.timeline,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('Give feedbacks'),
-              onTap: () {
-                // Navigate to create CV page
-              },
+              title: const Text('Interview Progress'),
+              onTap: () {},
             ),
             ListTile(
               leading: const Icon(Icons.settings,
