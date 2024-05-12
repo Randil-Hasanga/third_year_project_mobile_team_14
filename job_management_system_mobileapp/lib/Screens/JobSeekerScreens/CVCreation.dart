@@ -287,6 +287,12 @@ class _CVCreationState extends State<CVCreation> {
                         }).toList(),
                         decoration: const InputDecoration(
                             labelText: 'Title', border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a title';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -306,9 +312,13 @@ class _CVCreationState extends State<CVCreation> {
                           );
                         }).toList(),
                         decoration: const InputDecoration(
-                          labelText: 'Gender',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Gender', border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a gender';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -328,9 +338,14 @@ class _CVCreationState extends State<CVCreation> {
                           );
                         }).toList(),
                         decoration: const InputDecoration(
-                          labelText: 'Job Type',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Job Type',
+                            border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a job type';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -353,9 +368,14 @@ class _CVCreationState extends State<CVCreation> {
                           );
                         }).toList(),
                         decoration: const InputDecoration(
-                          labelText: 'Working Sector',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Working Sector',
+                            border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a working sector';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -375,9 +395,14 @@ class _CVCreationState extends State<CVCreation> {
                           );
                         }).toList(),
                         decoration: const InputDecoration(
-                          labelText: 'Marital Status',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Marital Status',
+                            border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a marital status';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -397,9 +422,14 @@ class _CVCreationState extends State<CVCreation> {
                           );
                         }).toList(),
                         decoration: const InputDecoration(
-                          labelText: 'Current Job Status',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Current Job Status',
+                            border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a current job status';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -407,14 +437,15 @@ class _CVCreationState extends State<CVCreation> {
                       TextFormField(
                         controller: _nameWithIniController,
                         decoration: const InputDecoration(
-                          labelText: 'Name With Initials *',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Name With Initials *',
+                            border: OutlineInputBorder()),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Name With Initials is required';
+                          } else if (value.length > 50) {
+                            return 'Name With Initials cannot exceed 50 characters';
                           }
-                          return null; // Return null if the input is valid
+                          return null;
                         },
                       ),
                       const SizedBox(
@@ -423,14 +454,16 @@ class _CVCreationState extends State<CVCreation> {
                       TextFormField(
                         controller: _fullNameController,
                         decoration: const InputDecoration(
-                          labelText: 'Full Name *',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Full Name *',
+                            border: OutlineInputBorder()),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Full Name is required';
+                          } else if (!RegExp(r'^[a-zA-Z\s]+$')
+                              .hasMatch(value)) {
+                            return 'Full Name must only contain letters and spaces';
                           }
-                          return null; // Return null if the input is valid
+                          return null;
                         },
                       ),
                       const SizedBox(

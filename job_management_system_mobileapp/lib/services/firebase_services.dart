@@ -411,6 +411,21 @@ class FirebaseService {
     }, SetOptions(merge: true));
   }
 
+
+
+
+//get seeker details
+ Future<Map<String, dynamic>?> getCurrentSeekerData(String uid) async {
+    DocumentSnapshot<Map<String, dynamic>?> _doc =
+        await _db.collection(SEEKER_PROFILE_DETAILS_COLLECTION).doc(uid).get();
+
+    if (_doc.exists) {
+      return _doc.data();
+    } else {
+      return null;
+    }
+  }
+
 // CV PDF genarating
 
   final CollectionReference cvDetailsCollection =

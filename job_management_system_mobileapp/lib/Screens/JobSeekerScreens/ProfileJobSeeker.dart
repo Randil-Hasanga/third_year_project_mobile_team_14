@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,6 +67,39 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
         type: QuickAlertType.success,
       );
     }
+
+ 
+@override
+void initState() {
+  super.initState();
+  _firebaseService = GetIt.instance.get<FirebaseService>();
+
+  // Get the uid of the current user
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  // Fetch the user's data from the Firebase Firestore database
+  _firebaseService.getCurrentSeekerData(uid).then((data) {
+    if (data != null) {
+      // Load the user's data into the form fields
+      setState(() {
+        _fullNameController.text = data['fullname'];
+        _addressController.text = data['address'];
+        _emailController.text = data['email'];
+        _nicController.text = data['nic'];
+        _selectedDate = data['dateOfBirth'].toDate();
+        _selectedDistrict = data['district'];
+        _contactNumberController.text = data['contact'];
+
+        // Set the selected gender based on the fetched data
+        if (data['gender'] == 'Male') {
+          _selectedGender = 'Male';
+        } else if (data['gender'] == 'Female') {
+          _selectedGender = 'Female';
+        }
+      });
+    }
+  });
+}
 
     return Scaffold(
       appBar: AppBar(
@@ -416,3 +450,5 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     );
   }
 }
+
+
