@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:job_management_system_mobileapp/widgets/alertBoxWidgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -27,12 +34,14 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   final TextEditingController _nicController = TextEditingController();
   DateTime? _selectedDate;
 
-  String? _selectedDistrict;
+  String? _selectedDistrict, _logo;
+  XFile? selectedImage;
 
   final TextEditingController _contactNumberController =
       TextEditingController();
 
   late FirebaseService _firebaseService;
+  AlertBoxWidgets _alertBoxWidgets = AlertBoxWidgets();
 
   double? _deviceWidth, _deviceHeight; // for the responsiveness of the device
 
@@ -40,6 +49,32 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _getSeeker();
+  }
+
+  void _getSeeker() {
+    _firebaseService.getCurrentSeekerData().then((data) {
+      if (data != null) {
+        // Load the user's data into the form fields
+        setState(() {
+          _fullNameController.text = data['fullname'];
+          _addressController.text = data['address'];
+          _emailController.text = data['email'];
+          _nicController.text = data['nic'];
+          _selectedDate = data['dateOfBirth'].toDate();
+          _selectedDistrict = data['district'];
+          _contactNumberController.text = data['contact'];
+
+          _logo = data['profile_image'];
+          // Set the selected gender based on the fetched data
+          if (data['gender'] == 'Male') {
+            _selectedGender = 'Male';
+          } else if (data['gender'] == 'Female') {
+            _selectedGender = 'Female';
+          }
+        });
+      }
+    });
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -67,39 +102,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
         type: QuickAlertType.success,
       );
     }
-
- 
-@override
-void initState() {
-  super.initState();
-  _firebaseService = GetIt.instance.get<FirebaseService>();
-
-  // Get the uid of the current user
-  String uid = FirebaseAuth.instance.currentUser!.uid;
-
-  // Fetch the user's data from the Firebase Firestore database
-  _firebaseService.getCurrentSeekerData(uid).then((data) {
-    if (data != null) {
-      // Load the user's data into the form fields
-      setState(() {
-        _fullNameController.text = data['fullname'];
-        _addressController.text = data['address'];
-        _emailController.text = data['email'];
-        _nicController.text = data['nic'];
-        _selectedDate = data['dateOfBirth'].toDate();
-        _selectedDistrict = data['district'];
-        _contactNumberController.text = data['contact'];
-
-        // Set the selected gender based on the fetched data
-        if (data['gender'] == 'Male') {
-          _selectedGender = 'Male';
-        } else if (data['gender'] == 'Female') {
-          _selectedGender = 'Female';
-        }
-      });
-    }
-  });
-}
 
     return Scaffold(
       appBar: AppBar(
@@ -174,6 +176,15 @@ void initState() {
           key: _formKey, // Provide a GlobalKey<FormState> for form validation
           child: ListView(
             children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _addProfilePicture(),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
               TextFormField(
                 controller: _fullNameController,
                 decoration: const InputDecoration(
@@ -396,24 +407,33 @@ void initState() {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await _firebaseService.addJobSeekerProfile(
-                          _fullNameController.text,
-                          _emailController.text,
-                          _addressController.text,
-                          _selectedGender!,
-                          _nicController.text,
-                          _selectedDate,
-                          _selectedDistrict!,
-                          _contactNumberController.text,
-                        );
+                        if (selectedImage == null && _logo == null) {
+                          _alertBoxWidgets.showAlert(
+                              context,
+                              QuickAlertType.warning,
+                              "Please select a profile picture");
+                        } else {
+                          await _firebaseService.addJobSeekerProfile(
+                            selectedImage,
+                            _logo,
+                            _fullNameController.text,
+                            _emailController.text,
+                            _addressController.text,
+                            _selectedGender!,
+                            _nicController.text,
+                            _selectedDate,
+                            _selectedDistrict!,
+                            _contactNumberController.text,
+                          );
 
-                        // Display success message
-                        QuickAlert.show(
-                          context: context,
-                          type: QuickAlertType.success,
-                          title: 'Success',
-                          text: 'Successfully added',
-                        );
+                          // Display success message
+                          QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.success,
+                            title: 'Success',
+                            text: 'Successfully added',
+                          );
+                        }
                       } else {
                         // If the form is invalid, show an error message
                         QuickAlert.show(
@@ -449,6 +469,149 @@ void initState() {
       ),
     );
   }
+
+  Widget _addProfilePicture() {
+    if (_logo != null && selectedImage == null) {
+      return GestureDetector(
+        onTap: () {
+          _pickAndResizeImage();
+        },
+        child: Stack(
+          children: [
+            Container(
+              child: CircleAvatar(
+                radius: 64,
+                backgroundImage: NetworkImage(_logo!),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => _pickAndResizeImage(),
+              child: const Icon(
+                Icons.add_a_photo,
+                size: 35,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (selectedImage != null && _logo == null) {
+      return GestureDetector(
+        onTap: () {
+          _pickAndResizeImage();
+        },
+        child: Stack(
+          children: [
+            Container(
+              width: 128,
+              height: 128,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(64),
+                child: Image.file(
+                  File(selectedImage!.path),
+                  width: 128,
+                  height: 128,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => _pickAndResizeImage(),
+              child: const Icon(
+                Icons.add_a_photo,
+                size: 35,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (selectedImage != null && _logo != null) {
+      return GestureDetector(
+        onTap: () {
+          _pickAndResizeImage();
+        },
+        child: Stack(
+          children: [
+            Container(
+              width: 128,
+              height: 128,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(64),
+                child: Image.file(
+                  File(selectedImage!.path),
+                  width: 128,
+                  height: 128,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => _pickAndResizeImage(),
+              child: const Icon(
+                Icons.add_a_photo,
+                size: 35,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return GestureDetector(
+        onTap: () {
+          _pickAndResizeImage();
+        },
+        child: Stack(
+          children: [
+            Container(
+                width: _deviceWidth! * 0.3,
+                height: _deviceHeight! * 0.15,
+                child: CircleAvatar(
+                  radius: 64,
+                  backgroundImage: NetworkImage(
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
+                )),
+            const Icon(Icons.add_a_photo),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> _pickAndResizeImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      XFile compressedImage = await _resizeImage(XFile(pickedFile.path));
+      setState(() {
+        selectedImage = compressedImage;
+      });
+    }
+  }
+
+  Future<XFile> _resizeImage(XFile imageFile) async {
+    List<int> imageBytes = (await FlutterImageCompress.compressWithFile(
+      imageFile.path,
+      minWidth: 500,
+      minHeight: 250,
+      quality: 90,
+    )) as List<int>;
+
+    String fileName = imageFile.name;
+
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+    String compressedImgPath = '$appDocPath/$fileName.jpg';
+    await File(compressedImgPath).writeAsBytes(imageBytes);
+
+    return XFile(compressedImgPath);
+  }
 }
-
-
