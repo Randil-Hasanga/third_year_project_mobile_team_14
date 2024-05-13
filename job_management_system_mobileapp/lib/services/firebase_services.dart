@@ -278,6 +278,10 @@ class FirebaseService {
         }, SetOptions(merge: true));
       }
     }
+
+    _db.collection(CV_COLLECTION).doc(uid).set({
+      'fullname': fullName,
+    }, SetOptions(merge: true));
   }
 
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++CV creatoion:
