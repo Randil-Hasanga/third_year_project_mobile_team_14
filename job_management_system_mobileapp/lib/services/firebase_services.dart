@@ -691,7 +691,7 @@ class FirebaseService {
 
   //get Interview detials stream
   Stream<List<Map<String, dynamic>>> getInterviewDetails() {
-    return interviewCollection.snapshots().map(
+    return interviewCollection.where('uid', isEqualTo: uid).snapshots().map(
       (snapshot) {
         return snapshot.docs.map((doc) {
           final interviewDetails = doc.data() as Map<String, dynamic>;
