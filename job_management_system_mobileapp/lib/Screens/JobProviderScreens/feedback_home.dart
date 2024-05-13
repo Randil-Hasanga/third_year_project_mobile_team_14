@@ -13,6 +13,7 @@ class FeedbackHome extends StatefulWidget {
 
 class _FeedbackHomeState extends State<FeedbackHome> {
   FirebaseService? _firebaseService;
+  String? vacancyId;
 
   @override
   void initState() {
@@ -72,13 +73,14 @@ class _FeedbackHomeState extends State<FeedbackHome> {
 
   Widget _buildInterviewListItems(
       Map<String, dynamic> userdata, BuildContext context) {
+    vacancyId = userdata['vacancy_id'];
     return InterviewDetailsTile(
       text: userdata['topic'],
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Feedback_page(),
+            builder: (context) => Feedback_page(vacancyId: vacancyId),
           ),
         );
       },
