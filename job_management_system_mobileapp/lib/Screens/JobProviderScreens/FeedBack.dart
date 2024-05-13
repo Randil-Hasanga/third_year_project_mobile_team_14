@@ -17,9 +17,6 @@ class _Feedback_pageState extends State<Feedback_page> {
 
     return Scaffold(
       appBar: AppBar(
-<<<<<<< Updated upstream
-        
-=======
         title: Text(
           'Applicants',
           style: TextStyle(
@@ -28,11 +25,8 @@ class _Feedback_pageState extends State<Feedback_page> {
             fontWeight: FontWeight.bold,
           ),
         ),
->>>>>>> Stashed changes
       ),
       // body: _buildApplicantsList(),
-        
-      ),
     );
   }
 }
