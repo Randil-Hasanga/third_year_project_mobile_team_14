@@ -687,6 +687,19 @@ class FirebaseService {
     );
   }
 
+  //get Interview detials stream
+  Stream<List<Map<String, dynamic>>> getInterviewDetails() {
+    return interviewCollection.snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          final interviewDetails = doc.data() as Map<String, dynamic>;
+
+          return interviewDetails;
+        }).toList();
+      },
+    );
+  }
+
   Future<List<Map<String, dynamic>>?> getVacanciesInPrefferedIndustry(
       List<String> preferedIndustries) async {
     int age = int.parse(currentSeekerCV!['age']);
