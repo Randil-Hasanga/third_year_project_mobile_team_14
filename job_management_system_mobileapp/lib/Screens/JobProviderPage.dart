@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/feedback_home.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/interview_scheduler.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/updateVacancy.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
@@ -781,7 +782,16 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.timeline,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: const Text('Interview Progress'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const FeedbackHome();
+                    },
+                  ),
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.settings,

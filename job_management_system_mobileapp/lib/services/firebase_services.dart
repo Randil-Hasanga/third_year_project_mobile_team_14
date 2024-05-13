@@ -411,11 +411,8 @@ class FirebaseService {
     }, SetOptions(merge: true));
   }
 
-
-
-
 //get seeker details
- Future<Map<String, dynamic>?> getCurrentSeekerData(String uid) async {
+  Future<Map<String, dynamic>?> getCurrentSeekerData(String uid) async {
     DocumentSnapshot<Map<String, dynamic>?> _doc =
         await _db.collection(SEEKER_PROFILE_DETAILS_COLLECTION).doc(uid).get();
 
@@ -652,6 +649,19 @@ class FirebaseService {
         'link': link,
         'date_time': date_time,
         'uid': uid,
+      },
+    );
+  }
+
+  //get Interview detials stream
+  Stream<List<Map<String, dynamic>>> getInterviewDetails() {
+    return interviewCollection.snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          final interviewDetails = doc.data() as Map<String, dynamic>;
+
+          return interviewDetails;
+        }).toList();
       },
     );
   }
