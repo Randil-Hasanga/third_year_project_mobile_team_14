@@ -667,18 +667,20 @@ class FirebaseService {
 
   //add scheduled interview
   Future<void> addInterviewDetails(
+    String companyName,
+    String vacancy_id,
     String topic,
     String description,
-    String vacancy_id,
     String type,
     String link,
     String date_time,
   ) {
     return interviewCollection.add(
       {
+        'company_name': companyName,
+        'vacancy_id': vacancy_id,
         'topic': topic,
         'description': description,
-        'vacancy_id': vacancy_id,
         'type': type,
         'link': link,
         'date_time': date_time,

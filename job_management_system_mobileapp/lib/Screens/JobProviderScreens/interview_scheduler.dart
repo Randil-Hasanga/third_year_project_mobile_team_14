@@ -23,16 +23,32 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
   final _formKey = GlobalKey<FormState>();
   final _topicController = TextEditingController();
   final _descriptionController = TextEditingController();
+  Map<String, dynamic>? _jobProviderDetails;
 
   String selectedvacancy = "0";
   String selectedvacancyName = 'Select vacancy';
 
   DateTime _selectedDateTime = DateTime.now();
 
+  String? companyName;
+
   @override
   void initState() {
     super.initState();
     firebaseSerice = GetIt.instance.get<FirebaseService>();
+    _getProvider();
+  }
+
+  void _getProvider() async {
+    _jobProviderDetails = await firebaseSerice!.getCurrentProviderData();
+
+    if (_jobProviderDetails != null) {
+      setState(() {
+        if (mounted) {
+          companyName = _jobProviderDetails!['company_name'];
+        }
+      });
+    }
   }
 
   void _chooseDateTime() async {
@@ -112,51 +128,6 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
             key: _formKey,
             child: Column(
               children: [
-                //input field for topic
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "please enter the topic";
-                    }
-                    return null;
-                  },
-                  controller: _topicController,
-                  decoration: InputDecoration(
-                    labelText: "Topic",
-                    hintText: "HR Interview",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-
-                //input field for description
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "please enter description";
-                    }
-                    return null;
-                  },
-                  minLines: 3,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    labelText: "Description",
-                    hintText: "give a brief description",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-
-                //add participants
-
                 Row(
                   children: [
                     const Text(
@@ -169,6 +140,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('vacancy')
+                          .where('uid', isEqualTo: firebaseSerice!.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
                         List<DropdownMenuItem> vacancyItems = [];
@@ -219,6 +191,49 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 ),
 
                 SizedBox(height: screenHeight * 0.02),
+                //input field for topic
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter the topic";
+                    }
+                    return null;
+                  },
+                  controller: _topicController,
+                  decoration: InputDecoration(
+                    labelText: "Topic",
+                    hintText: "HR Interview",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: screenHeight * 0.02),
+
+                //input field for description
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter description";
+                    }
+                    return null;
+                  },
+                  minLines: 3,
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelText: "Description",
+                    hintText: "give a brief description",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: screenHeight * 0.02),
+
                 // select interview type
                 Row(
                   children: [
@@ -315,9 +330,10 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       firebaseSerice?.addInterviewDetails(
+                        companyName!,
+                        selectedvacancy,
                         _topicController.text,
                         _descriptionController.text,
-                        selectedvacancy,
                         groupValue,
                         _linkController.text,
                         _selectedDateTime.toString(),
