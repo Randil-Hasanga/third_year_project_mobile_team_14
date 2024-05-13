@@ -28,7 +28,6 @@ class ProfileJobSeeker extends StatefulWidget {
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _selectedGender;
   final TextEditingController _nicController = TextEditingController();
@@ -59,7 +58,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
         setState(() {
           _fullNameController.text = data['fullname'];
           _addressController.text = data['address'];
-          _emailController.text = data['email'];
           _nicController.text = data['nic'];
           _selectedDate = data['dateOfBirth'].toDate();
           _selectedDistrict = data['district'];
@@ -200,24 +198,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email Address',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter email address';
-                  }
-                  // Regular expression pattern for email validation
-                  RegExp regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                  if (!regex.hasMatch(value)) {
-                    return 'Enter a valid email address';
-                  }
-                  return null; // Return null if the input is valid
-                },
-              ),
               const SizedBox(height: 20),
               TextFormField(
                 controller: _addressController,
@@ -417,7 +397,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                             selectedImage,
                             _logo,
                             _fullNameController.text,
-                            _emailController.text,
                             _addressController.text,
                             _selectedGender!,
                             _nicController.text,

@@ -234,7 +234,6 @@ class FirebaseService {
     XFile? profile_picture,
     String? logoLink,
     String fullName,
-    String email,
     String address,
     String? gender,
     String nic,
