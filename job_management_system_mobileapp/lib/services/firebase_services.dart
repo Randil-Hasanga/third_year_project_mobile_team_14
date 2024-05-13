@@ -124,8 +124,6 @@ class FirebaseService {
     }
   }
 
-  //TODO: signal nati una
-
   Future<bool> validateCurrentPassword(String oldPwd) async {
     try {
       final user = _auth.currentUser;
@@ -233,6 +231,8 @@ class FirebaseService {
 //add profile details of job seeker
 
   Future<void> addJobSeekerProfile(
+    XFile? profile_picture,
+    String? logoLink,
     String fullName,
     String email,
     String address,
@@ -241,17 +241,44 @@ class FirebaseService {
     DateTime? dateOfBirth,
     String? district,
     String contact,
-  ) {
-    return _db.collection(SEEKER_PROFILE_DETAILS_COLLECTION).doc(uid).set({
-      'fullname': fullName,
-      'email': email,
-      'address': address,
-      'gender': gender,
-      'nic': nic,
-      'dateOfBirth': dateOfBirth,
-      'district': district,
-      'contact': contact
-    }, SetOptions(merge: true));
+  ) async {
+    if (profile_picture != null) {
+      String _imageName = "Profile_Image" + p.extension(profile_picture!.path);
+
+      UploadTask _task = _storage
+          .ref('seeker_profile/$uid/$_imageName')
+          .putFile(File(profile_picture.path));
+
+      return _task.then((_snapshot) async {
+        String _downloadURL = await _snapshot.ref.getDownloadURL();
+
+        return _db.collection(SEEKER_PROFILE_DETAILS_COLLECTION).doc(uid).set({
+          'profile_image': _downloadURL,
+          'fullname': fullName,
+          'email': email,
+          'address': address,
+          'gender': gender,
+          'nic': nic,
+          'dateOfBirth': dateOfBirth,
+          'district': district,
+          'contact': contact
+        }, SetOptions(merge: true));
+      });
+    } else {
+      if (logoLink != null) {
+        return _db.collection(SEEKER_PROFILE_DETAILS_COLLECTION).doc(uid).set({
+          'profile_image': logoLink,
+          'fullname': fullName,
+          'email': email,
+          'address': address,
+          'gender': gender,
+          'nic': nic,
+          'dateOfBirth': dateOfBirth,
+          'district': district,
+          'contact': contact
+        }, SetOptions(merge: true));
+      }
+    }
   }
 
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++CV creatoion:
@@ -411,11 +438,8 @@ class FirebaseService {
     }, SetOptions(merge: true));
   }
 
-
-
-
 //get seeker details
- Future<Map<String, dynamic>?> getCurrentSeekerData(String uid) async {
+  Future<Map<String, dynamic>?> getCurrentSeekerData() async {
     DocumentSnapshot<Map<String, dynamic>?> _doc =
         await _db.collection(SEEKER_PROFILE_DETAILS_COLLECTION).doc(uid).get();
 
@@ -471,6 +495,7 @@ class FirebaseService {
     String repEmail,
     String districtFull,
   ) async {
+    // if Br link and logo File exist
     if (businessRegistrationPDFLink != null) {
       if (logo != null) {
         try {
@@ -504,6 +529,7 @@ class FirebaseService {
           print(e);
         }
       } else {
+        //if BR link exist and LOGO does not exist (Logo Link exist)
         try {
           await _db.collection(PROVIDER_DETAILS_COLLECTION).doc(uid).set({
             "logo": logoLink,
@@ -526,6 +552,7 @@ class FirebaseService {
           print(e);
         }
       }
+      //if Br link not exist (BR file exist) and logo file exist (Logo update)
     } else {
       if (logo != null) {
         try {
@@ -569,6 +596,7 @@ class FirebaseService {
           print(e);
         }
       } else {
+        //if Br link not exist (BR file exist) and logo file not exist (Link exist)
         try {
           String fileName =
               'pdf_BusinessReg${DateTime.now().millisecondsSinceEpoch}.pdf';
