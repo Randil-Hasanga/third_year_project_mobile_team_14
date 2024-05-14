@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:job_management_system_mobileapp/widgets/alertBoxWidgets.dart';
 import 'package:path_provider/path_provider.dart';
@@ -104,8 +105,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
-        title: const Text(
-          "Profile",
+        title: Text(
+          DemoLocalization.of(context).getTranslatedValue('profile')!,
           style: TextStyle(
             color: Colors.white,
           ),
@@ -185,14 +186,17 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               ),
               TextFormField(
                 controller: _fullNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Full Name',
-                  hintText: 'Full name',
+                decoration: InputDecoration(
+                  labelText: DemoLocalization.of(context)
+                      .getTranslatedValue('full_name')!,
+                  hintText: DemoLocalization.of(context)
+                      .getTranslatedValue('full_name')!,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your full name';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('please_enter_full_name')!;
                   }
                   return null;
                 },
@@ -202,14 +206,17 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               TextFormField(
                 controller: _addressController,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  labelText: 'Address',
-                  hintText: 'Address',
+                decoration: InputDecoration(
+                  labelText: DemoLocalization.of(context)
+                      .getTranslatedValue('address')!,
+                  hintText: DemoLocalization.of(context)
+                      .getTranslatedValue('address')!,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your address';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('please_enter_address')!;
                   }
                   return null;
                 },
@@ -218,8 +225,9 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 height: 20,
               ),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Gender',
+                decoration: InputDecoration(
+                  labelText: DemoLocalization.of(context)
+                      .getTranslatedValue('gender')!,
                   border: OutlineInputBorder(),
                 ),
                 value: _selectedGender,
@@ -230,7 +238,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please select your gender';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('please_select_gender')!;
                   }
                   return null;
                 },
@@ -250,7 +259,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 controller: _nicController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your NIC';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('please_enter_NIC')!;
                   }
 
                   // Remove any whitespaces
@@ -258,24 +268,28 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
 
                   // Check if the input starts with digits
                   if (!RegExp(r'^[0-9]').hasMatch(value)) {
-                    return 'Invalid NIC format';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('invalid_NIC_format')!;
                   }
 
                   // Check the length of the NIC
                   if (value.length != 12 && value.length != 10) {
-                    return 'NIC must be 10 or 12 characters long';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('NIC_character_warning')!;
                   }
 
                   // Check for old version NIC (9 digits + 'V' or 'X')
                   if (value.length == 10 &&
                       !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
-                    return 'Invalid NIC format';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('invalid_NIC_format')!;
                   }
 
                   // Check for new version NIC (12 digits)
                   if (value.length == 12 &&
                       !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
-                    return 'Invalid NIC format';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('invalid_NIC_format')!;
                   }
 
                   // Valid NIC
@@ -295,14 +309,17 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       : '',
                 ),
                 onTap: () => _selectDate(context),
-                decoration: const InputDecoration(
-                  labelText: 'Date of Birth',
-                  hintText: 'Date of Birth',
+                decoration: InputDecoration(
+                  labelText: DemoLocalization.of(context)
+                      .getTranslatedValue('date_of_birth')!,
+                  hintText: DemoLocalization.of(context)
+                      .getTranslatedValue('date_of_birth')!,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (_selectedDate == null) {
-                    return 'Please select your date of birth';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('please_select_DOB')!;
                   }
                   return null;
                 },
@@ -310,8 +327,9 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               const SizedBox(height: 20),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'District',
+                decoration: InputDecoration(
+                  labelText: DemoLocalization.of(context)
+                      .getTranslatedValue('district')!,
                   border: OutlineInputBorder(),
                 ),
                 value: _selectedDistrict,
@@ -322,7 +340,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please select a district';
+                    return DemoLocalization.of(context)
+                        .getTranslatedValue('please_select_district')!;
                   }
                   return null;
                 },
@@ -362,8 +381,9 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _contactNumberController,
-                decoration: const InputDecoration(
-                  labelText: 'Tel (Mobile)',
+                decoration: InputDecoration(
+                  labelText: DemoLocalization.of(context)
+                      .getTranslatedValue('mobile_number')!,
                   hintText: 'EX: +94718524560',
                   border: OutlineInputBorder(),
                 ),
@@ -389,9 +409,11 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       if (_formKey.currentState!.validate()) {
                         if (selectedImage == null && _logo == null) {
                           _alertBoxWidgets.showAlert(
-                              context,
-                              QuickAlertType.warning,
-                              "Please select a profile picture");
+                            context,
+                            QuickAlertType.warning,
+                            DemoLocalization.of(context).getTranslatedValue(
+                                'please_select_profile_pic')!,
+                          );
                         } else {
                           await _firebaseService.addJobSeekerProfile(
                             selectedImage,
@@ -409,8 +431,10 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                           QuickAlert.show(
                             context: context,
                             type: QuickAlertType.success,
-                            title: 'Success',
-                            text: 'Successfully added',
+                            title: DemoLocalization.of(context)
+                                .getTranslatedValue('success')!,
+                            text: DemoLocalization.of(context)
+                                .getTranslatedValue('successfully_added')!,
                           );
                         }
                       } else {
@@ -418,8 +442,10 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                         QuickAlert.show(
                           context: context,
                           type: QuickAlertType.error,
-                          title: 'Error',
-                          text: 'Please fill in all the required fields',
+                          title: DemoLocalization.of(context)
+                              .getTranslatedValue('error')!,
+                          text: DemoLocalization.of(context)
+                              .getTranslatedValue('fill_required_fields')!,
                         );
                       }
                     },
@@ -434,8 +460,9 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 16, horizontal: 32), // Button padding
                     ),
-                    child: const Text(
-                      'Submit',
+                    child: Text(
+                      DemoLocalization.of(context)
+                          .getTranslatedValue('submit')!,
                       style: TextStyle(
                           color: Colors.white, fontSize: 19), // Text color
                     ), // Background color
