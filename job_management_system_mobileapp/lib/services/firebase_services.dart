@@ -661,6 +661,17 @@ class FirebaseService {
     }
   }
 
+  //get Job Seeker Stream
+  Stream<List<Map<String, dynamic>>> getJobSeekerStream() {
+    return cvDetailsCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final cvDetails = doc.data() as Map<String, dynamic>;
+
+        return cvDetails;
+      }).toList();
+    });
+  }
+
 // get collection of interview detials
   final CollectionReference interviewCollection =
       FirebaseFirestore.instance.collection('interview_details');
