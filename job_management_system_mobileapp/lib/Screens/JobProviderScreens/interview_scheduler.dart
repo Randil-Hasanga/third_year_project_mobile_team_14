@@ -349,7 +349,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: const Color.fromARGB(255, 143, 255, 120),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -358,6 +358,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                     "Continue",
                     style: TextStyle(
                       color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

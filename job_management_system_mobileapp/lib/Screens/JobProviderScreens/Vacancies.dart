@@ -484,6 +484,10 @@ class _vacanciesState extends State<vacancies> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 143, 255, 120),
+                        ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _firebaseSerice!.addVacancy(
@@ -510,7 +514,13 @@ class _vacanciesState extends State<vacancies> {
                             showAlert();
                           }
                         },
-                        child: const Text('Add Vacancy'),
+                        child: const Text(
+                          'Add Vacancy',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   )
