@@ -364,7 +364,7 @@ class FirebaseService {
     _db.collection(CV_COLLECTION).doc(uid).set({
       'title': title,
       'gender': gender,
-      ' jobType': jobType,
+      'jobType': jobType,
       'workingSection': workingSection,
       'maritalStatus': maritalStatus,
       'currentJobStatus': currentJobStatus,

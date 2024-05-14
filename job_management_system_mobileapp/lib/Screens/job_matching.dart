@@ -31,7 +31,9 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       seeker_education,
       seeker_expected_salary,
       seeker_gender,
-      seeker_prefered_org_type;
+      seeker_prefered_org_type,
+      jobType,
+      _selectedJobType;
 
   Color iconColor = Color.fromARGB(255, 0, 0, 0);
 
@@ -44,7 +46,9 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       filteredVacanciesByEducation,
       filteredVacanciesBySalary,
       filteredVacanciesByOrgType,
-      bestMatchingVacancies;
+      bestMatchingVacancies,
+      filteredVacanciesByFullTime,
+      filteredVacanciesByPartTime;
 
   @override
   void initState() {
@@ -74,7 +78,12 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
           seeker_gender = _CV_details!['gender'];
           seeker_prefered_org_type = _CV_details!['workingSection'];
           expected_salary = double.parse(seeker_expected_salary!);
-          print(seeker_education);
+        });
+
+        setState(() {
+          jobType = _CV_details!['jobType'];
+          print("job Type ${_CV_details!['jobType']}");
+          _selectedJobType = jobType;
         });
       }
 
@@ -126,7 +135,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                               children: [
                                 TextSpan(
                                   text:
-                                      "All the results are shown according to your curriculum vitae (CV).\n\n",
+                                      "${DemoLocalization.of(context).getTranslatedValue('CV_warning')!}.\n\n",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.red),
@@ -148,6 +157,15 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                                 TextSpan(
                                   text:
                                       "${DemoLocalization.of(context).getTranslatedValue('preffered_area_info')!} \n\n",
+                                ),
+                                TextSpan(
+                                  text:
+                                      "${DemoLocalization.of(context).getTranslatedValue('by_job_type')!} \n\n",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "${DemoLocalization.of(context).getTranslatedValue('job_type_info')!} \n\n",
                                 ),
                                 TextSpan(
                                   text:
@@ -248,6 +266,23 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       const Divider(
                         thickness: 3,
                       ),
+                      _jobTypeDropDown(),
+                      if (_selectedJobType == "Full Time") ...{
+                        applyForVacanciesListWidget(
+                            null,
+                            filteredVacanciesByFullTime,
+                            seekerID!,
+                            _deviceHeight),
+                      } else if (_selectedJobType == "Part Time") ...{
+                        applyForVacanciesListWidget(
+                            null,
+                            filteredVacanciesByPartTime,
+                            seekerID!,
+                            _deviceHeight),
+                      },
+                      SizedBox(
+                        height: _deviceHeight! * 0.02,
+                      ),
                       applyForVacanciesListWidget(
                           DemoLocalization.of(context)
                               .getTranslatedValue('by_highest_education')!,
@@ -329,6 +364,39 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     );
   }
 
+  Widget _jobTypeDropDown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: _richTextWidget!.simpleText(
+              DemoLocalization.of(context).getTranslatedValue('by_job_type')!,
+              21,
+              Colors.black87,
+              FontWeight.w600),
+        ),
+        DropdownButton<String>(
+          value: _selectedJobType,
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedJobType = newValue!;
+            });
+          },
+          underline: Container(),
+          items: <String>['Full Time', 'Part Time'].map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: _richTextWidget!
+                  .simpleText(value, 16, Colors.black87, FontWeight.w600),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
   Widget applyForVacanciesListWidget(
     String? text,
     List<Map<String, dynamic>>? list,
@@ -362,7 +430,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
               ),
             ],
           ),
-          height: 278,
+          height: 295,
           child: _buildList(list, seekerId),
         ),
       ],
@@ -475,6 +543,23 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       _richTextWidget!.simpleTextWithIconLeft(
                           Icons.account_balance,
                           listItem['org_type'],
+                          15,
+                          Colors.black,
+                          FontWeight.w600,
+                          iconColor),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 30,
+                      ),
+                      _richTextWidget!.simpleTextWithIconLeft(
+                          Icons.access_time,
+                          listItem['job_type'],
                           15,
                           Colors.black,
                           FontWeight.w600,
@@ -614,6 +699,22 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
             filteredVacanciesByOrgType = _filterByGender(
               _filterByEducation(
                 _filterByOrgType(vacancies),
+              ),
+            );
+
+            filteredVacanciesByFullTime = _filterByGender(
+              _filterByEducation(
+                _filterByOrgType(
+                  _filterByJobTypeFullTime(vacancies),
+                ),
+              ),
+            );
+
+            filteredVacanciesByPartTime = _filterByGender(
+              _filterByEducation(
+                _filterByOrgType(
+                  _filterByJobTypePartTime(vacancies),
+                ),
               ),
             );
 
@@ -827,6 +928,36 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       }).toList();
 
       print("Filtered vacancies by salary: $filteredVacancies");
+      return filteredVacancies;
+    } else {
+      print("Cannot filter");
+      return null;
+    }
+  }
+
+  List<Map<String, dynamic>>? _filterByJobTypeFullTime(
+      List<Map<String, dynamic>>? list) {
+    if (list != null) {
+      List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
+        return vacancy['job_type'] == "Full Time";
+      }).toList();
+
+      print("Filtered vacancies by jobType: $filteredVacancies");
+      return filteredVacancies;
+    } else {
+      print("Cannot filter");
+      return null;
+    }
+  }
+
+  List<Map<String, dynamic>>? _filterByJobTypePartTime(
+      List<Map<String, dynamic>>? list) {
+    if (list != null) {
+      List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
+        return vacancy['job_type'] == "Part Time";
+      }).toList();
+
+      print("Filtered vacancies by jobType: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");
