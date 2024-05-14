@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/SeekerList.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
@@ -767,15 +768,12 @@ class _JobProviderPageState extends State<JobProviderPage> {
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: const Text('See JobSeekers'),
               onTap: () {
-                // Navigate to create CV page
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.description,
-                  color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('See CV'),
-              onTap: () {
-                // Navigate to create CV page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => JobSeekerList(),
+                  ),
+                );
               },
             ),
             ListTile(
