@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -42,6 +43,8 @@ class _vacanciesState extends State<vacancies> {
 
   DateTime issuedDate = DateTime.now();
 
+  DateTime expiryDate = DateTime.now();
+
   Map<String, dynamic>? _jobProviderDetails;
   String? orgType, _industry;
 
@@ -52,6 +55,8 @@ class _vacanciesState extends State<vacancies> {
   String _educationLevel = 'O/L';
 
   double _minimumAge = 18;
+
+  bool active = true;
 
   @override
   void initState() {
@@ -77,6 +82,32 @@ class _vacanciesState extends State<vacancies> {
     }
 
     orgType = _jobProviderDetails!['org_type'];
+  }
+
+  void _chooseExpiryDate() async {
+    final picked = await showBoardDateTimePicker(
+      context: context,
+      pickerType: DateTimePickerType.date,
+      initialDate: expiryDate,
+      options: BoardDateTimeOptions(
+        languages: const BoardPickerLanguages(
+          today: 'Today',
+          tomorrow: 'Tomorrow',
+          now: 'Now',
+        ),
+        startDayOfWeek: DateTime.monday,
+        pickerFormat: PickerFormat.ymd,
+        activeColor: Colors.blue.shade200,
+        backgroundDecoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+      ),
+    );
+    if (picked != null && picked != expiryDate) {
+      setState(() {
+        expiryDate = picked;
+      });
+    }
   }
 
   final List<String> items = [
@@ -134,6 +165,7 @@ class _vacanciesState extends State<vacancies> {
   ];
 
   List<String> jobPositions = [
+    'Junior Software Engineer',
     'Software Engineer',
     'Product Manager',
     'Data Scientist',
@@ -155,7 +187,10 @@ class _vacanciesState extends State<vacancies> {
     'Plumber',
     'Supervisors',
     'Marketing Staff',
-    'Customer Service Manager'
+    'Customer Service Manager',
+    'Business Analyst',
+    'Project Manager',
+    'Quality Assurance Manager',
   ];
 
   @override
@@ -480,6 +515,44 @@ class _vacanciesState extends State<vacancies> {
 
                   SizedBox(height: screenHeight * 0.02),
 
+                  //Date picker for expiry date
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: _chooseExpiryDate,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.lightBlueAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text(
+                            'select Expiry Date',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          "Selected Expiry Date: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Text(expiryDate.toString()),
+                    ],
+                  ),
+
+                  SizedBox(height: screenHeight * 0.02),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -502,6 +575,7 @@ class _vacanciesState extends State<vacancies> {
                               double.tryParse(_salaryController.text) ?? 0.0,
                               _locationController.text,
                               issuedDate,
+                              expiryDate,
                               orgType!,
                             );
 
@@ -511,6 +585,7 @@ class _vacanciesState extends State<vacancies> {
                             _descriptionController.clear();
                             _salaryController.clear();
                             _locationController.clear();
+                            expiryDate = DateTime.now();
                             showAlert();
                           }
                         },

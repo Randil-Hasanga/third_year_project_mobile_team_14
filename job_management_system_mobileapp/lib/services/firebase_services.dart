@@ -167,6 +167,7 @@ class FirebaseService {
       double salary,
       String location,
       DateTime date,
+      DateTime expiryDate,
       String orgType) async {
     List<String> list = [];
     DocumentReference vacancyRef = await vacancyCollection.add(
@@ -183,6 +184,7 @@ class FirebaseService {
         'location': location,
         'uid': uid,
         'created_at': date,
+        'expiry_date': expiryDate,
         'org_type': orgType,
         'applied_by': list,
       },
