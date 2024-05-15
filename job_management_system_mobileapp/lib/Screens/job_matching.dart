@@ -668,6 +668,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
 
           setState(() {
             vacancies = data;
+
+            vacancies = _isVacancyValidAndActive(vacancies);
             _isLoading = false;
             filteredVacanciesByDistrict = _filterByGender(
               _filterByDistrict(
@@ -955,6 +957,21 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     if (list != null) {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return vacancy['job_type'] == "Part Time";
+      }).toList();
+
+      print("Filtered vacancies by jobType: $filteredVacancies");
+      return filteredVacancies;
+    } else {
+      print("Cannot filter");
+      return null;
+    }
+  }
+
+  List<Map<String, dynamic>>? _isVacancyValidAndActive(
+      List<Map<String, dynamic>>? list) {
+    if (list != null) {
+      List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
+        return ((vacancy['active'] == true) && (vacancy['disabled'] == false));
       }).toList();
 
       print("Filtered vacancies by jobType: $filteredVacancies");
