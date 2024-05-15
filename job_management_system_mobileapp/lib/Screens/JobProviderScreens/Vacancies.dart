@@ -87,7 +87,7 @@ class _vacanciesState extends State<vacancies> {
   void _chooseExpiryDate() async {
     final picked = await showBoardDateTimePicker(
       context: context,
-      pickerType: DateTimePickerType.date,
+      pickerType: DateTimePickerType.datetime,
       initialDate: expiryDate,
       options: BoardDateTimeOptions(
         languages: const BoardPickerLanguages(
