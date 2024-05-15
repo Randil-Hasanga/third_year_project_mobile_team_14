@@ -39,6 +39,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
     _firebaseService = GetIt.instance.get<FirebaseService>();
     uid = _firebaseService!.getCurrentUserUid();
     _initSharedPreferences();
+    updateExpiredVacancies();
   }
 
   Future<void> _initSharedPreferences() async {
@@ -56,6 +57,25 @@ class _JobProviderPageState extends State<JobProviderPage> {
     } catch (e) {
       print("Error clearing credentials: $e");
       // Handle the error, if needed
+    }
+  }
+
+  // update expired vacancies
+  Future<void> updateExpiredVacancies() async {
+    final now = DateTime.now();
+
+    final QuerySnapshot snapshot =
+        await _firebaseService!.vacancyCollection.get();
+
+    for (final vacancy in snapshot.docs) {
+      final expiryDate = (vacancy.data() as Map)['expiry_date'] as Timestamp;
+      final bool isActive = (vacancy.data() as Map)['active'] as bool;
+
+      if (expiryDate.toDate().isBefore(now) && isActive) {
+        await _firebaseService?.vacancyCollection
+            .doc(vacancy.id)
+            .update({'active': false});
+      }
     }
   }
 
