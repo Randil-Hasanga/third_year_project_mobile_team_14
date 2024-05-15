@@ -185,6 +185,8 @@ class FirebaseService {
         'created_at': date,
         'org_type': orgType,
         'applied_by': list,
+        'active': true,
+        'disabled': false
       },
     );
 
