@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
+import 'package:job_management_system_mobileapp/componets/user_title.dart';
 
 class Feedback_page extends StatefulWidget {
   String? vacancyId;
@@ -51,12 +52,13 @@ class _Feedback_pageState extends State<Feedback_page> {
         if (applicants == null || !applicants.containsKey('applied_by')) {
           return const Text('No applicants found');
         }
-        List<dynamic> applicantsList = applicants!['applied_by'];
+        List<dynamic> applicantsList = applicants['applied_by'];
 
         return ListView.builder(
           itemCount: applicantsList.length,
           itemBuilder: (context, index) {
-            return Text(applicantsList[index]['uid']);
+            String applicantId = applicantsList[index].toString();
+            return UserTile(text: applicantId);
           },
         );
       },

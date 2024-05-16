@@ -230,6 +230,24 @@ class FirebaseService {
     );
   }
 
+  //job seeker details refference
+  final CollectionReference seekerDetailsCollection =
+      FirebaseFirestore.instance.collection('profileJobSeeker');
+
+  //get job seeker name Stream
+  Stream<List<Map<String, dynamic>>> getJobSeekerNameStream(
+      String applicantId) {
+    return cvDetailsCollection
+        .where('uid', isEqualTo: applicantId)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final cvDetails = doc.data() as Map<String, dynamic>;
+
+        return cvDetails;
+      }).toList();
+    });
+  }
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++get collection of details: Job seeker
 
 //add profile details of job seeker
