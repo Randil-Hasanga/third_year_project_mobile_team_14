@@ -36,6 +36,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
   FirebaseService? _firebaseService;
   String? _userName;
   double? _deviceWidth;
+  String? profile_image;
   final RichTextWidget _richTextWidget = RichTextWidget();
 
   @override
@@ -44,6 +45,19 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
     _initSharedPreferences();
+    _getSeeker();
+  }
+
+  void _getSeeker() async {
+    await _firebaseService!.getCurrentSeekerData().then((data) {
+      if (mounted) {
+        if (data != null) {
+          setState(() {
+            profile_image = data['profile_image'];
+          });
+        }
+      }
+    });
   }
 
   Future<void> _initSharedPreferences() async {
@@ -146,9 +160,27 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               const SizedBox(
                 height: 2,
               ),
-              const Padding(
-                padding: EdgeInsets.all(10),
-                child: Row(
+              if (profile_image != null) ...{
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 64,
+                            backgroundImage: NetworkImage(profile_image!),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              } else ...{
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Stack(
@@ -160,9 +192,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           )
                         ],
                       ),
-                    ]),
-              ),
-              const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              },
+              const SizedBox(height: 10),
               Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -370,7 +404,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                         ),
                       ),
                       const SizedBox(height: 15),
-                      Divider(),
+                      const Divider(),
                       const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -393,9 +427,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             child: Text(
                               DemoLocalization.of(context)
                                   .getTranslatedValue('see_all')!,
-                              style: TextStyle(
-                                  color:
-                                      const Color.fromARGB(255, 243, 117, 33),
+                              style: const TextStyle(
+                                  color: Color.fromARGB(255, 243, 117, 33),
                                   fontSize: 15),
                             ),
                           ),
@@ -593,11 +626,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Alert"),
-                        content: Text("Please create CV and try again."),
+                        title: const Text("Alert"),
+                        content: const Text("Please create CV and try again."),
                         actions: <Widget>[
                           TextButton(
-                            child: Text("OK"),
+                            child: const Text("OK"),
                             onPressed: () {
                               Navigator.of(context).pop(); // Close the dialog
                             },
