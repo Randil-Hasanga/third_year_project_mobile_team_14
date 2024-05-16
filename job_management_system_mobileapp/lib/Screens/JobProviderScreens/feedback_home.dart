@@ -73,14 +73,14 @@ class _FeedbackHomeState extends State<FeedbackHome> {
 
   Widget _buildInterviewListItems(
       Map<String, dynamic> userdata, BuildContext context) {
-    vacancyId = userdata['vacancy_id'];
     return InterviewDetailsTile(
       text: userdata['topic'],
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Feedback_page(vacancyId: vacancyId),
+            builder: (context) =>
+                Feedback_page(vacancyId: userdata['vacancy_id']),
           ),
         );
       },
