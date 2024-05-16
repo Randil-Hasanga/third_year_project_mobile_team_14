@@ -75,7 +75,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 _oldPwd = value;
                 print(value);
               });
-            }, "Enter your old password"),
+            }, "Enter your old password", validate: false),
             SizedBox(
               height: _deviceHeight! * 0.03,
             ),
@@ -87,7 +87,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               setState(() {
                 _newPwd = value;
               });
-            }, "Enter your new password"),
+            }, "Enter your new password", validate: true),
             SizedBox(
               height: _deviceHeight! * 0.03,
             ),
@@ -99,7 +99,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               setState(() {
                 _reenterNewPwd = value;
               });
-            }, "Re-enter new password"),
+            }, "Re-enter new password", validate: true),
             SizedBox(
               height: _deviceHeight! * 0.03,
             ),

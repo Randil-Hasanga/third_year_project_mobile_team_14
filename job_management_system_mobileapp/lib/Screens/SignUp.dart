@@ -9,6 +9,7 @@ import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:job_management_system_mobileapp/widgets/textfield_widgets.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key});
@@ -25,9 +26,12 @@ class _SignUpPageState extends State<SignUpPage> {
   String _accountType = 'seeker';
   final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
   String? _userName, _email, _password, _reEnterPassword;
+  bool showTextPwd = true;
+  bool showTextRePwd = true;
 
   FirebaseService? _firebaseService;
   EmailService? _emailService;
+  TextFieldWidgets _textFieldWidgets = TextFieldWidgets();
 
   @override
   void initState() {
@@ -110,8 +114,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         text: 'Sign Up',
                         color: Colors.orange.shade900,
                       ),
-                      const SizedBox(height:125),
-                    const Text("Job Center, Matara"),
+                      const SizedBox(height: 125),
+                      const Text("Job Center, Matara"),
                     ],
                   ),
                 ),
@@ -187,160 +191,38 @@ class _SignUpPageState extends State<SignUpPage> {
       key: _signUpFormKey,
       child: Column(
         children: [
-          _userNameTextField(),
-          _emailTextField(),
-          _passwordTextField(),
-          _reEnterPasswordTextField(),
-        ],
-      ),
-    );
-  }
-
-  Widget _userNameTextField() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.person,
-            color: const Color.fromARGB(255, 255, 115, 1),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: TextFormField(
-              onSaved: (_value) {
-                setState(() {
-                  _userName = _value!;
-                });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Username cannot be empty';
-                }
-                // You can add additional validation here if needed, like checking if it matches the password
-                return null;
-              },
-              decoration: const InputDecoration(
-                hintText: "Username",
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _emailTextField() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.email,
-            color: const Color.fromARGB(255, 255, 115, 1),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: TextFormField(
-              onSaved: (_value) {
-                setState(() {
-                  _email = _value!;
-                });
-              },
-              validator: (_value) {
-                bool _result = _value!.contains(
-                  RegExp(
-                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"),
-                );
-                return _result ? null : "Please enter a valid email";
-              },
-              decoration: const InputDecoration(
-                hintText: "Email",
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _passwordTextField() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.lock,
-            color: Color.fromARGB(255, 255, 115, 1),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: TextFormField(
-              onSaved: (_value) {
-                setState(() {
-                  _password = _value!;
-                });
-              },
-              validator: (_value) => _value!.length >= 8
-                          ? null
-                          : "Please enter password greater than 8 characters",
-              obscureText: true,
-              decoration: const InputDecoration(
-                hintText: "Password",
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _reEnterPasswordTextField() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.lock,
-            color: Color.fromARGB(255, 255, 115, 1),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: TextFormField(
-              onSaved: (_value) {
-                setState(() {
-                  _reEnterPassword = _value!;
-                });
-              },
-              validator: (_value) => _value!.length >= 8
-                          ? null
-                          : "Please enter password greater than 8 characters",
-              obscureText: true,
-              decoration: const InputDecoration(
-                hintText: "Re-enter Password",
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
+          // _userNameTextField(),
+          _textFieldWidgets.usernameTextFieldStyleSignUp((value) {
+            setState(() {
+              _userName = value;
+            });
+          }, "Username", validate: true),
+          // _emailTextField(),
+          _textFieldWidgets.emailTextFieldStyleSignUp((value) {
+            setState(() {
+              _email = value;
+            });
+          }, "Email", validate: true),
+          // _passwordTextField(),
+          _textFieldWidgets.passwordTextFieldStyle2(showTextPwd, () {
+            setState(() {
+              showTextPwd = !showTextPwd;
+            });
+          }, (value) {
+            setState(() {
+              _password = value;
+            });
+          }, "Password", validate: true),
+          //_reEnterPasswordTextField(),
+          _textFieldWidgets.passwordTextFieldStyle2(showTextRePwd, () {
+            setState(() {
+              showTextRePwd = !showTextRePwd;
+            });
+          }, (value) {
+            setState(() {
+              _reEnterPassword = value;
+            });
+          }, "Re-enter Password", validate: true),
         ],
       ),
     );

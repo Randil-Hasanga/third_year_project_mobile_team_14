@@ -34,6 +34,36 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   final TextEditingController _nicController = TextEditingController();
   DateTime? _selectedDate;
 
+  final List<String> _genderDropdownItems = ["Male", "Female"];
+
+  final List<String> _districts = [
+    'Matara',
+    'Galle',
+    'Kalutara',
+    'Colombo',
+    'Gampaha',
+    'Kandy',
+    'Matale',
+    'Nuwara Eliya',
+    'Hambantota',
+    'Jaffna',
+    'Kilinochchi',
+    'Mannar',
+    'Mullaitivu',
+    'Vavuniya',
+    'Batticaloa',
+    'Ampara',
+    'Trincomalee',
+    'Kurunegala',
+    'Puttalam',
+    'Anuradhapura',
+    'Polonnaruwa',
+    'Badulla',
+    'Moneragala',
+    'Ratnapura',
+    'Kegalle'
+  ];
+
   String? _selectedDistrict, _logo;
   XFile? selectedImage;
 
@@ -41,7 +71,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
       TextEditingController();
 
   late FirebaseService _firebaseService;
-  AlertBoxWidgets _alertBoxWidgets = AlertBoxWidgets();
+  final AlertBoxWidgets _alertBoxWidgets = AlertBoxWidgets();
 
   double? _deviceWidth, _deviceHeight; // for the responsiveness of the device
 
@@ -49,29 +79,38 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _selectedGender = _genderDropdownItems.first;
+    _selectedDistrict = _districts.first;
     _getSeeker();
   }
 
-  void _getSeeker() {
-    _firebaseService.getCurrentSeekerData().then((data) {
-      if (data != null) {
-        // Load the user's data into the form fields
-        setState(() {
-          _fullNameController.text = data['fullname'];
-          _addressController.text = data['address'];
-          _nicController.text = data['nic'];
-          _selectedDate = data['dateOfBirth'].toDate();
-          _selectedDistrict = data['district'];
-          _contactNumberController.text = data['contact'];
+  void _getSeeker() async {
+    await _firebaseService.getCurrentSeekerData().then((data) {
+      if (mounted) {
+        if (data != null) {
+          // Load the user's data into the form fields
+          setState(() {
+            _fullNameController.text = data['fullname'] ?? '';
+            _addressController.text = data['address'] ?? '';
+            _nicController.text = data['nic'] ?? '';
+            if (data['dateOfBirth'] != null) {
+              _selectedDate = data['dateOfBirth'].toDate() ?? '';
+            }
+            if (data['district'] != null) {
+              _selectedDistrict = data['district'];
+            }
 
-          _logo = data['profile_image'];
-          // Set the selected gender based on the fetched data
-          if (data['gender'] == 'Male') {
-            _selectedGender = 'Male';
-          } else if (data['gender'] == 'Female') {
-            _selectedGender = 'Female';
-          }
-        });
+            _contactNumberController.text = data['contact'] ?? '';
+
+            _logo = data['profile_image'];
+            // Set the selected gender based on the fetched data
+            if (data['gender'] == 'Male') {
+              _selectedGender = 'Male';
+            } else if (data['gender'] == 'Female') {
+              _selectedGender = 'Female';
+            }
+          });
+        }
       }
     });
   }
@@ -224,6 +263,33 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               const SizedBox(
                 height: 20,
               ),
+              // DropdownButtonFormField<String>(
+              //   decoration: InputDecoration(
+              //     labelText: DemoLocalization.of(context)
+              //         .getTranslatedValue('gender')!,
+              //     border: OutlineInputBorder(),
+              //   ),
+              //   value: _selectedGender,
+              //   onChanged: (String? newValue) {
+              //     setState(() {
+              //       _selectedGender = newValue;
+              //     });
+              //   },
+              //   validator: (value) {
+              //     if (value == null || value.isEmpty) {
+              //       return DemoLocalization.of(context)
+              //           .getTranslatedValue('please_select_gender')!;
+              //     }
+              //     return null;
+              //   },
+              //   items: <String>['Male', 'Female']
+              //       .map<DropdownMenuItem<String>>((String value) {
+              //     return DropdownMenuItem<String>(
+              //       value: value,
+              //       child: Text(value),
+              //     );
+              //   }).toList(),
+              // ),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: DemoLocalization.of(context)
@@ -243,7 +309,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   }
                   return null;
                 },
-                items: <String>['Male', 'Female']
+                items: _genderDropdownItems
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -345,33 +411,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   }
                   return null;
                 },
-                items: <String>[
-                  'Matara',
-                  'Galle',
-                  'Kalutara',
-                  'Colombo',
-                  'Gampaha',
-                  'Kandy',
-                  'Matale',
-                  'Nuwara Eliya',
-                  'Hambantota',
-                  'Jaffna',
-                  'Kilinochchi',
-                  'Mannar',
-                  'Mullaitivu',
-                  'Vavuniya',
-                  'Batticaloa',
-                  'Ampara',
-                  'Trincomalee',
-                  'Kurunegala',
-                  'Puttalam',
-                  'Anuradhapura',
-                  'Polonnaruwa',
-                  'Badulla',
-                  'Moneragala',
-                  'Ratnapura',
-                  'Kegalle'
-                ].map<DropdownMenuItem<String>>((String value) {
+                items: _districts.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
