@@ -22,6 +22,7 @@ const String POSTS_COLLECTION = 'posts';
 const String CV_COLLECTION = 'CVDetails';
 const String VACANCY_COLLECTION = 'vacancy';
 const String SEEKER_PROFILE_DETAILS_COLLECTION = 'profileJobSeeker';
+const String NOTIFICATIONS = 'notifications';
 
 class FirebaseService {
   var value;
@@ -114,6 +115,35 @@ class FirebaseService {
             SetOptions(merge: true),
           );
         }
+
+        //Create new seeker after insert Notification data db
+        if (accountType == 'seeker') {
+          String notificationId = _db.collection(NOTIFICATIONS).doc().id;
+          await _db.collection(NOTIFICATIONS).doc(notificationId).set({
+            'notification_id': notificationId,
+            'uid': _userCredentials.user!.uid,
+            'username': userName,
+            'type': accountType,
+            'registered_date': currentDate,
+            'description': "Register New Job Seeker",
+            'notification_go': "officer",
+          });
+        }
+
+        //Create new provider after insert Notification data db
+        if (accountType == 'provider') {
+          String notificationId = _db.collection(NOTIFICATIONS).doc().id;
+          await _db.collection(NOTIFICATIONS).doc(notificationId).set({
+            'notification_id': notificationId,
+            'uid': _userCredentials.user!.uid,
+            'username': userName,
+            'type': accountType,
+            'registered_date': currentDate,
+            'description': "Register New Job Provider",
+            'notification_go': "officer",
+          });
+        }
+
         return true;
       } else {
         return false;
@@ -197,6 +227,18 @@ class FirebaseService {
 
     // Update the document with the generated ID
     await vacancyRef.update({'vacancy_id': vacancyId});
+
+    //Create new vacancy after insert Notification data db
+    String notificationId = _db.collection(NOTIFICATIONS).doc().id;
+    await _db.collection(NOTIFICATIONS).doc(notificationId).set({
+      'notification_id': notificationId,
+      'uid': uid,
+      'company_name': companyName,
+      'type': accountType,
+      'registered_date': currentDate,
+      'description': "Register New Job Provider",
+      'notification_go': "officer",
+    });
   }
 
   //delete vacancy
@@ -654,6 +696,17 @@ class FirebaseService {
         }
       }
     }
+    //Add new campany after insert Notification data db
+    DateTime currentDate = DateTime.now();
+    String notificationId = _db.collection(NOTIFICATIONS).doc().id;
+    await _db.collection(NOTIFICATIONS).doc(notificationId).set({
+      "company_name": companyName,
+      "membership_number": membershipNumber,
+      "org_type": orgType,
+      "registered_date": currentDate,
+      "description": "Add new campany",
+      "notification_go": "officer",
+    });
   }
 
   //current provider data
