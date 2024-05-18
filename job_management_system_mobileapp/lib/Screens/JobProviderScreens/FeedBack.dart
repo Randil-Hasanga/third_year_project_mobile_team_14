@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/componets/user_title.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class Feedback_page extends StatefulWidget {
   String? vacancyId;
@@ -13,6 +15,24 @@ class Feedback_page extends StatefulWidget {
 }
 
 class _Feedback_pageState extends State<Feedback_page> {
+  FirebaseService? firebaseService;
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseService = GetIt.instance.get<FirebaseService>();
+  }
+
+  Future<String> getApplicantName(String applicantId) async {
+    DocumentSnapshot snapshot =
+        await firebaseService!.cvDetailsCollection.doc(applicantId).get();
+
+    if (snapshot.exists) {
+      return snapshot['fullname'] ?? 'no name found';
+    }
+    return 'no document found';
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -36,7 +56,7 @@ class _Feedback_pageState extends State<Feedback_page> {
   Widget _buildApplicantsList() {
     return StreamBuilder<DocumentSnapshot>(
       stream:
-          firebaseService.vacancyCollection.doc(widget.vacancyId).snapshots(),
+          firebaseService!.vacancyCollection.doc(widget.vacancyId).snapshots(),
       builder: (Context, snapshot) {
         if (snapshot.hasError) {
           return const Text('Error');
@@ -57,8 +77,20 @@ class _Feedback_pageState extends State<Feedback_page> {
         return ListView.builder(
           itemCount: applicantsList.length,
           itemBuilder: (context, index) {
-            String applicantId = applicantsList[index].toString();
-            return UserTile(text: applicantId);
+            String applicantId = applicantsList[index];
+            //String applicantName = getApplicantName(applicantId) as String;
+            return FutureBuilder<String>(
+                future: getApplicantName(applicantId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return UserTile(text: 'Error');
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return UserTile(text: 'Loading');
+                  } else {
+                    return UserTile(text: snapshot.data ?? 'No name Found');
+                  }
+                });
           },
         );
       },
