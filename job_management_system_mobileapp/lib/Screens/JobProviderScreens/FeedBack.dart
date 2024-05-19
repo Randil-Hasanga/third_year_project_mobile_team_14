@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/feedback_stepper.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/componets/user_title.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -88,7 +89,15 @@ class _Feedback_pageState extends State<Feedback_page> {
                       ConnectionState.waiting) {
                     return UserTile(text: 'Loading');
                   } else {
-                    return UserTile(text: snapshot.data ?? 'No name Found');
+                    return UserTile(
+                      text: snapshot.data ?? 'No name Found',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FeedbackStepper()));
+                      },
+                    );
                   }
                 });
           },

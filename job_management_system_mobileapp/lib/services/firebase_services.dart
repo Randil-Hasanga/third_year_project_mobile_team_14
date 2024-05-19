@@ -235,6 +235,7 @@ class FirebaseService {
       'notification_id': notificationId,
       'uid': uid,
       'company_name': companyName,
+      'job_type': jobType,
       'registered_date': currentDate,
       'description': "Register New Job Provider",
       'notification_go': "officer",
