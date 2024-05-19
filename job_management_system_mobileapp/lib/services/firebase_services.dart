@@ -229,12 +229,13 @@ class FirebaseService {
     await vacancyRef.update({'vacancy_id': vacancyId});
 
     //Create new vacancy after insert Notification data db
+    DateTime currentDate = DateTime.now();
     String notificationId = _db.collection(NOTIFICATIONS).doc().id;
     await _db.collection(NOTIFICATIONS).doc(notificationId).set({
       'notification_id': notificationId,
       'uid': uid,
       'company_name': companyName,
-      'type': accountType,
+      'job_type': jobType,
       'registered_date': currentDate,
       'description': "Register New Job Provider",
       'notification_go': "officer",
