@@ -740,7 +740,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
             ListTile(
               leading: const Icon(Icons.create,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('Create Vacancy'),
+              title: Text(
+                DemoLocalization.of(context)
+                    .getTranslatedValue('create_vacancy')!,
+              ),
               onTap: () async {
                 bool isCompanyExist =
                     await _firebaseService!.checkCompanyExist();
@@ -755,7 +758,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
                       return AlertDialog(
                         title: Text("Alert"),
                         content: Text(
-                            "Company is not registered or Account has been disabled\nPlease contact job center"),
+                          DemoLocalization.of(context)
+                              .getTranslatedValue('create_vacancy_warning')!,
+                        ),
                         actions: <Widget>[
                           TextButton(
                             child: Text("OK"),
@@ -774,7 +779,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
             ListTile(
               leading: const Icon(Icons.schedule,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('Schedule Interveiws'),
+              title: Text(
+                DemoLocalization.of(context)
+                    .getTranslatedValue('schedule_inverviews')!,
+              ),
               onTap: () {
                 //Navigate to interview scheduler page
                 Navigator.push(
@@ -786,7 +794,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
             ListTile(
               leading: const Icon(Icons.person_2,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('See JobSeekers'),
+              title: Text(
+                DemoLocalization.of(context)
+                    .getTranslatedValue('see_job_seekers')!,
+              ),
               onTap: () {
                 Navigator.push(
                   context,
@@ -799,7 +810,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
             ListTile(
               leading: const Icon(Icons.timeline,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('Interview Progress'),
+              title: Text(
+                DemoLocalization.of(context)
+                    .getTranslatedValue('interview_progress')!,
+              ),
               onTap: () {
                 Navigator.push(
                   context,
@@ -814,7 +828,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
             ListTile(
               leading: const Icon(Icons.settings,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('Edit Company Information'),
+              title: Text(
+                DemoLocalization.of(context)
+                    .getTranslatedValue('edit_company_info')!,
+              ),
               onTap: () {
                 Navigator.pushNamed(context, 'editProviderProfile');
               },
@@ -822,7 +839,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
             ListTile(
               leading: const Icon(Icons.power_settings_new,
                   color: Color.fromARGB(255, 255, 137, 2)),
-              title: const Text('Log out'),
+              title: Text(
+                DemoLocalization.of(context).getTranslatedValue('log_out')!,
+              ),
               onTap: () async {
                 await clearCredentials();
                 Navigator.push(

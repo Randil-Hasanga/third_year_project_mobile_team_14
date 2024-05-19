@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/colors/colors.dart';
+import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:job_management_system_mobileapp/widgets/alertBoxWidgets.dart';
 import 'package:job_management_system_mobileapp/widgets/appbar_widget.dart';
@@ -41,7 +42,9 @@ class _ChangePasswordState extends State<ChangePassword> {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: _appBarWidget.simpleAppBarWidget("Change Password", 20),
+      appBar: _appBarWidget.simpleAppBarWidget(
+          DemoLocalization.of(context).getTranslatedValue('change_password')!,
+          20),
       bottomNavigationBar: _appBarWidget.bottomAppBarSeeker(context),
       backgroundColor: ScaffoldColor,
       body: SafeArea(
@@ -75,7 +78,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                 _oldPwd = value;
                 print(value);
               });
-            }, "Enter your old password", validate: false),
+            },
+                DemoLocalization.of(context)
+                    .getTranslatedValue('enter_old_password')!,
+                validate: false),
             SizedBox(
               height: _deviceHeight! * 0.03,
             ),
@@ -87,7 +93,10 @@ class _ChangePasswordState extends State<ChangePassword> {
               setState(() {
                 _newPwd = value;
               });
-            }, "Enter your new password", validate: true),
+            },
+                DemoLocalization.of(context)
+                    .getTranslatedValue('enter_new_password')!,
+                validate: true),
             SizedBox(
               height: _deviceHeight! * 0.03,
             ),
@@ -99,7 +108,10 @@ class _ChangePasswordState extends State<ChangePassword> {
               setState(() {
                 _reenterNewPwd = value;
               });
-            }, "Re-enter new password", validate: true),
+            },
+                DemoLocalization.of(context)
+                    .getTranslatedValue('re_enter_old_password')!,
+                validate: true),
             SizedBox(
               height: _deviceHeight! * 0.03,
             ),
@@ -119,7 +131,8 @@ class _ChangePasswordState extends State<ChangePassword> {
           onPressed: () {
             _validateAndVerify();
           },
-          buttonText: "Change Password",
+          buttonText: DemoLocalization.of(context)
+              .getTranslatedValue('change_password')!,
           style: ElevatedButton.styleFrom(
             backgroundColor: Color.fromARGB(255, 231, 104, 104),
           ),

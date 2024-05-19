@@ -10,7 +10,7 @@ class TextFieldWidgets {
       obscureText: showText,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: const TextStyle(color: Colors.black),
+        labelStyle: const TextStyle(color: Colors.black, fontSize: 12),
         prefixIcon: const Icon(Icons.lock),
         suffixIcon: IconButton(
           onPressed: onPressedIcon,

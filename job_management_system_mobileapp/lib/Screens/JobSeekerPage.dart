@@ -698,7 +698,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
               title: _richTextWidget.simpleText(
-                  "Change Password", 16, Colors.black, FontWeight.bold),
+                  DemoLocalization.of(context)
+                      .getTranslatedValue('change_password')!,
+                  16,
+                  Colors.black,
+                  FontWeight.bold),
               onTap: () {
                 Navigator.push(
                   context,
