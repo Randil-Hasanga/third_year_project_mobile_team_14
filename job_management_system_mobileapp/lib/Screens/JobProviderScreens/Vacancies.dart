@@ -318,16 +318,20 @@ class _vacanciesState extends State<vacancies> {
                       return TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "please enter job position";
+                            return DemoLocalization.of(context)
+                                .getTranslatedValue(
+                                    'please_enter_job_position')!;
                           }
                           return null;
                         },
                         controller: controller,
                         focusNode: focusNode,
                         onFieldSubmitted: (_) => onFieldSubmitted,
-                        decoration: const InputDecoration(
-                          labelText: 'Job Position',
-                          hintText: 'Job Position',
+                        decoration: InputDecoration(
+                          labelText: DemoLocalization.of(context)
+                              .getTranslatedValue('job_position')!,
+                          hintText: DemoLocalization.of(context)
+                              .getTranslatedValue('job_position')!,
                           border: OutlineInputBorder(),
                         ),
                       );
@@ -339,7 +343,8 @@ class _vacanciesState extends State<vacancies> {
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "please enter description";
+                        return DemoLocalization.of(context).getTranslatedValue(
+                            'please_enter_job_description')!;
                       }
                       return null;
                     },
@@ -347,9 +352,11 @@ class _vacanciesState extends State<vacancies> {
                     minLines: 3,
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                        labelText: 'Description',
-                        hintText: 'Description',
+                    decoration: InputDecoration(
+                        labelText: DemoLocalization.of(context)
+                            .getTranslatedValue('job_description')!,
+                        hintText: DemoLocalization.of(context)
+                            .getTranslatedValue('job_description')!,
                         border: OutlineInputBorder()),
                   ),
 
@@ -358,13 +365,16 @@ class _vacanciesState extends State<vacancies> {
                   DropdownButtonFormField<String>(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "please select job type";
+                        return DemoLocalization.of(context)
+                            .getTranslatedValue('please_enter_job_type')!;
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Job Type',
-                      hintText: 'Full Time',
+                    decoration: InputDecoration(
+                      labelText: DemoLocalization.of(context)
+                          .getTranslatedValue('job_type')!,
+                      hintText: DemoLocalization.of(context)
+                          .getTranslatedValue('job_type')!,
                       border: OutlineInputBorder(),
                     ),
                     value: jobType,
@@ -391,8 +401,9 @@ class _vacanciesState extends State<vacancies> {
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Gender',
+                    decoration: InputDecoration(
+                      labelText: DemoLocalization.of(context)
+                          .getTranslatedValue('gender')!,
                       hintText: 'Male',
                       border: OutlineInputBorder(),
                     ),
@@ -412,11 +423,14 @@ class _vacanciesState extends State<vacancies> {
                   ),
                   SizedBox(height: screenHeight * 0.02),
 
-                  const Column(
+                  Column(
                     children: [
                       Row(
                         children: [
-                          Text('Select Minimum Age:'),
+                          Text(
+                            DemoLocalization.of(context)
+                                .getTranslatedValue('select_min_age')!,
+                          ),
                         ],
                       ),
                     ],
@@ -438,8 +452,9 @@ class _vacanciesState extends State<vacancies> {
                   SizedBox(height: screenHeight * 0.02),
 
                   DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: 'Required Education Level',
+                    decoration: InputDecoration(
+                      labelText: DemoLocalization.of(context)
+                          .getTranslatedValue('requied_education')!,
                       hintText: 'O/L',
                       border: OutlineInputBorder(),
                     ),
@@ -464,7 +479,8 @@ class _vacanciesState extends State<vacancies> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "please select education level";
+                        return DemoLocalization.of(context)
+                            .getTranslatedValue('please_select_edu_level')!;
                       }
                       return null;
                     },
@@ -475,14 +491,17 @@ class _vacanciesState extends State<vacancies> {
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "please enter salary";
+                        return DemoLocalization.of(context)
+                            .getTranslatedValue('please_enter_salary')!;
                       }
                       return null;
                     },
                     controller: _salaryController,
-                    decoration: const InputDecoration(
-                        labelText: 'Minimum Salary',
-                        hintText: 'Minimum Salary',
+                    decoration: InputDecoration(
+                        labelText: DemoLocalization.of(context)
+                            .getTranslatedValue('min_salary')!,
+                        hintText: DemoLocalization.of(context)
+                            .getTranslatedValue('min_salary')!,
                         border: OutlineInputBorder()),
                   ),
 
@@ -490,9 +509,11 @@ class _vacanciesState extends State<vacancies> {
 
                   //dropdown for location
                   DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                        labelText: 'Location',
-                        hintText: 'Location',
+                    decoration: InputDecoration(
+                        labelText: DemoLocalization.of(context)
+                            .getTranslatedValue('location')!,
+                        hintText: DemoLocalization.of(context)
+                            .getTranslatedValue('location')!,
                         border: OutlineInputBorder()),
                     value: selectedLocation,
                     onChanged: (String? value) {
@@ -501,7 +522,8 @@ class _vacanciesState extends State<vacancies> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please select location';
+                        return DemoLocalization.of(context)
+                            .getTranslatedValue('please_select_location')!;
                       }
                       return null;
                     },
@@ -527,8 +549,9 @@ class _vacanciesState extends State<vacancies> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: const Text(
-                            'select Expiry Date',
+                          child: Text(
+                            DemoLocalization.of(context)
+                                .getTranslatedValue('select_expire_date')!,
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -541,9 +564,10 @@ class _vacanciesState extends State<vacancies> {
 
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          "Selected Expiry Date: ",
+                          DemoLocalization.of(context)
+                              .getTranslatedValue('selected_expire_date')!,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -589,8 +613,9 @@ class _vacanciesState extends State<vacancies> {
                             showAlert();
                           }
                         },
-                        child: const Text(
-                          'Add Vacancy',
+                        child: Text(
+                          DemoLocalization.of(context)
+                              .getTranslatedValue('add_vacancy')!,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
