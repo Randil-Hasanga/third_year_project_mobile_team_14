@@ -617,13 +617,14 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
         child: Stack(
           children: [
             Container(
-                width: _deviceWidth! * 0.3,
-                height: _deviceHeight! * 0.15,
-                child: CircleAvatar(
-                  radius: 64,
-                  backgroundImage: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
-                )),
+              width: 128,
+              height: 128,
+              child: CircleAvatar(
+                radius: 64,
+                backgroundImage: NetworkImage(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
+              ),
+            ),
             const Icon(Icons.add_a_photo),
           ],
         ),
