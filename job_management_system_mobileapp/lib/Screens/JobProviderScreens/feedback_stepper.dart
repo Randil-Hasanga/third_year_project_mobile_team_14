@@ -1,16 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class FeedbackStepper extends StatefulWidget {
   final String applicantId;
+  final String vacancyId;
 
-  const FeedbackStepper({super.key, required this.applicantId});
+  const FeedbackStepper(
+      {super.key, required this.applicantId, required this.vacancyId});
 
   @override
   State<FeedbackStepper> createState() => _FeedbackStepperState();
 }
 
 class _FeedbackStepperState extends State<FeedbackStepper> {
+  FirebaseService? firebaseService;
   int currentStep = 0;
   bool applicationReceived = false;
   bool initialInterviewPassed = false;
@@ -31,6 +37,12 @@ class _FeedbackStepperState extends State<FeedbackStepper> {
         currentStep--;
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
   @override
@@ -230,6 +242,16 @@ class _FeedbackStepperState extends State<FeedbackStepper> {
 
   void _submitFeedback() async {
     try {
+      await firebaseService!.interViewProgressCollection.doc().set({
+        'applicantId': widget.applicantId,
+        'vacancyId': widget.vacancyId,
+        'application_received': applicationReceived,
+        'initial_interview_passed': initialInterviewPassed,
+        'select_Status': selectStatus,
+        'feedback': feedback,
+        'providerId': firebaseService?.uid,
+        'submitted_date': DateTime.now(),
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Feedback submitted Successfully!'),
