@@ -79,7 +79,7 @@ class _Feedback_pageState extends State<Feedback_page> {
           itemCount: applicantsList.length,
           itemBuilder: (context, index) {
             String applicantId = applicantsList[index];
-            //String applicantName = getApplicantName(applicantId) as String;
+
             return FutureBuilder<String>(
                 future: getApplicantName(applicantId),
                 builder: (context, snapshot) {
@@ -95,7 +95,8 @@ class _Feedback_pageState extends State<Feedback_page> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => FeedbackStepper()));
+                                builder: (context) =>
+                                    FeedbackStepper(applicantId: applicantId)));
                       },
                     );
                   }
