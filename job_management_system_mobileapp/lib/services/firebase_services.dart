@@ -902,6 +902,12 @@ class FirebaseService {
     }
   }
 
+  //get collection of interview progress details
+  final CollectionReference interViewProgressCollection =
+      FirebaseFirestore.instance.collection('interview_progress');
+
+  //add interview progress
+
   User? getCurrentUserChat() {
     return _auth.currentUser;
   }

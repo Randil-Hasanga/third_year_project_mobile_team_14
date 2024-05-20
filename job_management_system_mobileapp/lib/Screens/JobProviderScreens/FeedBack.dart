@@ -93,10 +93,13 @@ class _Feedback_pageState extends State<Feedback_page> {
                       text: snapshot.data ?? 'No name Found',
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    FeedbackStepper(applicantId: applicantId)));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FeedbackStepper(
+                                applicantId: applicantId,
+                                vacancyId: widget.vacancyId!),
+                          ),
+                        );
                       },
                     );
                   }
