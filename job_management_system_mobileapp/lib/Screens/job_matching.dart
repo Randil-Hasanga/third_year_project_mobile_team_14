@@ -236,6 +236,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       SizedBox(
                         height: _deviceHeight! * 0.01,
                       ),
+                      //show best matching vacancies
                       applyForVacanciesListWidget(
                           DemoLocalization.of(context)
                               .getTranslatedValue('best_matching_vacancies')!,
@@ -249,6 +250,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                         thickness: 3,
                       ),
                       _locationDropDown(),
+                      //show vacancies according to choosen location
                       if (_selectedItem == "District") ...{
                         applyForVacanciesListWidget(
                             null,
@@ -268,6 +270,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       const Divider(
                         thickness: 3,
                       ),
+                      //show vacancies according to job type
                       _jobTypeDropDown(),
                       if (_selectedJobType == "Full Time") ...{
                         applyForVacanciesListWidget(
@@ -285,6 +288,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       SizedBox(
                         height: _deviceHeight! * 0.02,
                       ),
+                      //show vacancies according to highest education level
                       applyForVacanciesListWidget(
                           DemoLocalization.of(context)
                               .getTranslatedValue('by_highest_education')!,
@@ -297,6 +301,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       const Divider(
                         thickness: 3,
                       ),
+                      //show vacancies according to salary
                       applyForVacanciesListWidget(
                         DemoLocalization.of(context)
                             .getTranslatedValue('by_salary')!,
@@ -310,6 +315,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       const Divider(
                         thickness: 3,
                       ),
+                      //show vacancies according to organization type
                       applyForVacanciesListWidget(
                         DemoLocalization.of(context)
                             .getTranslatedValue('by_organization_type')!,
@@ -668,27 +674,37 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                 .cast<String>();
 
         if (preferedIndustries != null) {
+          // get vacancies according to age and prefered industries
           List<Map<String, dynamic>>? data = await _firebaseService!
               .getVacanciesInPrefferedIndustry(preferedIndustries);
 
           setState(() {
             vacancies = data;
 
+            // check validity of vacancy
             vacancies = _isVacancyValidAndActive(vacancies);
             _isLoading = false;
+
+            // filter vacancies according the preffered district
             filteredVacanciesByDistrict = _filterByGender(
               _filterByDistrict(
                 _filterByEducation(vacancies),
               ),
             );
+
+            //filter vacancies according to province
             filteredVacanciesByProvince = _filterByGender(
               _filterByProvince(
                 _filterByEducation(vacancies),
               ),
             );
+
+            // filter vacancies according to highest education
             filteredVacanciesByEducation = _filterByGender(
               _filterByEducation(vacancies),
             );
+
+            // filter best matching vacancies
             bestMatchingVacancies = _filterByGender(
               _filterBySalary(
                 _filterByDistrict(
@@ -698,17 +714,22 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                 ),
               ),
             );
+
+            //filter by salary
             filteredVacanciesBySalary = _filterByGender(
               _filterByEducation(
                 _filterBySalary(vacancies),
               ),
             );
+
+            //filter by org type
             filteredVacanciesByOrgType = _filterByGender(
               _filterByEducation(
                 _filterByOrgType(vacancies),
               ),
             );
 
+            //filter by full time
             filteredVacanciesByFullTime = _filterByGender(
               _filterByEducation(
                 _filterByOrgType(
@@ -716,7 +737,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                 ),
               ),
             );
-
+            //filter by part time
             filteredVacanciesByPartTime = _filterByGender(
               _filterByEducation(
                 _filterByOrgType(
