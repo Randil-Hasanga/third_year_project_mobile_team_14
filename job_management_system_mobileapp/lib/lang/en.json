@@ -38,7 +38,7 @@
     "preffered_area_info": "Vacancies by Preferred Area are filtered by your district or province, gender, age, preferred industries and highest education level, regardless of your expected salary and prefered organization type.",
     "highest_edu_info": "Vacancies by Highest Education are filtered by your gender, age, prefered industries and highest education level.\nYou can see vacancies according to your education level, regardless of your prefered location, prefered organization type and your expected salary.",
     "expected_salary_info": "Vacancies by Expected salary are filtered by your gender, age,prefered industries, highest education level and your expected salary.\nYou can see vacancies that offer salary greater than or equals to your expected salary, regardless of your prefered location and prefered organization type.",
-    "preffered_org_info": "Vacancies by Prefered organization type are filtered by your gender, age, prefered industries, highest education level and your Prefered organization type regardless of your prefered location and expected salary.",
+    "preffered_org_info": "Vacancies by Prefered organization type are filtered by your gender, age, prefered industries, highest education level and your Prefered organization type (Private/Government/Semi Government) regardless of your prefered location and expected salary.",
     "job_type_info": "Vacancies by job type are filtered by your gender, age, prefered industries, highest education level ,your Prefered organization type and job type (Full Time/Part Time) regardless of your prefered location and expected salary. You can see vacancies according to your prefered job type",
     "business_resistration": "Business Resistration",
     "selected_industry": "Selected Industry",

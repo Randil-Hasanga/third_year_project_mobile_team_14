@@ -56,6 +56,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     _richTextWidget = GetIt.instance.get<RichTextWidget>();
     _firebaseService = GetIt.instance.get<FirebaseService>();
     _buttonWidgets = GetIt.instance.get<ButtonWidgets>();
+
+    //get cv data from db
     _initializeData();
   }
 
@@ -87,7 +89,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
         });
       }
 
-      await _loadVacanciesInPrefferedIndustry(); // Wait for data to be loaded
+      await _filterAndLoadVacancies(); // Wait for data to be loaded
     } else {
       print('CV details not found');
       setState(() {
@@ -397,6 +399,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     );
   }
 
+// Vacancy list Widget
   Widget applyForVacanciesListWidget(
     String? text,
     List<Map<String, dynamic>>? list,
@@ -469,6 +472,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       ),
     );
   }
+
+//List Item
 
   Widget _buildItem(
     String seeker_id,
@@ -624,7 +629,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                               listItem['vacancy_id'], seeker_id);
 
                           print("Removed from vacancy");
-                          _loadVacanciesInPrefferedIndustry();
+                          _filterAndLoadVacancies();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -638,7 +643,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                               listItem['vacancy_id'], seeker_id);
 
                           print("Applied for vacancy");
-                          _loadVacanciesInPrefferedIndustry();
+                          _filterAndLoadVacancies();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -655,7 +660,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     );
   }
 
-  Future<void> _loadVacanciesInPrefferedIndustry() async {
+  Future<void> _filterAndLoadVacancies() async {
     try {
       if (_CV_details != null) {
         List<String>? preferedIndustries =
@@ -743,6 +748,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     }
   }
 
+//Filtering methods ------------------------------------------------------------------------------
+
 //Filter by Gender
   List<Map<String, dynamic>>? _filterByGender(
       List<Map<String, dynamic>>? list) {
@@ -759,6 +766,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       return null;
     }
   }
+
+//Filter by org type
 
   List<Map<String, dynamic>>? _filterByOrgType(
       List<Map<String, dynamic>>? list) {
@@ -922,6 +931,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     }
   }
 
+//Filter by salary
+
   List<Map<String, dynamic>>? _filterBySalary(
       List<Map<String, dynamic>>? list) {
     if (list != null) {
@@ -936,6 +947,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       return null;
     }
   }
+
+//Filter by full/half time
 
   List<Map<String, dynamic>>? _filterByJobTypeFullTime(
       List<Map<String, dynamic>>? list) {
@@ -966,6 +979,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       return null;
     }
   }
+
+//Check vacancy is active or not
 
   List<Map<String, dynamic>>? _isVacancyValidAndActive(
       List<Map<String, dynamic>>? list) {
