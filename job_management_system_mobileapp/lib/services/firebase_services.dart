@@ -31,7 +31,7 @@ class FirebaseService {
 
   Map? currentUser;
 
-  String? uid, email;
+  String? uid, email, userType;
   Map? currentSeekerCV;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -42,10 +42,15 @@ class FirebaseService {
     return uid!;
   }
 
+  String getUserType() {
+    return userType!;
+  }
+
   String getCurrentUserAuthEmail() {
     return email!;
   }
 
+  //User login
   Future<bool> loginUser(
       {required String email, required String password}) async {
     try {
@@ -56,6 +61,8 @@ class FirebaseService {
         currentUser = await _getUserData(uid: _userCredentials.user!.uid);
         uid = _auth.currentUser?.uid;
         this.email = email;
+        userType = currentUser!['type'];
+        print("User type $userType");
         return true;
       } else {
         return false;
@@ -77,6 +84,7 @@ class FirebaseService {
     }
   }
 
+  //User register
   Future<bool> registerUser({
     required String email,
     required String password,
@@ -154,6 +162,7 @@ class FirebaseService {
     }
   }
 
+  //Confirm password
   Future<bool> validateCurrentPassword(String oldPwd) async {
     try {
       final user = _auth.currentUser;
@@ -812,7 +821,7 @@ class FirebaseService {
       }
     } catch (error) {
       print("Error fetching vacancies: $error");
-      return null; // Return null to indicate an error occurred
+      return null; // Return null to indicate an error
     }
   }
 

@@ -79,7 +79,7 @@ class RichTextWidget {
     );
   }
 
-  Widget KeyValuePairrichText(
+  Widget KeyValuePairRichText(
       String keyText, String valueText, double fontSize) {
     return Column(
       children: [
