@@ -429,7 +429,12 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
         },
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.zero,
+              bottomLeft: Radius.zero,
+              bottomRight: Radius.circular(25),
+            ),
             color: cardBackgroundColorLayer4,
             boxShadow: const [
               BoxShadow(
@@ -629,7 +634,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                     width: 30,
                   ),
                   if (isApplied) ...{
-                    _buttonWidgets!.simpleElevatedButtonWidget(
+                    _buttonWidgets!.simpleElevatedButtonWidgetWithIcon(
                         onPressed: () async {
                           await _firebaseService!.removeSeekerFromVacancy(
                               listItem['vacancy_id'], seeker_id);
@@ -641,7 +646,8 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                           backgroundColor:
                               const Color.fromARGB(255, 120, 255, 124),
                         ),
-                        buttonText: "Applied"),
+                        buttonText: "Applied",
+                        icon: Icons.check),
                   } else ...{
                     _buttonWidgets!.simpleElevatedButtonWidget(
                         onPressed: () async {

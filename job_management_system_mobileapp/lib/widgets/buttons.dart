@@ -26,4 +26,31 @@ class ButtonWidgets {
       ),
     );
   }
+
+  Widget simpleElevatedButtonWidgetWithIcon({
+    VoidCallback? onPressed,
+    ButtonStyle? style,
+    String? buttonText,
+    IconData? icon,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: style ??
+          ElevatedButton.styleFrom(
+            backgroundColor: buttonDefaultColorOrange,
+          ),
+      child: Row(
+        children: [
+          Text(
+            "$buttonText",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          Icon(icon),
+        ],
+      ),
+    );
+  }
 }
