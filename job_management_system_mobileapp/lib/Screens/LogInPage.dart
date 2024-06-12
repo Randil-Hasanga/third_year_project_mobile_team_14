@@ -299,15 +299,9 @@ class _LogInPageState extends State<LogInPage> {
     if (_result) {
       await saveCredentials(_email!, _password!);
       if (_firebaseService!.currentUser!['type'] == 'seeker') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => JobSeekerPage()),
-        );
+        Navigator.popAndPushNamed(context, "seeker_dashboard");
       } else if (_firebaseService!.currentUser!['type'] == 'provider') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => JobProviderPage()),
-        );
+        Navigator.popAndPushNamed(context, "provider_dashboard");
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -340,15 +334,9 @@ class _LogInPageState extends State<LogInPage> {
 
         if (success) {
           if (_firebaseService!.currentUser!['type'] == 'seeker') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => JobSeekerPage()),
-            );
+            Navigator.popAndPushNamed(context, "seeker_dashboard");
           } else if (_firebaseService!.currentUser!['type'] == 'provider') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => JobProviderPage()),
-            );
+            Navigator.popAndPushNamed(context, "provider_dashboard");
           }
         } else {
           await clearCredentials();

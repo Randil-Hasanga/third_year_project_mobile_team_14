@@ -844,10 +844,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
               ),
               onTap: () async {
                 await clearCredentials();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogInPage()),
-                );
+                await _firebaseService!.logout();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "login", (route) => false);
               },
             ),
           ],
