@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
 import 'package:job_management_system_mobileapp/componets/chat_bubble.dart';
 import 'package:job_management_system_mobileapp/componets/custom_textfield.dart';
-import 'package:job_management_system_mobileapp/componets/user_title.dart';
 import 'package:job_management_system_mobileapp/services/chat_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverEmail;
   final String receiverID;
+  final String receiverName;
 
-  ChatPage({super.key, required this.receiverEmail, required this.receiverID});
+  ChatPage(
+      {super.key,
+      required this.receiverEmail,
+      required this.receiverID,
+      required this.receiverName});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -78,7 +79,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiverEmail), // Set the title of the app bar
+        title: Text(widget.receiverName), // Set the title of the app bar
         backgroundColor: const Color.fromARGB(255, 255, 136, 0),
       ),
       body: Column(

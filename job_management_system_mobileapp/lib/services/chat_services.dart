@@ -8,9 +8,13 @@ class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  //get user stream
+  //get job seekers stream
   Stream<List<Map<String, dynamic>>> getUserStream() {
-    return _firestore.collection("users").snapshots().map((snapshot) {
+    return _firestore
+        .collection("users")
+        .where('type', isEqualTo: 'seeker')
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((doc) {
         //go thorugh each indivual users
         final user = doc.data();

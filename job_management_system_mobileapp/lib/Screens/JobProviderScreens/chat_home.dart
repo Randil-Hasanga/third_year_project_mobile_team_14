@@ -52,12 +52,13 @@ class ChatHome extends StatelessWidget {
     //display all users except current user
     if (userData['email'] != _firebaseService.getCurrentUserChat()!.email) {
       return UserTile(
-        text: userData['email'],
+        text: userData['username'],
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ChatPage(
+                receiverName: userData['username'],
                 receiverEmail: userData['email'],
                 receiverID: userData['uid'],
               ),
