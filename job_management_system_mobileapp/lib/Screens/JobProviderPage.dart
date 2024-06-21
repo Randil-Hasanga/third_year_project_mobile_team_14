@@ -1,16 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/SeekerList.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_page.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/feedback_home.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/interview_scheduler.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/updateVacancy.dart';
-import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/main.dart';
@@ -124,11 +121,11 @@ class _JobProviderPageState extends State<JobProviderPage> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: DropdownButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.language,
               color: Colors.black,
             ),
-            underline: SizedBox(),
+            underline: const SizedBox(),
             items: Language.languageList()
                 .map<DropdownMenuItem<Language>>((lang) => DropdownMenuItem(
                     value: lang,
@@ -162,22 +159,22 @@ class _JobProviderPageState extends State<JobProviderPage> {
                 height: 2,
               ),
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 30,
                       backgroundImage: AssetImage('assets/Default.png'),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text("$_userName",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 30)),
-                        Text("Software Engineer",
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 30)),
+                        const Text("Software Engineer",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)),
                       ],
@@ -287,8 +284,14 @@ class _JobProviderPageState extends State<JobProviderPage> {
                             List<DocumentSnapshot> vacancies =
                                 snapshot.data!.docs;
 
-                            return ListView.builder(
+                            return ListView.separated(
                               scrollDirection: Axis.horizontal,
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                width: 10,
+                              ),
                               itemCount: vacancies.length,
                               itemBuilder: (context, index) {
                                 String vacancyID = vacancies[index].id;
@@ -300,12 +303,14 @@ class _JobProviderPageState extends State<JobProviderPage> {
 
                                 return Container(
                                   margin: const EdgeInsets.all(8),
-                                  width: 250,
+                                  width: 300,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xff92A3FD).withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Row(
                                         children: [
@@ -318,7 +323,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 6),
+                                      const SizedBox(height: 6),
                                       Row(
                                         children: [
                                           const Icon(Icons.work),
@@ -330,7 +335,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 6),
+                                      const SizedBox(height: 6),
                                       Row(
                                         children: [
                                           const Icon(Icons.location_on),
@@ -490,7 +495,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      SizedBox(),
+                      const SizedBox(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -728,7 +733,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                   const SizedBox(height: 15),
                   Text(
                     '$_userName',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                   const Text(
                     'Software Engineer',
@@ -756,14 +761,14 @@ class _JobProviderPageState extends State<JobProviderPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Alert"),
+                        title: const Text("Alert"),
                         content: Text(
                           DemoLocalization.of(context)
                               .getTranslatedValue('create_vacancy_warning')!,
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: Text("OK"),
+                            child: const Text("OK"),
                             onPressed: () {
                               Navigator.of(context).pop(); // Close the dialog
                             },
@@ -802,7 +807,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => JobSeekerList(),
+                    builder: (context) => const JobSeekerList(),
                   ),
                 );
               },
