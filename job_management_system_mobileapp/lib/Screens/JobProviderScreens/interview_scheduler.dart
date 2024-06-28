@@ -2,7 +2,6 @@ import "package:board_datetime_picker/board_datetime_picker.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:get_it/get_it.dart";
-import "package:job_management_system_mobileapp/Screens/JobSeekerPage.dart";
 import "package:job_management_system_mobileapp/services/firebase_services.dart";
 import "package:quickalert/models/quickalert_type.dart";
 import "package:quickalert/widgets/quickalert_dialog.dart";
@@ -136,7 +135,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 30.0),
+                    const SizedBox(width: 10.0),
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('vacancy')
