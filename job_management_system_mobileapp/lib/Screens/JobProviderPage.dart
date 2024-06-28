@@ -364,9 +364,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                             icon: const Icon(Icons.edit),
                                           ),
                                           IconButton(
-                                            onPressed: () => FirebaseService()
-                                                .deleteVacancy(snapshot
-                                                    .data!.docs[index].id),
+                                            onPressed: () {
+                                              _showDeleteConfirmationDialog(
+                                                  context, vacancyID);
+                                            },
                                             icon: const Icon(Icons.delete),
                                           ),
                                         ],
@@ -922,6 +923,33 @@ class _JobProviderPageState extends State<JobProviderPage> {
       //   },
       //   child: const Icon(Icons.add),
       // ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, String vacancyID) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Vacancy'),
+          content: const Text('Do you want to delete this vacancy?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                _firebaseService?.deleteVacancy(vacancyID);
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
