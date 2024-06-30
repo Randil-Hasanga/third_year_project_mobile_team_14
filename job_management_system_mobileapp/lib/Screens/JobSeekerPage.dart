@@ -32,6 +32,8 @@ class JobSeekerPage extends StatefulWidget {
 final FirebaseService firebaseService = FirebaseService();
 
 class _JobSeekerPageState extends State<JobSeekerPage> {
+
+  //Variables of JobSeeker Dashboard
   SharedPreferences? _sharedPreferences;
   FirebaseService? _firebaseService;
   String? _userName;
@@ -115,6 +117,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     _deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+
+  //Top App Bar
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
         actions: <Widget>[
@@ -140,6 +144,10 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
           ),
         ],
       ),
+
+
+//Dashboard screen
+
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -160,23 +168,31 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               const SizedBox(
                 height: 2,
               ),
+
+              
               if (profile_image != null) ...{
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 64,
-                            backgroundImage: NetworkImage(profile_image!),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+             Center(
+  child: Padding(
+    padding: const EdgeInsets.all(10),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          radius: 64,
+          backgroundImage: NetworkImage(profile_image!),
+        ),
+        SizedBox(height: 10), // Adding some space between the profile image and the username
+        Text(
+          _userName ?? '', // Assuming _userName holds the user's name
+          style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255), fontSize: 24,fontWeight: FontWeight.bold,),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  ),
+),
+
               } else ...{
                 const Padding(
                   padding: EdgeInsets.all(10),
@@ -189,13 +205,14 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             radius: 64,
                             backgroundImage: NetworkImage(
                                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
-                          )
+                          ),
                         ],
-                      ),
+                      ),  
                     ],
                   ),
                 ),
               },
+              
               const SizedBox(height: 10),
               Container(
                 decoration: const BoxDecoration(
@@ -572,6 +589,9 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
           ),
         ),
       ),
+
+
+ //Drawer of function list     
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -588,6 +608,9 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   ],
                 ),
               ),
+
+
+              
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -603,6 +626,10 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 ],
               ),
             ),
+
+
+
+
             ListTile(
               leading: const Icon(Icons.search,
                   color: Color.fromARGB(
@@ -735,14 +762,20 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   FontWeight.bold),
               onTap: () async {
                 await clearCredentials();
-                await _firebaseService!.logout();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "login", (route) => false);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LogInPage()),
+                );
               },
             ),
           ],
         ),
       ),
+
+
+
+      //BottomNavigationBar
+      
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
@@ -800,3 +833,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     );
   }
 }
+
+
+
+
+

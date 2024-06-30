@@ -1,3 +1,5 @@
+
+
 //import 'dart:js';
 
 import 'package:flutter/material.dart';
@@ -38,11 +40,11 @@ class Help extends StatelessWidget {
               onTap: () {
                 _callNumber(context, '071');
               },
-              child: Row(
+              child: const Row(
                 children: [
-                  const Text('071'),
-                  const SizedBox(width: 5),
-                  const Icon(Icons.copy, size: 16),
+                  Text('0714587892'),
+                  SizedBox(width: 5),
+                  Icon(Icons.copy, size: 16),
                 ],
               ),
             ),
@@ -54,11 +56,11 @@ class Help extends StatelessWidget {
               onTap: () {
                 _launchEmail(context, 'defnir@gmail.com');
               },
-              child: Row(
+              child: const Row(
                 children: [
-                  const Text('defnir@gmail.com'),
-                  const SizedBox(width: 5),
-                  const Icon(Icons.copy, size: 16),
+                  Text('defnir@gmail.com'),
+                  SizedBox(width: 5),
+                  Icon(Icons.copy, size: 16),
                 ],
               ),
             ),
@@ -80,11 +82,11 @@ class Help extends StatelessWidget {
                 _launchURL(context,
                     'https://www.facebook.com/share/G99Wj1gb3AEcZfuD/?mibextid=qi2Omg');
               },
-              child: Row(
+              child: const Row(
                 children: [
-                  const Text('Department of Employement and Manpower'),
-                  const SizedBox(width: 5),
-                  const Icon(Icons.copy, size: 16),
+                  Text('Department of Employement and Manpower'),
+                  SizedBox(width: 5),
+                  Icon(Icons.copy, size: 16),
                 ],
               ),
             ),
@@ -96,11 +98,11 @@ class Help extends StatelessWidget {
               onTap: () {
                 _launchURL(context, 'https://wa.me/+1234567890');
               },
-              child: Row(
+              child: const Row(
                 children: [
-                  const Text('+1234567890'),
-                  const SizedBox(width: 5),
-                  const Icon(Icons.copy, size: 16),
+                  Text('+1234567890'),
+                  SizedBox(width: 5),
+                  Icon(Icons.copy, size: 16),
                 ],
               ),
             ),
