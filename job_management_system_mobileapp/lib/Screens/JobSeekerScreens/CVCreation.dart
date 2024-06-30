@@ -1,3 +1,5 @@
+
+
 import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,6 +32,7 @@ class CVCreation extends StatefulWidget {
 }
 
 class _CVCreationState extends State<CVCreation> {
+  //variables
   FirebaseService? _firebaseService;
 
   final _formKey = GlobalKey<FormState>();
@@ -44,19 +47,16 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _nationalityController = TextEditingController();
   final TextEditingController _nicController = TextEditingController();
-  final TextEditingController _drivingLicenceController =
-      TextEditingController();
+  final TextEditingController _drivingLicenceController = TextEditingController();
   DateTime? _selectedDate;
   String? _selectReligion;
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactMobileController =
-      TextEditingController();
+  final TextEditingController _contactMobileController =TextEditingController();
   final TextEditingController _contactHomeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _selecteddistrict;
-  final TextEditingController _divisionalSecController =
-      TextEditingController();
+  final TextEditingController _divisionalSecController =TextEditingController();
 
   final TextEditingController _salaryController = TextEditingController();
 
@@ -77,38 +77,28 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _ALAttemptController = TextEditingController();
   String? _selectALStatus;
   final TextEditingController _sec01NameController = TextEditingController();
-  final TextEditingController _sec01InstituteController =
-      TextEditingController();
-  final TextEditingController _sec01durationController =
-      TextEditingController();
+  final TextEditingController _sec01InstituteController =TextEditingController();
+  final TextEditingController _sec01durationController =TextEditingController();
   final TextEditingController _sec02NameController = TextEditingController();
-  final TextEditingController _sec02InstituteController =
-      TextEditingController();
-  final TextEditingController _sec02durationController =
-      TextEditingController();
+  final TextEditingController _sec02InstituteController =TextEditingController();
+  final TextEditingController _sec02durationController =TextEditingController();
 
   //Tab 03:Skill
 
-  final TextEditingController _yearOfExperienceController =
-      TextEditingController();
-  final TextEditingController _currentJobPositionController =
-      TextEditingController();
+  final TextEditingController _yearOfExperienceController =TextEditingController();
+  final TextEditingController _currentJobPositionController =TextEditingController();
   final TextEditingController _dateOfJoinController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
-  final TextEditingController _responsibilitiesController =
-      TextEditingController();
+  final TextEditingController _responsibilitiesController =TextEditingController();
   final TextEditingController _specialSkillController = TextEditingController();
-  final TextEditingController _computerSkillController =
-      TextEditingController();
+  final TextEditingController _computerSkillController =TextEditingController();
   final TextEditingController _otherSkillController = TextEditingController();
   final TextEditingController _achievementsController = TextEditingController();
-  final TextEditingController _extraCurricularController =
-      TextEditingController();
+  final TextEditingController _extraCurricularController =TextEditingController();
   final TextEditingController _trainingReqController = TextEditingController();
   // final TextEditingController _prefferedAreaController =
   //     TextEditingController();
-  final TextEditingController _careerGuidanceController =
-      TextEditingController();
+  final TextEditingController _careerGuidanceController =TextEditingController();
   String? sinhalaSpeaking;
   String? sinhalaReading;
   String? sinhalaWriting;
@@ -129,16 +119,13 @@ class _CVCreationState extends State<CVCreation> {
   ]; // language skill
 
   //Tab 04:Job Expectation
-  final TextEditingController _careerObjectiveController =
-      TextEditingController();
+  final TextEditingController _careerObjectiveController = TextEditingController();
   final TextEditingController _refeeOneController = TextEditingController();
   final TextEditingController _refeeTwoController = TextEditingController();
 
   // ignore: non_constant_identifier_names
   List<String> prefered_industries = [];
-
   String? selectPrefferedDistrict;
-
   double? _deviceWidth, _deviceHeight;
 
   @override
@@ -147,6 +134,8 @@ class _CVCreationState extends State<CVCreation> {
     _firebaseService = GetIt.instance.get<FirebaseService>();
   }
 
+
+//date picker
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -170,6 +159,8 @@ class _CVCreationState extends State<CVCreation> {
     return DefaultTabController(
       length: 4, // Number of tabs
       child: Scaffold(
+
+ //top App bar       
         appBar: AppBar(
           backgroundColor: Colors.orange.shade800,
           title: const Text(
@@ -240,6 +231,9 @@ class _CVCreationState extends State<CVCreation> {
             ),
           ),
         ),
+
+
+       
         body: Form(
           key: _formKey,
           child: TabBarView(
@@ -259,6 +253,7 @@ class _CVCreationState extends State<CVCreation> {
                             color: Colors.orange,
                           ),
                           SizedBox(width: 8),
+
                           Text(
                             'Follow text hints for a better CV of you',
                             style: TextStyle(
@@ -271,6 +266,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       DropdownButtonFormField<String>(
                         value: _selectedtitle,
                         onChanged: (String? newValue) {
@@ -297,6 +293,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       DropdownButtonFormField<String>(
                         value: _selectedgender,
                         onChanged: (String? newValue) {
@@ -304,7 +301,7 @@ class _CVCreationState extends State<CVCreation> {
                             _selectedgender = newValue;
                           });
                         },
-                        items: <String>['Male', 'Female']
+                        items: <String>['Male', 'Female','Other']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -323,6 +320,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       DropdownButtonFormField<String>(
                         value: _selectedjobType,
                         onChanged: (String? newValue) {
@@ -350,6 +348,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       DropdownButtonFormField<String>(
                         value: _selectedworkingSection,
                         onChanged: (String? newValue) {
@@ -380,6 +379,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       DropdownButtonFormField<String>(
                         value: _selectedmaritalStatus,
                         onChanged: (String? newValue) {
@@ -407,6 +407,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       DropdownButtonFormField<String>(
                         value: _selectedcurrentJobStatus,
                         onChanged: (String? newValue) {
@@ -434,6 +435,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _nameWithIniController,
                         decoration: const InputDecoration(
@@ -451,6 +453,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _fullNameController,
                         decoration: const InputDecoration(
@@ -469,6 +472,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _nationalityController,
                         decoration: const InputDecoration(
@@ -479,49 +483,52 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
-                        controller: _nicController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'NIC cannot be empty';
-                          }
+  controller: _nicController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'NIC cannot be empty';
+    }
 
-                          // Remove any whitespaces
-                          value = value.replaceAll(' ', '');
+    // Remove any whitespaces
+    value = value.replaceAll(' ', '');
 
-                          // Check if the input starts with digits
-                          if (!RegExp(r'^[0-9]').hasMatch(value)) {
-                            return 'Invalid NIC format';
-                          }
+    // Check if the input starts with digits
+    if (!RegExp(r'^[0-9]').hasMatch(value)) {
+      return 'Invalid NIC format';
+    }
 
-                          // Check the length of the NIC
-                          if (value.length != 12 && value.length != 10) {
-                            return 'NIC must be 10 or 12 characters long';
-                          }
+    // Check the length of the NIC
+    if (value.length != 10 && value.length != 12) {
+      return 'NIC must be 10 or 12 characters long';
+    }
 
-                          // Check for old version NIC (9 digits + 'V' or 'X')
-                          if (value.length == 10 &&
-                              !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
-                            return 'Invalid NIC format';
-                          }
+    // Check for old version NIC (9 digits + 'V' or 'X')
+    if (value.length == 10 && !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
+      return 'Invalid NIC format';
+    }
 
-                          // Check for new version NIC (12 digits)
-                          if (value.length == 12 &&
-                              !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
-                            return 'Invalid NIC format';
-                          }
+    // Check for new version NIC (12 digits)
+    if (value.length == 12 && !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
+      return 'Invalid NIC format';
+    }
 
-                          // Valid NIC
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'NIC',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+    // Valid NIC
+    return null;
+  },
+  decoration: const InputDecoration(
+    labelText: 'NIC*',
+    border: OutlineInputBorder(),
+    
+  ),
+),
+
+
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _drivingLicenceController,
                         decoration: const InputDecoration(
@@ -545,6 +552,7 @@ class _CVCreationState extends State<CVCreation> {
                         },
                       ),
                       const SizedBox(height: 20),
+
                       TextFormField(
                         readOnly: true,
                         controller: TextEditingController(
@@ -560,6 +568,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       DropdownButtonFormField<String>(
                         value: _selectReligion,
                         onChanged: (String? newValue) {
@@ -586,6 +595,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _ageController,
                         keyboardType: TextInputType.number,
@@ -618,6 +628,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
@@ -640,6 +651,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _contactMobileController,
                         decoration: const InputDecoration(
@@ -663,6 +675,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _contactHomeController,
                         decoration: const InputDecoration(
@@ -685,6 +698,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _addressController,
                         maxLines: 2,
@@ -702,6 +716,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       DropdownButtonFormField<String>(
                         decoration: const InputDecoration(
                           labelText: 'District',
@@ -749,6 +764,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         controller: _divisionalSecController,
                         decoration: const InputDecoration(
@@ -766,6 +782,7 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: _salaryController,
@@ -802,7 +819,7 @@ class _CVCreationState extends State<CVCreation> {
                 ),
               ),
 
-              // Educational Tab************************************************************************************
+// Educational Tab************************************************************************************
 
               SingleChildScrollView(
                 child: Padding(
@@ -819,6 +836,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 10),
+
                       // Educational Dropdown
                       DropdownButtonFormField<String>(
                         value: _selectEduQalification,
@@ -846,6 +864,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       // Professional Qualification Dropdown
                       DropdownButtonFormField<String>(
                         value: _selectProfQualification,
@@ -874,6 +893,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       // Educational Qualification Section
                       const Text(
                         'Educational Qualification:',
@@ -913,7 +933,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null;
                         },
                       ),
-                      /*  */
+                     
 
                       const SizedBox(height: 10),
                       TextFormField(
@@ -1867,6 +1887,8 @@ class _CVCreationState extends State<CVCreation> {
   }
 }
 
+
+//PDF generating unction
 Future<void> generatePdfFromFirebase() async {
   final pdf = pw.Document();
 

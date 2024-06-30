@@ -1,3 +1,5 @@
+
+
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,15 +29,16 @@ class ProfileJobSeeker extends StatefulWidget {
 }
 
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
+
+  //Variables of JobSeeker Dashboard
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _selectedGender;
   final TextEditingController _nicController = TextEditingController();
   DateTime? _selectedDate;
-
   final List<String> _genderDropdownItems = ["Male", "Female"];
-
   final List<String> _districts = [
     'Matara',
     'Galle',
@@ -63,17 +66,14 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     'Ratnapura',
     'Kegalle'
   ];
-
   String? _selectedDistrict, _logo;
   XFile? selectedImage;
-
-  final TextEditingController _contactNumberController =
-      TextEditingController();
-
+  final TextEditingController _contactNumberController = TextEditingController();
   late FirebaseService _firebaseService;
   final AlertBoxWidgets _alertBoxWidgets = AlertBoxWidgets();
-
+                                                                                                                                                        //final TextEditingController _additionalField= TextEditingController(); 
   double? _deviceWidth, _deviceHeight; // for the responsiveness of the device
+
 
   @override
   void initState() {
@@ -84,13 +84,16 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     _getSeeker();
   }
 
+
+
+//Get data from JobSeeker in firebase data
   void _getSeeker() async {
     await _firebaseService.getCurrentSeekerData().then((data) {
       if (mounted) {
         if (data != null) {
           // Load the user's data into the form fields
           setState(() {
-            _fullNameController.text = data['fullname'] ?? '';
+            _fullNameController.text = data['fullname'] ?? '';   // it fills the full name text field with the user's full name if available; otherwise, it leaves the text field empty.
             _addressController.text = data['address'] ?? '';
             _nicController.text = data['nic'] ?? '';
             if (data['dateOfBirth'] != null) {
@@ -115,20 +118,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     });
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
 
+ 
   @override
   Widget build(BuildContext context) {
     //responsiveness of the device
@@ -142,17 +133,20 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     }
 
     return Scaffold(
+
+//TopApp Bar
+
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
         title: Text(
           DemoLocalization.of(context).getTranslatedValue('profile')!,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
       ),
 
-      //bottom app bar
+ //Bottom app bar
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
@@ -208,6 +202,9 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
         ),
       ),
 
+
+//Body of the Screen
+
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -220,7 +217,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   _addProfilePicture(),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               TextFormField(
@@ -230,7 +227,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       .getTranslatedValue('full_name')!,
                   hintText: DemoLocalization.of(context)
                       .getTranslatedValue('full_name')!,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -241,7 +238,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
               ),
               const SizedBox(height: 20),
-              const SizedBox(height: 20),
+              
               TextFormField(
                 controller: _addressController,
                 maxLines: 2,
@@ -250,7 +247,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       .getTranslatedValue('address')!,
                   hintText: DemoLocalization.of(context)
                       .getTranslatedValue('address')!,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -260,41 +257,13 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              // DropdownButtonFormField<String>(
-              //   decoration: InputDecoration(
-              //     labelText: DemoLocalization.of(context)
-              //         .getTranslatedValue('gender')!,
-              //     border: OutlineInputBorder(),
-              //   ),
-              //   value: _selectedGender,
-              //   onChanged: (String? newValue) {
-              //     setState(() {
-              //       _selectedGender = newValue;
-              //     });
-              //   },
-              //   validator: (value) {
-              //     if (value == null || value.isEmpty) {
-              //       return DemoLocalization.of(context)
-              //           .getTranslatedValue('please_select_gender')!;
-              //     }
-              //     return null;
-              //   },
-              //   items: <String>['Male', 'Female']
-              //       .map<DropdownMenuItem<String>>((String value) {
-              //     return DropdownMenuItem<String>(
-              //       value: value,
-              //       child: Text(value),
-              //     );
-              //   }).toList(),
-              // ),
+              const SizedBox(height: 20),
+              
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: DemoLocalization.of(context)
                       .getTranslatedValue('gender')!,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 value: _selectedGender,
                 onChanged: (String? newValue) {
@@ -318,9 +287,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              const SizedBox(
-                height: 20,
-              ),
+              
+            
               TextFormField(
                 controller: _nicController,
                 validator: (value) {
@@ -367,6 +335,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 ),
               ),
               const SizedBox(height: 20),
+
+
               TextFormField(
                 readOnly: true,
                 controller: TextEditingController(
@@ -380,7 +350,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                       .getTranslatedValue('date_of_birth')!,
                   hintText: DemoLocalization.of(context)
                       .getTranslatedValue('date_of_birth')!,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (_selectedDate == null) {
@@ -391,12 +361,12 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
               ),
               const SizedBox(height: 20),
-              const SizedBox(height: 20),
+              
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: DemoLocalization.of(context)
                       .getTranslatedValue('district')!,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 value: _selectedDistrict,
                 onChanged: (String? newValue) {
@@ -419,28 +389,26 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
+
               TextFormField(
                 controller: _contactNumberController,
                 decoration: InputDecoration(
                   labelText: DemoLocalization.of(context)
                       .getTranslatedValue('mobile_number')!,
                   hintText: 'EX: +94718524560',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  // if (value == null || value.isEmpty) {
-                  //   return 'Please enter your contact number';
-                  // }
-                  // // Regular expression pattern for Sri Lankan mobile number format
-                  // RegExp regex =
-                  //     RegExp(r'^[+94]{1}[7]{1}[01245678]{1}[0-9]{7}$');
-                  // if (!regex.hasMatch(value)) {
-                  //   return 'Invalid mobile format. Please enter a valid Sri Lankan mobile number with a "+" sign and 11 digits (e.g., +94718524560).';
-                  // }
+                  validator: (value) { 
+                                                                                                                                                            // }
                   return null; // Return null if the input is valid
                 },
               ),
               const SizedBox(height: 20),
+
+
+            //add more fields here 
+
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -465,6 +433,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                             _selectedDate,
                             _selectedDistrict!,
                             _contactNumberController.text,
+                            //_additionalField.text,
                           );
 
                           // Display success message
@@ -502,8 +471,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                     ),
                     child: Text(
                       DemoLocalization.of(context)
-                          .getTranslatedValue('submit')!,
-                      style: TextStyle(
+                          .getTranslatedValue('save')!,
+                      style: const TextStyle(
                           color: Colors.white, fontSize: 19), // Text color
                     ), // Background color
                   ),
@@ -516,6 +485,22 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     );
   }
 
+//Date picker 
+   Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+//Profile image Adding function
   Widget _addProfilePicture() {
     if (_logo != null && selectedImage == null) {
       return GestureDetector(
@@ -551,7 +536,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             Container(
               width: 128,
               height: 128,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
               child: ClipRRect(
@@ -585,7 +570,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             Container(
               width: 128,
               height: 128,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
               child: ClipRRect(
@@ -619,7 +604,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
             Container(
               width: 128,
               height: 128,
-              child: CircleAvatar(
+              child: const CircleAvatar(
                 radius: 64,
                 backgroundImage: NetworkImage(
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
@@ -662,3 +647,25 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     return XFile(compressedImgPath);
   }
 }
+                                                                                                                                                                                                                                                                                                                                                //  Additional field
+                                                                                                                                                                                              //                   TextFormField(
+                                                                                                                                                                                              //                         controller: _additionalField,
+                                                                                                                                                                                              //                         decoration: const InputDecoration(
+                                                                                                                                                                                              //                             labelText: 'Additional field',
+                                                                                                                                                                                              //                             border: OutlineInputBorder()),
+                                                                                                                                                                                              //                         validator: (value) {
+                                                                                                                                                                                              //                           if (value == null || value.isEmpty) {
+                                                                                                                                                                                              //                             return 'required';
+                                                                                                                                                                                              //                           }
+                                                                                                                                                                                              //                           return null;
+                                                                                                                                                                                              //                         },
+                                                                                                                                                                                              //                       ),
+
+
+
+
+
+
+
+
+
