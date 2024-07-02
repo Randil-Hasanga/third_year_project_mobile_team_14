@@ -88,5 +88,17 @@
     "see_job_seekers": "රැකියා සොයන්නන් බලන්න",
     "interview_progress": "සම්මුඛ පරීක්ෂණ ප්‍රගතිය",
     "edit_company_info": "සමාගම් තොරතුරු සංස්කරණය",
-    "create_vacancy_warning": "සමාගම ලියාපදිංචි කර නොමැති හෝ ගිණුම අක්‍රීය කර ඇත\n\nකරුණාකර රැකියා කේන්ද්‍රය අමතන්න"
+    "create_vacancy_warning": "සමාගම ලියාපදිංචි කර නොමැති හෝ ගිණුම අක්‍රීය කර ඇත\n\nකරුණාකර රැකියා කේන්ද්‍රය අමතන්න",
+    "select_vacancy": "පුරප්පාඩුව තෝරන්න : ",
+    "topic": "මාතෘකාව",
+    "description": "විස්තරය",
+    "type": "වර්ගය :",
+    "select_date_and_time": "දිනය සහ වේලාව තෝරන්න",
+    "selected_date_and_time": "තෝරාගත් දිනය සහ වේලාව",
+    "continue": "ඉදිරියට යන්න",
+    "online": "මාර්ගගත",
+    "physical": "සාම්ප්‍රධායික",
+    "topic_warning": "කරුණාකර මාතෘකාවක් ඇතුළත් කරන්න",
+    "description_warning": "කරුණාකර විස්තරයක් ඇතුළත් කරන්න",
+    "interview_scheduler": "සම්මුඛ පරීක්ෂණ සැලසුම්"
 }

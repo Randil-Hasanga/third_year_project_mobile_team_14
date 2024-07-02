@@ -242,7 +242,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            DemoLocalization.of(context)
+                            Localization.of(context)
                                 .getTranslatedValue('my_vacancies')!,
                             style: TextStyle(
                                 color: Colors.black,
@@ -470,8 +470,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.create,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: Text(
-                DemoLocalization.of(context)
-                    .getTranslatedValue('create_vacancy')!,
+                Localization.of(context).getTranslatedValue('create_vacancy')!,
               ),
               onTap: () async {
                 bool isCompanyExist =
@@ -487,7 +486,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                       return AlertDialog(
                         title: const Text("Alert"),
                         content: Text(
-                          DemoLocalization.of(context)
+                          Localization.of(context)
                               .getTranslatedValue('create_vacancy_warning')!,
                         ),
                         actions: <Widget>[
@@ -509,7 +508,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.schedule,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: Text(
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('schedule_inverviews')!,
               ),
               onTap: () {
@@ -524,8 +523,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.person_2,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: Text(
-                DemoLocalization.of(context)
-                    .getTranslatedValue('see_job_seekers')!,
+                Localization.of(context).getTranslatedValue('see_job_seekers')!,
               ),
               onTap: () {
                 Navigator.push(
@@ -540,7 +538,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.timeline,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: Text(
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('interview_progress')!,
               ),
               onTap: () {
@@ -558,7 +556,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.settings,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: Text(
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('edit_company_info')!,
               ),
               onTap: () {
@@ -569,7 +567,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
               leading: const Icon(Icons.power_settings_new,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: Text(
-                DemoLocalization.of(context).getTranslatedValue('log_out')!,
+                Localization.of(context).getTranslatedValue('log_out')!,
               ),
               onTap: () async {
                 await clearCredentials();
