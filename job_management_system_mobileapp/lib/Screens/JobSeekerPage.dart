@@ -4,10 +4,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
-import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens./Help.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/change_password.dart';
@@ -16,10 +16,10 @@ import 'package:job_management_system_mobileapp/classes/language.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/main.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens./Help.dart';
 import 'package:job_management_system_mobileapp/widgets/richTextWidgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'JobSeekerScreens/seeker_chat_home.dart';
 
 class JobSeekerPage extends StatefulWidget {
   // ignore: use_super_parameters
@@ -809,9 +809,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                     color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Chattings()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SeekerChatHome(),
+                    ),
+                  );
                 },
               ),
             ],

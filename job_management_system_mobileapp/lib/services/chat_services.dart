@@ -25,6 +25,23 @@ class ChatService {
     });
   }
 
+  //get job provider stream
+  Stream<List<Map<String, dynamic>>> getProviderStream() {
+    return _firestore
+        .collection("users")
+        .where('type', isEqualTo: 'provider')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        //go thorugh each indivual users
+        final user = doc.data();
+
+        //return user
+        return user;
+      }).toList();
+    });
+  }
+
   //send message
   Future<void> sendMessage(String receiverID, message) async {
     final String currentUserID = _auth.currentUser!.uid;
