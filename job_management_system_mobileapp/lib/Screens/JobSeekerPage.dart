@@ -32,7 +32,6 @@ class JobSeekerPage extends StatefulWidget {
 final FirebaseService firebaseService = FirebaseService();
 
 class _JobSeekerPageState extends State<JobSeekerPage> {
-
   //Variables of JobSeeker Dashboard
   SharedPreferences? _sharedPreferences;
   FirebaseService? _firebaseService;
@@ -117,8 +116,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     _deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-
-  //Top App Bar
+      //Top App Bar
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
         actions: <Widget>[
@@ -145,7 +143,6 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
         ],
       ),
 
-
 //Dashboard screen
 
       body: Container(
@@ -168,31 +165,35 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               const SizedBox(
                 height: 2,
               ),
-
-              
               if (profile_image != null) ...{
-             Center(
-  child: Padding(
-    padding: const EdgeInsets.all(10),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          radius: 64,
-          backgroundImage: NetworkImage(profile_image!),
-        ),
-        SizedBox(height: 10), // Adding some space between the profile image and the username
-        Text(
-          _userName ?? '', // Assuming _userName holds the user's name
-          style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255), fontSize: 24,fontWeight: FontWeight.bold,),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  ),
-),
-
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 64,
+                          backgroundImage: NetworkImage(profile_image!),
+                        ),
+                        SizedBox(
+                            height:
+                                10), // Adding some space between the profile image and the username
+                        Text(
+                          _userName ??
+                              '', // Assuming _userName holds the user's name
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               } else ...{
                 const Padding(
                   padding: EdgeInsets.all(10),
@@ -207,12 +208,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
                           ),
                         ],
-                      ),  
+                      ),
                     ],
                   ),
                 ),
               },
-              
               const SizedBox(height: 10),
               Container(
                 decoration: const BoxDecoration(
@@ -274,7 +274,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           _richTextWidget.simpleText(
-                              DemoLocalization.of(context)
+                              Localization.of(context)
                                   .getTranslatedValue('featured_jobs')!,
                               16,
                               Colors.black,
@@ -293,7 +293,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               );
                             },
                             child: _richTextWidget.simpleText(
-                                DemoLocalization.of(context)
+                                Localization.of(context)
                                     .getTranslatedValue('see_all')!,
                                 15,
                                 const Color.fromARGB(255, 243, 117, 33),
@@ -427,7 +427,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           _richTextWidget.simpleText(
-                              DemoLocalization.of(context)
+                              Localization.of(context)
                                   .getTranslatedValue('recent_jobs')!,
                               16,
                               Colors.black,
@@ -442,7 +442,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               // Add your logic to navigate to see all recent jobs
                             },
                             child: Text(
-                              DemoLocalization.of(context)
+                              Localization.of(context)
                                   .getTranslatedValue('see_all')!,
                               style: const TextStyle(
                                   color: Color.fromARGB(255, 243, 117, 33),
@@ -590,8 +590,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
         ),
       ),
 
-
- //Drawer of function list     
+      //Drawer of function list
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -608,9 +607,6 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   ],
                 ),
               ),
-
-
-              
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -626,17 +622,12 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 ],
               ),
             ),
-
-
-
-
             ListTile(
               leading: const Icon(Icons.search,
                   color: Color.fromARGB(
                       255, 255, 137, 2)), // Icon for finding jobs
               title: _richTextWidget.simpleText(
-                  DemoLocalization.of(context)
-                      .getTranslatedValue('featured_jobs')!,
+                  Localization.of(context).getTranslatedValue('featured_jobs')!,
                   16,
                   Colors.black,
                   FontWeight.bold),
@@ -674,7 +665,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
               title: _richTextWidget.simpleText(
-                  DemoLocalization.of(context).getTranslatedValue('create_CV')!,
+                  Localization.of(context).getTranslatedValue('create_CV')!,
                   16,
                   Colors.black,
                   FontWeight.bold),
@@ -690,8 +681,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
               title: _richTextWidget.simpleText(
-                  DemoLocalization.of(context)
-                      .getTranslatedValue('notifications')!,
+                  Localization.of(context).getTranslatedValue('notifications')!,
                   16,
                   Colors.black,
                   FontWeight.bold),
@@ -708,7 +698,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
               title: _richTextWidget.simpleText(
-                  DemoLocalization.of(context)
+                  Localization.of(context)
                       .getTranslatedValue('profile_settings')!,
                   16,
                   Colors.black,
@@ -725,7 +715,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   color:
                       Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
               title: _richTextWidget.simpleText(
-                  DemoLocalization.of(context)
+                  Localization.of(context)
                       .getTranslatedValue('change_password')!,
                   16,
                   Colors.black,
@@ -741,7 +731,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               leading: const Icon(Icons.help,
                   color: Color.fromARGB(255, 255, 137, 2)),
               title: _richTextWidget.simpleText(
-                  DemoLocalization.of(context).getTranslatedValue('help')!,
+                  Localization.of(context).getTranslatedValue('help')!,
                   16,
                   Colors.black,
                   FontWeight.bold),
@@ -756,7 +746,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               leading: const Icon(Icons.logout,
                   color: Color.fromARGB(255, 255, 137, 2)), // Icon for logout
               title: _richTextWidget.simpleText(
-                  DemoLocalization.of(context).getTranslatedValue('log_out')!,
+                  Localization.of(context).getTranslatedValue('log_out')!,
                   16,
                   Colors.black,
                   FontWeight.bold),
@@ -772,10 +762,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
         ),
       ),
 
-
-
       //BottomNavigationBar
-      
+
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
@@ -833,8 +821,3 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
     );
   }
 }
-
-
-
-
-

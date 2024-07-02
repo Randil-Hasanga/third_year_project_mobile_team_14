@@ -2,6 +2,7 @@ import "package:board_datetime_picker/board_datetime_picker.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:get_it/get_it.dart";
+import "package:job_management_system_mobileapp/localization/demo_localization.dart";
 import "package:job_management_system_mobileapp/services/firebase_services.dart";
 import "package:quickalert/models/quickalert_type.dart";
 import "package:quickalert/widgets/quickalert_dialog.dart";
@@ -111,7 +112,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Interview Scheduler",
+          Localization.of(context).getTranslatedValue('interview_scheduler')!,
           style: TextStyle(
               color: Colors.black,
               fontSize: screenWidth! * 0.04,
@@ -122,71 +123,101 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(15.0),
           child: Form(
             key: _formKey,
             child: Column(
               children: [
-                Row(
-                  children: [
-                    const Text(
-                      "Select Vacancy:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.grey,
+                      style: BorderStyle.solid,
                     ),
-                    const SizedBox(width: 10.0),
-                    StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('vacancy')
-                          .where('uid', isEqualTo: firebaseSerice!.uid)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        List<DropdownMenuItem> vacancyItems = [];
-
-                        if (!snapshot.hasData) {
-                          const CircularProgressIndicator();
-                        } else {
-                          final Vacancies =
-                              snapshot.data?.docs.reversed.toList();
-                          vacancyItems.add(
-                            const DropdownMenuItem(
-                              value: "0",
-                              child: Text('Select Vacancy'),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            Localization.of(context)
+                                .getTranslatedValue('select_vacancy')!,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
-                          );
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('vacancy')
+                                .where('uid', isEqualTo: firebaseSerice!.uid)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              List<DropdownMenuItem> vacancyItems = [];
 
-                          for (var vacancy in Vacancies!) {
-                            vacancyItems.add(
-                              DropdownMenuItem(
-                                value: vacancy.id,
-                                child: Text(
-                                  vacancy['job_position'],
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                        return DropdownButton(
-                          menuMaxHeight: screenWidth * 0.5,
-                          items: vacancyItems,
-                          onChanged: (vacancyValue) {
-                            selectedvacancyName = vacancyItems
-                                .firstWhere(
-                                    (item) => item.value == vacancyValue)
-                                .child
-                                .toString();
+                              if (!snapshot.hasData) {
+                                const CircularProgressIndicator();
+                              } else {
+                                final Vacancies =
+                                    snapshot.data?.docs.reversed.toList();
+                                vacancyItems.add(
+                                  const DropdownMenuItem(
+                                    value: "0",
+                                    child: Text('Select Vacancy'),
+                                  ),
+                                );
 
-                            selectedvacancy = vacancyValue;
+                                for (var vacancy in Vacancies!) {
+                                  vacancyItems.add(
+                                    DropdownMenuItem(
+                                      value: vacancy.id,
+                                      child: Text(
+                                        vacancy['job_position'],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                              return DropdownButton(
+                                menuMaxHeight: screenHeight * 0.5,
+                                items: vacancyItems,
+                                onChanged: (vacancyValue) {
+                                  selectedvacancyName = vacancyItems
+                                      .firstWhere(
+                                          (item) => item.value == vacancyValue)
+                                      .child
+                                      .toString();
 
-                            print(vacancyValue);
-                          },
-                          value: selectedvacancy,
-                          isExpanded: false,
-                        );
-                      },
-                    ),
-                  ],
+                                  selectedvacancy = vacancyValue;
+
+                                  print(vacancyValue);
+                                },
+                                value: selectedvacancy,
+                                isExpanded: false,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
 
                 SizedBox(height: screenHeight * 0.02),
@@ -194,13 +225,15 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 TextFormField(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "please enter the topic";
+                      return Localization.of(context)
+                          .getTranslatedValue('topic_warning')!;
                     }
                     return null;
                   },
                   controller: _topicController,
                   decoration: InputDecoration(
-                    labelText: "Topic",
+                    labelText:
+                        Localization.of(context).getTranslatedValue('topic')!,
                     hintText: "HR Interview",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -214,7 +247,8 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 TextFormField(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "please enter description";
+                      return Localization.of(context)
+                          .getTranslatedValue('description_warning')!;
                     }
                     return null;
                   },
@@ -223,7 +257,8 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                   keyboardType: TextInputType.multiline,
                   controller: _descriptionController,
                   decoration: InputDecoration(
-                    labelText: "Description",
+                    labelText: Localization.of(context)
+                        .getTranslatedValue('description')!,
                     hintText: "give a brief description",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -234,56 +269,91 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 SizedBox(height: screenHeight * 0.02),
 
                 // select interview type
-                Row(
-                  children: [
-                    const Text(
-                      "Type:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.grey,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Localization.of(context).getTranslatedValue('type')!,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: screenWidth * 0.05),
-                    Radio(
-                      value: "Online",
-                      groupValue: groupValue,
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            groupValue = value!;
-                            showLinkFeild = true;
-                            linkPopup();
-                          },
-                        );
-                      },
-                    ),
-                    const Text(
-                      "Online",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                      SizedBox(
+                        width: 10,
                       ),
-                    ),
-                    SizedBox(width: screenWidth * 0.02),
-                    Radio(
-                      value: "Physical",
-                      groupValue: groupValue,
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            groupValue = value!;
-                            showLinkFeild = false;
-                          },
-                        );
-                      },
-                    ),
-                    const Text(
-                      "Physical",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              Radio(
+                                value: "Online",
+                                groupValue: groupValue,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      groupValue = value!;
+                                      print(groupValue);
+                                      showLinkFeild = true;
+                                      linkPopup();
+                                    },
+                                  );
+                                },
+                              ),
+                              Text(
+                                Localization.of(context)
+                                    .getTranslatedValue('online')!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          // SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Radio(
+                                value: "Physical",
+                                groupValue: groupValue,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      groupValue = value!;
+                                      showLinkFeild = false;
+                                    },
+                                  );
+                                },
+                              ),
+                              Text(
+                                Localization.of(context)
+                                    .getTranslatedValue('physical')!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-
+                SizedBox(
+                  height: 10,
+                ),
                 //date and time pickers
                 Row(
                   children: [
@@ -296,15 +366,16 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        child: const Text(
-                          "Select Date and Time",
-                          style: TextStyle(
+                        child: Text(
+                          Localization.of(context)
+                              .getTranslatedValue('select_date_and_time')!,
+                          style: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: screenWidth * 0.02),
+                    SizedBox(width: 5),
                     /*Text(
                       _selectedDateTime.toString(),
                     ),*/
@@ -313,17 +384,18 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                 SizedBox(height: screenHeight * 0.02),
                 Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        "Selected Date and Time: ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        Localization.of(context)
+                            .getTranslatedValue('selected_date_and_time')!,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     Text(_selectedDateTime.toString()),
                   ],
                 ),
 
-                SizedBox(height: screenHeight * 0.08),
+                SizedBox(height: 10),
 
                 ElevatedButton(
                   onPressed: () {
@@ -353,9 +425,9 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  child: const Text(
-                    "Continue",
-                    style: TextStyle(
+                  child: Text(
+                    Localization.of(context).getTranslatedValue('continue')!,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),

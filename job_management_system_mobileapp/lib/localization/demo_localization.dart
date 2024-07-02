@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class DemoLocalization {
+class Localization {
   final Locale locale;
 
-  DemoLocalization(this.locale);
+  Localization(this.locale);
 
-  static DemoLocalization of(BuildContext context) {
-    return Localizations.of<DemoLocalization>(context, DemoLocalization)!;
+  static Localization of(BuildContext context) {
+    return Localizations.of<Localization>(context, Localization)!;
   }
 
   Map<String, String>? _localizedValues;
@@ -29,21 +29,20 @@ class DemoLocalization {
     return _localizedValues![key];
   }
 
-  static const LocalizationsDelegate<DemoLocalization> delegate = _DemoLocalizationDelegate();
+  static const LocalizationsDelegate<Localization> delegate =
+      _DemoLocalizationDelegate();
 }
 
-class _DemoLocalizationDelegate
-    extends LocalizationsDelegate<DemoLocalization> {
-
-      const _DemoLocalizationDelegate();
+class _DemoLocalizationDelegate extends LocalizationsDelegate<Localization> {
+  const _DemoLocalizationDelegate();
   @override
   bool isSupported(Locale locale) {
     return ['en', 'si', 'ta'].contains(locale.languageCode);
   }
 
   @override
-  Future<DemoLocalization> load(Locale locale) async {
-    DemoLocalization localization = new DemoLocalization(locale);
+  Future<Localization> load(Locale locale) async {
+    Localization localization = new Localization(locale);
     await localization.loadLang();
     return localization;
   }
