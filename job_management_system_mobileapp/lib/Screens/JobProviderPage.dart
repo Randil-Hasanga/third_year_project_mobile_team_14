@@ -262,7 +262,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                           ),
                         ],
                       ),
-                      Container(
+                      SizedBox(
                         height: 180,
                         child: StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
@@ -385,126 +385,10 @@ class _JobProviderPageState extends State<JobProviderPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            Localization.of(context)
-                                .getTranslatedValue('suggested_seekers')!,
+                            "Scheduled Interviews",
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: screenWidth! * 0.04,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // Add your logic to navigate to see all suggested seekers
-                            },
-                            child: const Text(
-                              "See All",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 145, 0),
-                                  fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 230, // Adjust the height as needed
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Profile Icon
-                                    const CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: AssetImage(
-                                          'assets/profile_picture.jpg'),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    // Skills
-                                    const Text(
-                                      "Skills: Skill 1, Skill 2, Skill 3",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    // Preferred Working Section
-                                    const Text(
-                                      "Preferred Working: Location, Remote",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    // View CV Button
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        // Add your logic to view the CV of the job seeker
-                                      },
-                                      child: const Text("View CV"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Profile Icon
-                                  const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: AssetImage(
-                                        'assets/profile_picture.jpg'),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Skills
-                                  const Text(
-                                    "Skills: Skill 1, Skill 2, Skill 3",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Preferred Working Section
-                                  const Text(
-                                    "Preferred Working: Location, Remote",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // View CV Button
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Add your logic to view the CV of the job seeker
-                                    },
-                                    child: const Text("View CV"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      const SizedBox(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          const Text(
-                            "Requested CV List",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
+                                fontSize: fontSize,
                                 fontWeight: FontWeight.bold),
                           ),
                           TextButton(
@@ -519,187 +403,26 @@ class _JobProviderPageState extends State<JobProviderPage> {
                         ],
                       ),
                       SizedBox(
-                        height: 200,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Profile Icon
-                                  const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage:
-                                        AssetImage('assets/Default.png'),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Job Seeker Name
-                                  Text(
-                                    "$_userName",
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // View CV Button
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Add your logic to view the CV of the job seeker
-                                    },
-                                    child: const Text("View CV"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Profile Icon
-                                  const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: AssetImage(
-                                        'assets/profile_picture.jpg'),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Job Seeker Name
-                                  const Text(
-                                    "Jane Doe",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // View CV Button
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Add your logic to view the CV of the job seeker
-                                    },
-                                    child: const Text("View CV"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        height: 150,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: _firebaseService?.interviewCollection
+                              .where('uid', isEqualTo: _firebaseService!.uid)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              ); // Show loading indicator while fetching data
+                            }
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+                            return _bulidInterviewList(
+                                context, snapshot.data!.docs);
+                          },
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          const Text(
-                            "Feedback CV List", // Add the Feedback CV list section title
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // Add your logic to navigate to the feedback CV list page
-                            },
-                            child: const Text(
-                              "See All",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 145, 0),
-                                  fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 200,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Profile Icon
-                                  const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: AssetImage(
-                                        'assets/profile_picture.jpg'),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Job Seeker Name
-                                  const Text(
-                                    "John Doe",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Submit Feedback Button
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Add your logic to submit feedback for the job seeker
-                                    },
-                                    child: const Text("Submit Feedback"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Profile Icon
-                                  const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage:
-                                        AssetImage('assets/Default.png'),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Job Seeker Name
-                                  const Text(
-                                    "Jane Doe",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Submit Feedback Button
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Add your logic to submit feedback for the job seeker
-                                    },
-                                    child: const Text("Submit Feedback"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Add the requested CV list boxes here similar to the suggested seekers
-                      // You can use the same widget as suggested seekers but with different data
                     ],
                   ),
                 ),
@@ -948,6 +671,55 @@ class _JobProviderPageState extends State<JobProviderPage> {
           ],
         );
       },
+    );
+  }
+
+  Widget _bulidInterviewList(
+      BuildContext context, List<DocumentSnapshot> interviews) {
+    return ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        separatorBuilder: (context, index) => const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          return _buildInterviewItem(context, interviews[index]);
+        },
+        itemCount: interviews.length);
+  }
+
+  Widget _buildInterviewItem(BuildContext context, DocumentSnapshot interview) {
+    String topic = interview['topic'];
+    String interviewDate = interview['date_time'];
+
+    return Container(
+      margin: const EdgeInsets.all(8),
+      width: 300,
+      decoration: BoxDecoration(
+        color: const Color(0xff92A3FD).withOpacity(0.3),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _bulidInterviewDetailsRow(Icons.topic, topic, 20),
+          const SizedBox(
+            height: 4,
+          ),
+          _bulidInterviewDetailsRow(Icons.calendar_month, interviewDate, 15),
+        ],
+      ),
+    );
+  }
+
+  _bulidInterviewDetailsRow(IconData icon, String text, double fonSize) {
+    return Row(
+      children: [
+        Icon(icon),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(fontSize: fonSize),
+        ),
+      ],
     );
   }
 }
