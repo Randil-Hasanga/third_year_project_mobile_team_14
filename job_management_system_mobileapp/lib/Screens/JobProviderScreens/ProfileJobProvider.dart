@@ -137,7 +137,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
     return Scaffold(
       appBar: _appBarWidget.simpleAppBarWidget(
-          DemoLocalization.of(context).getTranslatedValue('edit_profile')!, 20),
+          Localization.of(context).getTranslatedValue('edit_profile')!, 20),
       bottomNavigationBar: _appBarWidget.bottomAppBarProvider(context),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.04),
@@ -152,7 +152,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      DemoLocalization.of(context).getTranslatedValue('logo')!,
+                      Localization.of(context).getTranslatedValue('logo')!,
                       style: const TextStyle(fontSize: 20),
                     ),
                     Container(
@@ -461,7 +461,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _memberNumberController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('membership_number')!,
+          Localization.of(context).getTranslatedValue('membership_number')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -485,7 +485,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _companyNameController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('company_name')!,
+          Localization.of(context).getTranslatedValue('company_name')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -514,7 +514,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       decoration: InputDecoration(
         alignLabelWithHint: true,
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('company_address')!,
+          Localization.of(context).getTranslatedValue('company_address')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -560,7 +560,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               label: Text(
-                  DemoLocalization.of(context).getTranslatedValue('district')!),
+                  Localization.of(context).getTranslatedValue('district')!),
             ),
           );
         },
@@ -587,7 +587,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _richTextWidget.simpleText(
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('selcted_org_type')!,
                 15,
                 Colors.black,
@@ -609,8 +609,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             color: buttonDefaultColorOrange,
             borderRadius: BorderRadius.circular(20)),
         child: ExpansionTile(
-          title: Text(
-              DemoLocalization.of(context).getTranslatedValue('org_type')!),
+          title: Text(Localization.of(context).getTranslatedValue('org_type')!),
           children: [
             Container(
               //height: _deviceHeight! * 0.35,
@@ -679,7 +678,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _richTextWidget.simpleText(
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('selected_industry')!,
                 15,
                 Colors.black,
@@ -702,8 +701,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: ExpansionTile(
-          title: Text(
-              DemoLocalization.of(context).getTranslatedValue('industry')!),
+          title: Text(Localization.of(context).getTranslatedValue('industry')!),
           children: [
             Container(
               height: _deviceHeight! * 0.35,
@@ -769,7 +767,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _agentNameController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('agent_name')!,
+          Localization.of(context).getTranslatedValue('agent_name')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -795,7 +793,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _agentPositionController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('agent_position')!,
+          Localization.of(context).getTranslatedValue('agent_position')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -821,7 +819,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _agentTelephoneController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('telephone_number')!,
+          Localization.of(context).getTranslatedValue('telephone_number')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -849,7 +847,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _agentMobileController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('mobile_number')!,
+          Localization.of(context).getTranslatedValue('mobile_number')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -877,7 +875,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _agentFaxController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('fax_number')!,
+          Localization.of(context).getTranslatedValue('fax_number')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -905,7 +903,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       controller: _agentEmailController,
       decoration: InputDecoration(
         label: Text(
-          DemoLocalization.of(context).getTranslatedValue('email')!,
+          Localization.of(context).getTranslatedValue('email')!,
         ),
         border: const OutlineInputBorder(),
       ),
@@ -963,7 +961,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         });
       },
       child: Text(
-        DemoLocalization.of(context).getTranslatedValue('clear')!,
+        Localization.of(context).getTranslatedValue('clear')!,
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
     );
@@ -978,7 +976,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         _validateAndSave();
       },
       child: Text(
-        DemoLocalization.of(context).getTranslatedValue('save')!,
+        Localization.of(context).getTranslatedValue('save')!,
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
     );
@@ -991,7 +989,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       mainAxisSize: MainAxisSize.max,
       children: [
         _richTextWidget.simpleText(
-            DemoLocalization.of(context)
+            Localization.of(context)
                 .getTranslatedValue('business_resistration')!,
             17,
             Colors.black,

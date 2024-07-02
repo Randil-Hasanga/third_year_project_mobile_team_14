@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,7 +27,6 @@ class ProfileJobSeeker extends StatefulWidget {
 }
 
 class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
-
   //Variables of JobSeeker Dashboard
 
   final _formKey = GlobalKey<FormState>();
@@ -68,12 +65,12 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
   ];
   String? _selectedDistrict, _logo;
   XFile? selectedImage;
-  final TextEditingController _contactNumberController = TextEditingController();
+  final TextEditingController _contactNumberController =
+      TextEditingController();
   late FirebaseService _firebaseService;
   final AlertBoxWidgets _alertBoxWidgets = AlertBoxWidgets();
-                                                                                                                                                        //final TextEditingController _additionalField= TextEditingController(); 
+  //final TextEditingController _additionalField= TextEditingController();
   double? _deviceWidth, _deviceHeight; // for the responsiveness of the device
-
 
   @override
   void initState() {
@@ -84,8 +81,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     _getSeeker();
   }
 
-
-
 //Get data from JobSeeker in firebase data
   void _getSeeker() async {
     await _firebaseService.getCurrentSeekerData().then((data) {
@@ -93,7 +88,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
         if (data != null) {
           // Load the user's data into the form fields
           setState(() {
-            _fullNameController.text = data['fullname'] ?? '';   // it fills the full name text field with the user's full name if available; otherwise, it leaves the text field empty.
+            _fullNameController.text = data['fullname'] ??
+                ''; // it fills the full name text field with the user's full name if available; otherwise, it leaves the text field empty.
             _addressController.text = data['address'] ?? '';
             _nicController.text = data['nic'] ?? '';
             if (data['dateOfBirth'] != null) {
@@ -118,8 +114,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     });
   }
 
-
- 
   @override
   Widget build(BuildContext context) {
     //responsiveness of the device
@@ -133,20 +127,19 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     }
 
     return Scaffold(
-
 //TopApp Bar
 
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
         title: Text(
-          DemoLocalization.of(context).getTranslatedValue('profile')!,
+          Localization.of(context).getTranslatedValue('profile')!,
           style: const TextStyle(
             color: Colors.white,
           ),
         ),
       ),
 
- //Bottom app bar
+      //Bottom app bar
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
@@ -202,7 +195,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
         ),
       ),
 
-
 //Body of the Screen
 
       body: Padding(
@@ -223,46 +215,46 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               TextFormField(
                 controller: _fullNameController,
                 decoration: InputDecoration(
-                  labelText: DemoLocalization.of(context)
-                      .getTranslatedValue('full_name')!,
-                  hintText: DemoLocalization.of(context)
-                      .getTranslatedValue('full_name')!,
+                  labelText:
+                      Localization.of(context).getTranslatedValue('full_name')!,
+                  hintText:
+                      Localization.of(context).getTranslatedValue('full_name')!,
                   border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('please_enter_full_name')!;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              
+
               TextFormField(
                 controller: _addressController,
                 maxLines: 2,
                 decoration: InputDecoration(
-                  labelText: DemoLocalization.of(context)
-                      .getTranslatedValue('address')!,
-                  hintText: DemoLocalization.of(context)
-                      .getTranslatedValue('address')!,
+                  labelText:
+                      Localization.of(context).getTranslatedValue('address')!,
+                  hintText:
+                      Localization.of(context).getTranslatedValue('address')!,
                   border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('please_enter_address')!;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              
+
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                  labelText: DemoLocalization.of(context)
-                      .getTranslatedValue('gender')!,
+                  labelText:
+                      Localization.of(context).getTranslatedValue('gender')!,
                   border: const OutlineInputBorder(),
                 ),
                 value: _selectedGender,
@@ -273,7 +265,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('please_select_gender')!;
                   }
                   return null;
@@ -287,13 +279,12 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              
-            
+
               TextFormField(
                 controller: _nicController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('please_enter_NIC')!;
                   }
 
@@ -302,27 +293,27 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
 
                   // Check if the input starts with digits
                   if (!RegExp(r'^[0-9]').hasMatch(value)) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('invalid_NIC_format')!;
                   }
 
                   // Check the length of the NIC
                   if (value.length != 12 && value.length != 10) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('NIC_character_warning')!;
                   }
 
                   // Check for old version NIC (9 digits + 'V' or 'X')
                   if (value.length == 10 &&
                       !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('invalid_NIC_format')!;
                   }
 
                   // Check for new version NIC (12 digits)
                   if (value.length == 12 &&
                       !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('invalid_NIC_format')!;
                   }
 
@@ -336,7 +327,6 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               ),
               const SizedBox(height: 20),
 
-
               TextFormField(
                 readOnly: true,
                 controller: TextEditingController(
@@ -346,26 +336,26 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 ),
                 onTap: () => _selectDate(context),
                 decoration: InputDecoration(
-                  labelText: DemoLocalization.of(context)
+                  labelText: Localization.of(context)
                       .getTranslatedValue('date_of_birth')!,
-                  hintText: DemoLocalization.of(context)
+                  hintText: Localization.of(context)
                       .getTranslatedValue('date_of_birth')!,
                   border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (_selectedDate == null) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('please_select_DOB')!;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              
+
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                  labelText: DemoLocalization.of(context)
-                      .getTranslatedValue('district')!,
+                  labelText:
+                      Localization.of(context).getTranslatedValue('district')!,
                   border: const OutlineInputBorder(),
                 ),
                 value: _selectedDistrict,
@@ -376,7 +366,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return DemoLocalization.of(context)
+                    return Localization.of(context)
                         .getTranslatedValue('please_select_district')!;
                   }
                   return null;
@@ -393,21 +383,19 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
               TextFormField(
                 controller: _contactNumberController,
                 decoration: InputDecoration(
-                  labelText: DemoLocalization.of(context)
+                  labelText: Localization.of(context)
                       .getTranslatedValue('mobile_number')!,
                   hintText: 'EX: +94718524560',
                   border: const OutlineInputBorder(),
                 ),
-                  validator: (value) { 
-                                                                                                                                                            // }
+                validator: (value) {
+                  // }
                   return null; // Return null if the input is valid
                 },
               ),
               const SizedBox(height: 20),
 
-
-            //add more fields here 
-
+              //add more fields here
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -419,7 +407,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                           _alertBoxWidgets.showAlert(
                             context,
                             QuickAlertType.warning,
-                            DemoLocalization.of(context).getTranslatedValue(
+                            Localization.of(context).getTranslatedValue(
                                 'please_select_profile_pic')!,
                           );
                         } else {
@@ -440,9 +428,9 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                           QuickAlert.show(
                             context: context,
                             type: QuickAlertType.success,
-                            title: DemoLocalization.of(context)
+                            title: Localization.of(context)
                                 .getTranslatedValue('success')!,
-                            text: DemoLocalization.of(context)
+                            text: Localization.of(context)
                                 .getTranslatedValue('successfully_added')!,
                           );
                         }
@@ -451,9 +439,9 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                         QuickAlert.show(
                           context: context,
                           type: QuickAlertType.error,
-                          title: DemoLocalization.of(context)
+                          title: Localization.of(context)
                               .getTranslatedValue('error')!,
-                          text: DemoLocalization.of(context)
+                          text: Localization.of(context)
                               .getTranslatedValue('fill_required_fields')!,
                         );
                       }
@@ -470,8 +458,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                           vertical: 16, horizontal: 32), // Button padding
                     ),
                     child: Text(
-                      DemoLocalization.of(context)
-                          .getTranslatedValue('save')!,
+                      Localization.of(context).getTranslatedValue('save')!,
                       style: const TextStyle(
                           color: Colors.white, fontSize: 19), // Text color
                     ), // Background color
@@ -485,8 +472,8 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     );
   }
 
-//Date picker 
-   Future<void> _selectDate(BuildContext context) async {
+//Date picker
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
@@ -647,25 +634,16 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     return XFile(compressedImgPath);
   }
 }
-                                                                                                                                                                                                                                                                                                                                                //  Additional field
-                                                                                                                                                                                              //                   TextFormField(
-                                                                                                                                                                                              //                         controller: _additionalField,
-                                                                                                                                                                                              //                         decoration: const InputDecoration(
-                                                                                                                                                                                              //                             labelText: 'Additional field',
-                                                                                                                                                                                              //                             border: OutlineInputBorder()),
-                                                                                                                                                                                              //                         validator: (value) {
-                                                                                                                                                                                              //                           if (value == null || value.isEmpty) {
-                                                                                                                                                                                              //                             return 'required';
-                                                                                                                                                                                              //                           }
-                                                                                                                                                                                              //                           return null;
-                                                                                                                                                                                              //                         },
-                                                                                                                                                                                              //                       ),
-
-
-
-
-
-
-
-
-
+//  Additional field
+//                   TextFormField(
+//                         controller: _additionalField,
+//                         decoration: const InputDecoration(
+//                             labelText: 'Additional field',
+//                             border: OutlineInputBorder()),
+//                         validator: (value) {
+//                           if (value == null || value.isEmpty) {
+//                             return 'required';
+//                           }
+//                           return null;
+//                         },
+//                       ),

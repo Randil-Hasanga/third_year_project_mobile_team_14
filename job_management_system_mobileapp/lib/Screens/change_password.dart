@@ -43,8 +43,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     _deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: _appBarWidget.simpleAppBarWidget(
-          DemoLocalization.of(context).getTranslatedValue('change_password')!,
-          20),
+          Localization.of(context).getTranslatedValue('change_password')!, 20),
       bottomNavigationBar: _appBarWidget.bottomAppBarSeeker(context),
       backgroundColor: ScaffoldColor,
       body: SafeArea(
@@ -79,7 +78,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 print(value);
               });
             },
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('enter_old_password')!,
                 validate: false),
             SizedBox(
@@ -94,7 +93,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 _newPwd = value;
               });
             },
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('enter_new_password')!,
                 validate: true),
             SizedBox(
@@ -109,7 +108,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 _reenterNewPwd = value;
               });
             },
-                DemoLocalization.of(context)
+                Localization.of(context)
                     .getTranslatedValue('re_enter_old_password')!,
                 validate: true),
             SizedBox(
@@ -131,8 +130,8 @@ class _ChangePasswordState extends State<ChangePassword> {
           onPressed: () {
             _validateAndVerify();
           },
-          buttonText: DemoLocalization.of(context)
-              .getTranslatedValue('change_password')!,
+          buttonText:
+              Localization.of(context).getTranslatedValue('change_password')!,
           style: ElevatedButton.styleFrom(
             backgroundColor: Color.fromARGB(255, 231, 104, 104),
           ),

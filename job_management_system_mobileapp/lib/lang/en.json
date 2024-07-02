@@ -88,5 +88,17 @@
     "see_job_seekers": "See Job Seekers",
     "interview_progress": "Interview Progress",
     "edit_company_info": "Edit Company Information",
-    "create_vacancy_warning": "Company is not registered or Account has been disabled.\n\nPlease contact job center."
+    "create_vacancy_warning": "Company is not registered or Account has been disabled.\n\nPlease contact job center.",
+    "select_vacancy": "Select Vacancy : ",
+    "topic": "Topic",
+    "description": "Description",
+    "type": "Type :",
+    "select_date_and_time": "Select Date and Time",
+    "selected_date_and_time": "Selected Date and Time",
+    "continue": "Continue",
+    "online": "Online",
+    "physical": "Traditional",
+    "topic_warning": "Please enter a topic",
+    "description_warning": "Please enter a description",
+    "interview_scheduler": "Interview Scheduler"
 }

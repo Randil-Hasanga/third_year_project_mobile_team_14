@@ -110,7 +110,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: _richTextWidget!.simpleText(
-            DemoLocalization.of(context).getTranslatedValue('featured_jobs')!,
+            Localization.of(context).getTranslatedValue('featured_jobs')!,
             23,
             Colors.black87,
             FontWeight.w700),
@@ -137,64 +137,64 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                               children: [
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('CV_warning')!}.\n\n",
+                                      "${Localization.of(context).getTranslatedValue('CV_warning')!}.\n\n",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.red),
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('best_matching_vacancies')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('best_matching_vacancies')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('best_match_info')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('best_match_info')!} \n\n",
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('by_prefered_area')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('by_prefered_area')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('preffered_area_info')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('preffered_area_info')!} \n\n",
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('by_job_type')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('by_job_type')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('job_type_info')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('job_type_info')!} \n\n",
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('by_highest_education')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('by_highest_education')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('highest_edu_info')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('highest_edu_info')!} \n\n",
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('by_salary')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('by_salary')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('expected_salary_info')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('expected_salary_info')!} \n\n",
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('by_organization_type')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('by_organization_type')!} \n\n",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text:
-                                      "${DemoLocalization.of(context).getTranslatedValue('preffered_org_info')!} \n\n",
+                                      "${Localization.of(context).getTranslatedValue('preffered_org_info')!} \n\n",
                                 ),
                               ],
                             ),
@@ -238,7 +238,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       ),
                       //show best matching vacancies
                       applyForVacanciesListWidget(
-                          DemoLocalization.of(context)
+                          Localization.of(context)
                               .getTranslatedValue('best_matching_vacancies')!,
                           bestMatchingVacancies,
                           seekerID!,
@@ -290,7 +290,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       ),
                       //show vacancies according to highest education level
                       applyForVacanciesListWidget(
-                          DemoLocalization.of(context)
+                          Localization.of(context)
                               .getTranslatedValue('by_highest_education')!,
                           filteredVacanciesByEducation,
                           seekerID!,
@@ -303,7 +303,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       ),
                       //show vacancies according to salary
                       applyForVacanciesListWidget(
-                        DemoLocalization.of(context)
+                        Localization.of(context)
                             .getTranslatedValue('by_salary')!,
                         filteredVacanciesBySalary,
                         seekerID!,
@@ -317,7 +317,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                       ),
                       //show vacancies according to organization type
                       applyForVacanciesListWidget(
-                        DemoLocalization.of(context)
+                        Localization.of(context)
                             .getTranslatedValue('by_organization_type')!,
                         filteredVacanciesByOrgType,
                         seekerID!,
@@ -346,8 +346,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       children: [
         Expanded(
           child: _richTextWidget!.simpleText(
-              DemoLocalization.of(context)
-                  .getTranslatedValue('by_prefered_area')!,
+              Localization.of(context).getTranslatedValue('by_prefered_area')!,
               21,
               Colors.black87,
               FontWeight.w600),
@@ -380,7 +379,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       children: [
         Expanded(
           child: _richTextWidget!.simpleText(
-              DemoLocalization.of(context).getTranslatedValue('by_job_type')!,
+              Localization.of(context).getTranslatedValue('by_job_type')!,
               21,
               Colors.black87,
               FontWeight.w600),
