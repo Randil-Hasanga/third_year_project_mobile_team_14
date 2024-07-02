@@ -516,75 +516,128 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                   _richTextWidget!.simpleTextWithIconLeft(
                       Icons.work,
                       listItem['job_position'],
-                      25,
-                      Colors.black,
-                      FontWeight.w700,
-                      iconColor),
-                  _richTextWidget!.simpleTextWithIconLeft(
-                      Icons.business,
-                      listItem['company_name'],
-                      18,
+                      20,
                       Colors.black,
                       FontWeight.w700,
                       iconColor),
                   SizedBox(
-                    height: 8,
+                    height: 2,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: 30,
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        color: Colors.grey,
+                        style: BorderStyle.solid,
                       ),
-                      _richTextWidget!.simpleTextWithIconLeft(
-                          Icons.construction,
-                          listItem['industry'],
-                          15,
-                          Colors.black,
-                          FontWeight.w600,
-                          iconColor),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: 30,
-                      ),
-                      _richTextWidget!.simpleTextWithIconLeft(
-                          Icons.account_balance,
-                          listItem['org_type'],
-                          15,
-                          Colors.black,
-                          FontWeight.w600,
-                          iconColor),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: 30,
-                      ),
-                      _richTextWidget!.simpleTextWithIconLeft(
-                          Icons.access_time,
-                          listItem['job_type'],
-                          15,
-                          Colors.black,
-                          FontWeight.w600,
-                          iconColor),
-                    ],
+                    ),
+                    child: Row(
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _richTextWidget!.simpleTextWithIconLeft(
+                                Icons.business,
+                                listItem['company_name'],
+                                15,
+                                Colors.black,
+                                FontWeight.w700,
+                                iconColor),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                _richTextWidget!.simpleTextWithIconLeft(
+                                    Icons.construction,
+                                    listItem['industry'],
+                                    13,
+                                    Colors.black,
+                                    FontWeight.w600,
+                                    iconColor),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                _richTextWidget!.simpleTextWithIconLeft(
+                                    Icons.account_balance,
+                                    listItem['org_type'],
+                                    13,
+                                    Colors.black,
+                                    FontWeight.w600,
+                                    iconColor),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                _richTextWidget!.simpleTextWithIconLeft(
+                                    Icons.access_time,
+                                    listItem['job_type'],
+                                    13,
+                                    Colors.black,
+                                    FontWeight.w600,
+                                    iconColor),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        if (listItem['logo'] != null &&
+                            listItem['logo'] != '') ...{
+                          Center(
+                            child: Image.network(
+                              listItem['logo']!, // Replace with your image URL
+                              height: 50,
+                              width: 120,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                );
+                              },
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                return Text(
+                                    'Image not found'); // Placeholder for error case
+                              },
+                            ),
+                          ),
+                        }
+                      ],
+                    ),
                   ),
                 ],
               ),
               SizedBox(
-                height: 8,
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -630,7 +683,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                     ],
                   ),
                   const SizedBox(
-                    width: 30,
+                    width: 20,
                   ),
                   if (isApplied) ...{
                     _buttonWidgets!.simpleElevatedButtonWidgetWithIcon(
