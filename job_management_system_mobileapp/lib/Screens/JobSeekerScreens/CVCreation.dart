@@ -1,5 +1,3 @@
-
-
 import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +12,7 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -21,6 +20,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 // ignore: depend_on_referenced_packages
 import 'package:printing/printing.dart';
+
+import '../../localization/demo_localization.dart';
 
 class CVCreation extends StatefulWidget {
   CVCreation({super.key});
@@ -47,16 +48,19 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _nationalityController = TextEditingController();
   final TextEditingController _nicController = TextEditingController();
-  final TextEditingController _drivingLicenceController = TextEditingController();
+  final TextEditingController _drivingLicenceController =
+      TextEditingController();
   DateTime? _selectedDate;
   String? _selectReligion;
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactMobileController =TextEditingController();
+  final TextEditingController _contactMobileController =
+      TextEditingController();
   final TextEditingController _contactHomeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _selecteddistrict;
-  final TextEditingController _divisionalSecController =TextEditingController();
+  final TextEditingController _divisionalSecController =
+      TextEditingController();
 
   final TextEditingController _salaryController = TextEditingController();
 
@@ -77,28 +81,38 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _ALAttemptController = TextEditingController();
   String? _selectALStatus;
   final TextEditingController _sec01NameController = TextEditingController();
-  final TextEditingController _sec01InstituteController =TextEditingController();
-  final TextEditingController _sec01durationController =TextEditingController();
+  final TextEditingController _sec01InstituteController =
+      TextEditingController();
+  final TextEditingController _sec01durationController =
+      TextEditingController();
   final TextEditingController _sec02NameController = TextEditingController();
-  final TextEditingController _sec02InstituteController =TextEditingController();
-  final TextEditingController _sec02durationController =TextEditingController();
+  final TextEditingController _sec02InstituteController =
+      TextEditingController();
+  final TextEditingController _sec02durationController =
+      TextEditingController();
 
   //Tab 03:Skill
 
-  final TextEditingController _yearOfExperienceController =TextEditingController();
-  final TextEditingController _currentJobPositionController =TextEditingController();
+  final TextEditingController _yearOfExperienceController =
+      TextEditingController();
+  final TextEditingController _currentJobPositionController =
+      TextEditingController();
   final TextEditingController _dateOfJoinController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
-  final TextEditingController _responsibilitiesController =TextEditingController();
+  final TextEditingController _responsibilitiesController =
+      TextEditingController();
   final TextEditingController _specialSkillController = TextEditingController();
-  final TextEditingController _computerSkillController =TextEditingController();
+  final TextEditingController _computerSkillController =
+      TextEditingController();
   final TextEditingController _otherSkillController = TextEditingController();
   final TextEditingController _achievementsController = TextEditingController();
-  final TextEditingController _extraCurricularController =TextEditingController();
+  final TextEditingController _extraCurricularController =
+      TextEditingController();
   final TextEditingController _trainingReqController = TextEditingController();
   // final TextEditingController _prefferedAreaController =
   //     TextEditingController();
-  final TextEditingController _careerGuidanceController =TextEditingController();
+  final TextEditingController _careerGuidanceController =
+      TextEditingController();
   String? sinhalaSpeaking;
   String? sinhalaReading;
   String? sinhalaWriting;
@@ -119,7 +133,8 @@ class _CVCreationState extends State<CVCreation> {
   ]; // language skill
 
   //Tab 04:Job Expectation
-  final TextEditingController _careerObjectiveController = TextEditingController();
+  final TextEditingController _careerObjectiveController =
+      TextEditingController();
   final TextEditingController _refeeOneController = TextEditingController();
   final TextEditingController _refeeTwoController = TextEditingController();
 
@@ -132,8 +147,8 @@ class _CVCreationState extends State<CVCreation> {
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _editCVDetails();
   }
-
 
 //date picker
   Future<void> _selectDate(BuildContext context) async {
@@ -150,6 +165,144 @@ class _CVCreationState extends State<CVCreation> {
     }
   }
 
+  void _editCVDetails() async {
+    await _firebaseService?.editCVDetails().then((data) {
+      if (mounted) {
+        if (data != null) {
+          setState(() {
+            if (data['title'] != null) {
+              _selectedtitle = data['title'];
+            }
+            if (data['gender'] != null) {
+              _selectedgender = data['gender'];
+            }
+            if (data['jobType'] != null) {
+              _selectedjobType = data['jobType'];
+            }
+            if (data['workingSection'] != null) {
+              _selectedworkingSection = data['workingSection'];
+            }
+            if (data['maritalStatus'] != null) {
+              _selectedmaritalStatus = data['maritalStatus'];
+            }
+            if (data['maritalStatus'] != null) {
+              _selectedmaritalStatus = data['maritalStatus'];
+            }
+            if (data['currentJobStatus'] != null) {
+              _selectedcurrentJobStatus = data['currentJobStatus'];
+            }
+            _nameWithIniController.text = data['nameWithIni'] ?? '';
+            _fullNameController.text = data['fullname'] ?? '';
+            _nationalityController.text = data['nationality'] ?? '';
+            _nicController.text = data['nic'] ?? '';
+            _drivingLicenceController.text = data['drivingLicence'] ?? '';
+            if (data['selectedDate'] != null) {
+              _selectedDate = data['selectedDate'].toDate() ?? '';
+            }
+            if (data['religion'] != null) {
+              _selectReligion = data['religion'];
+            }
+            _ageController.text = data['age'] ?? '';
+            _emailController.text = data['cv_email'] ?? '';
+            _contactMobileController.text = data['contactMobile'] ?? '';
+            _contactHomeController.text = data['ContactHome'] ?? '';
+            _addressController.text = data['address'] ?? '';
+            if (data['district'] != null) {
+              _selecteddistrict = data['district'];
+            }
+            _divisionalSecController.text = data['divisionalSecretariat'] ?? '';
+            _salaryController.text = data['salary'] ?? '';
+            if (data['EduQalification'] != null) {
+              _selectEduQalification = data['EduQalification'];
+            }
+            if (data['ProfQualification'] != null) {
+              _selectProfQualification = data['ProfQualification'];
+            }
+
+            _OLYearController.text = data['OLYear'] ?? '';
+            _OLIndexController.text = data['OLIndex'] ?? '';
+            _OLMediumController.text = data['OLMedium'] ?? '';
+            _OLSchoolController.text = data['OLSchool'] ?? '';
+            _OLAttemptController.text = data['OLAttempt'] ?? '';
+            if (data['OLStatus'] != null) {
+              _selectOLStatus = data['OLStatus'];
+            }
+            _ALYearController.text = data['ALYear'] ?? '';
+            _ALIndexController.text = data['ALIndex'] ?? '';
+            _ALMediumController.text = data['ALMedium'] ?? '';
+            _ALSchoolController.text = data['ALSchool'] ?? '';
+            _ALAttemptController.text = data['ALAttempt'] ?? '';
+            if (data['ALStatus'] != null) {
+              _selectALStatus = data['ALStatus'];
+            }
+
+            _sec01NameController.text = data['sec01Ins'] ?? '';
+            _sec01InstituteController.text = data['sec01Name'] ?? '';
+            _sec01durationController.text = data['sec01duration'] ?? '';
+
+            _sec02NameController.text = data['sec01Ins'] ?? '';
+            _sec02InstituteController.text = data['sec01Name'] ?? '';
+            _sec02durationController.text = data['sec01duration'] ?? '';
+
+            _yearOfExperienceController.text = data['yearOfExperience'] ?? '';
+            _currentJobPositionController.text =
+                data['currentJobPosition'] ?? '';
+            _dateOfJoinController.text = data['dateOfJoin'] ?? '';
+            _companyController.text = data['currentEmployee'] ?? '';
+            _responsibilitiesController.text = data['responsibilities'] ?? '';
+            _specialSkillController.text = data['specialSkill'] ?? '';
+            _computerSkillController.text = data['computerSkill'] ?? '';
+            _otherSkillController.text = data['otherSkill'] ?? '';
+            _achievementsController.text = data['achievements'] ?? '';
+            _extraCurricularController.text = data['extraCurricular'] ?? '';
+            _trainingReqController.text = data['trainingReq'] ?? '';
+            _careerGuidanceController.text = data['careerGuidance'] ?? '';
+
+            if (data['sinhalaSpeaking'] != null) {
+              sinhalaSpeaking = data['sinhalaSpeaking'];
+            }
+            if (data['sinhalaReading'] != null) {
+              sinhalaReading = data['sinhalaReading'];
+            }
+            if (data['sinhalaWriting'] != null) {
+              sinhalaWriting = data['sinhalaWriting'];
+            }
+            if (data['englishSpeaking'] != null) {
+              englishSpeaking = data['englishSpeaking'];
+            }
+            if (data['englishReading'] != null) {
+              englishReading = data['englishReading'];
+            }
+            if (data['englishWriting'] != null) {
+              englishWriting = data['englishWriting'];
+            }
+            if (data['tamilSpeaking'] != null) {
+              tamilSpeaking = data['tamilSpeaking'];
+            }
+            if (data['tamilReading'] != null) {
+              tamilReading = data['tamilReading'];
+            }
+            if (data['tamilWriting'] != null) {
+              tamilWriting = data['tamilWriting'];
+            }
+            _careerObjectiveController.text = data['careerObjective'] ?? '';
+            _refeeOneController.text = data['refeeOne'] ?? '';
+            _refeeTwoController.text = data['refeeTwo'] ?? '';
+
+            if (data['preferredIndustries'] != null) {
+            List<dynamic> industry = data['preferredIndustries'];
+            prefered_industries = List<String>.from(industry);
+          }
+
+            if (data['prefferedDistrict'] != null) {
+              selectPrefferedDistrict = data['prefferedDistrict'];
+            }
+          });
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //responsiveness of the device
@@ -159,8 +312,7 @@ class _CVCreationState extends State<CVCreation> {
     return DefaultTabController(
       length: 4, // Number of tabs
       child: Scaffold(
-
- //top App bar       
+        //top App bar
         appBar: AppBar(
           backgroundColor: Colors.orange.shade800,
           title: const Text(
@@ -232,8 +384,6 @@ class _CVCreationState extends State<CVCreation> {
           ),
         ),
 
-
-       
         body: Form(
           key: _formKey,
           child: TabBarView(
@@ -253,7 +403,6 @@ class _CVCreationState extends State<CVCreation> {
                             color: Colors.orange,
                           ),
                           SizedBox(width: 8),
-
                           Text(
                             'Follow text hints for a better CV of you',
                             style: TextStyle(
@@ -266,7 +415,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       DropdownButtonFormField<String>(
                         value: _selectedtitle,
                         onChanged: (String? newValue) {
@@ -293,7 +441,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       DropdownButtonFormField<String>(
                         value: _selectedgender,
                         onChanged: (String? newValue) {
@@ -301,7 +448,7 @@ class _CVCreationState extends State<CVCreation> {
                             _selectedgender = newValue;
                           });
                         },
-                        items: <String>['Male', 'Female','Other']
+                        items: <String>['Male', 'Female', 'Other']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -320,7 +467,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       DropdownButtonFormField<String>(
                         value: _selectedjobType,
                         onChanged: (String? newValue) {
@@ -348,7 +494,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       DropdownButtonFormField<String>(
                         value: _selectedworkingSection,
                         onChanged: (String? newValue) {
@@ -379,7 +524,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       DropdownButtonFormField<String>(
                         value: _selectedmaritalStatus,
                         onChanged: (String? newValue) {
@@ -407,7 +551,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       DropdownButtonFormField<String>(
                         value: _selectedcurrentJobStatus,
                         onChanged: (String? newValue) {
@@ -435,17 +578,27 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _nameWithIniController,
-                        decoration: const InputDecoration(
-                            labelText: 'Name With Initials *',
-                            border: OutlineInputBorder()),
+                        decoration: InputDecoration(
+                          labelText: DemoLocalization.of(context)
+                                  .getTranslatedValue('nameWithIni') ??
+                              'Name With Initials *',
+                          hintText: DemoLocalization.of(context)
+                                  .getTranslatedValue('nameWithIni') ??
+                              'Name With Initials *',
+                          border: const OutlineInputBorder(),
+                        ),
                         validator: (value) {
+                          // Regular expression to allow only letters and spaces
+                          final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
                           if (value == null || value.isEmpty) {
-                            return 'Name With Initials is required';
-                          } else if (value.length > 50) {
-                            return 'Name With Initials cannot exceed 50 characters';
+                            return DemoLocalization.of(context)
+                                    .getTranslatedValue(
+                                        'please enter name with initials') ??
+                                'Please enter full name';
+                          } else if (!regex.hasMatch(value)) {
+                            return 'Please enter valid name with initials (only letters and spaces)';
                           }
                           return null;
                         },
@@ -453,7 +606,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _fullNameController,
                         decoration: const InputDecoration(
@@ -472,7 +624,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _nationalityController,
                         decoration: const InputDecoration(
@@ -483,52 +634,49 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
-  controller: _nicController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'NIC cannot be empty';
-    }
+                        controller: _nicController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'NIC cannot be empty';
+                          }
 
-    // Remove any whitespaces
-    value = value.replaceAll(' ', '');
+                          // Remove any whitespaces
+                          value = value.replaceAll(' ', '');
 
-    // Check if the input starts with digits
-    if (!RegExp(r'^[0-9]').hasMatch(value)) {
-      return 'Invalid NIC format';
-    }
+                          // Check if the input starts with digits
+                          if (!RegExp(r'^[0-9]').hasMatch(value)) {
+                            return 'Invalid NIC format';
+                          }
 
-    // Check the length of the NIC
-    if (value.length != 10 && value.length != 12) {
-      return 'NIC must be 10 or 12 characters long';
-    }
+                          // Check the length of the NIC
+                          if (value.length != 10 && value.length != 12) {
+                            return 'NIC must be 10 or 12 characters long';
+                          }
 
-    // Check for old version NIC (9 digits + 'V' or 'X')
-    if (value.length == 10 && !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
-      return 'Invalid NIC format';
-    }
+                          // Check for old version NIC (9 digits + 'V' or 'X')
+                          if (value.length == 10 &&
+                              !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
+                            return 'Invalid NIC format';
+                          }
 
-    // Check for new version NIC (12 digits)
-    if (value.length == 12 && !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
-      return 'Invalid NIC format';
-    }
+                          // Check for new version NIC (12 digits)
+                          if (value.length == 12 &&
+                              !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
+                            return 'Invalid NIC format';
+                          }
 
-    // Valid NIC
-    return null;
-  },
-  decoration: const InputDecoration(
-    labelText: 'NIC*',
-    border: OutlineInputBorder(),
-    
-  ),
-),
-
-
+                          // Valid NIC
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'NIC*',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _drivingLicenceController,
                         decoration: const InputDecoration(
@@ -552,7 +700,6 @@ class _CVCreationState extends State<CVCreation> {
                         },
                       ),
                       const SizedBox(height: 20),
-
                       TextFormField(
                         readOnly: true,
                         controller: TextEditingController(
@@ -568,7 +715,6 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
                       DropdownButtonFormField<String>(
                         value: _selectReligion,
                         onChanged: (String? newValue) {
@@ -595,7 +741,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _ageController,
                         keyboardType: TextInputType.number,
@@ -628,7 +773,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
@@ -651,7 +795,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _contactMobileController,
                         decoration: const InputDecoration(
@@ -675,7 +818,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _contactHomeController,
                         decoration: const InputDecoration(
@@ -698,7 +840,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _addressController,
                         maxLines: 2,
@@ -716,7 +857,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       DropdownButtonFormField<String>(
                         decoration: const InputDecoration(
                           labelText: 'District',
@@ -764,7 +904,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _divisionalSecController,
                         decoration: const InputDecoration(
@@ -782,7 +921,6 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: _salaryController,
@@ -888,7 +1026,7 @@ class _CVCreationState extends State<CVCreation> {
                           );
                         }).toList(),
                         decoration: const InputDecoration(
-                          labelText: 'Educational Qualification Level',
+                          labelText: 'NVQ Level',
                           border: OutlineInputBorder(),
                         ),
                       ),
@@ -933,7 +1071,6 @@ class _CVCreationState extends State<CVCreation> {
                           return null;
                         },
                       ),
-                     
 
                       const SizedBox(height: 10),
                       TextFormField(
@@ -1542,6 +1679,7 @@ class _CVCreationState extends State<CVCreation> {
                                           prefered_industries.remove(industry);
                                         }
                                         print(prefered_industries);
+                                        // Update Firebase with the new `prefered_industries` list if needed
                                       });
                                     },
                                     title: Text(industry),
@@ -1551,6 +1689,7 @@ class _CVCreationState extends State<CVCreation> {
                             ),
                           ],
                         ),
+
                         const SizedBox(height: 20),
                         const Text(
                           'Select Preferred Districts to Work:',
@@ -1713,11 +1852,13 @@ class _CVCreationState extends State<CVCreation> {
                                     vertical: 16,
                                     horizontal: 32), // Button padding
                               ),
-                              child: const Text(
-                                'Submit',
-                                style: TextStyle(
+                              child: Text(
+                                DemoLocalization.of(context)
+                                        .getTranslatedValue('Submit') ??
+                                    'Submit',
+                                style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 16), // Text color
+                                    fontSize: 19), // Text color
                               ), // Background color
                             ),
                             ElevatedButton(
@@ -1886,7 +2027,6 @@ class _CVCreationState extends State<CVCreation> {
     );
   }
 }
-
 
 //PDF generating unction
 Future<void> generatePdfFromFirebase() async {
@@ -2418,3 +2558,4 @@ Future<void> generatePdfFromFirebase() async {
     print('User details not found');
   }
 }
+

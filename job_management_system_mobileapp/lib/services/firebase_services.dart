@@ -551,6 +551,20 @@ class FirebaseService {
     }
   }
 
+
+
+  
+//get CV details
+Future<Map<String,dynamic>?>editCVDetails()async{
+  DocumentSnapshot<Map<String,dynamic>?> _doc=await _db.collection(CV_COLLECTION).doc(uid).get();
+  if(_doc.exists){
+    return _doc.data();
+  }else{
+    return null;
+  }
+
+}
+
   //job provider details
 
   Future<void> addJobProviderDetails(
