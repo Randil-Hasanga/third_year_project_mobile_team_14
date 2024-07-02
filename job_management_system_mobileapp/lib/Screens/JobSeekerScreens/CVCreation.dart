@@ -290,9 +290,9 @@ class _CVCreationState extends State<CVCreation> {
             _refeeTwoController.text = data['refeeTwo'] ?? '';
 
             if (data['preferredIndustries'] != null) {
-            List<dynamic> industry = data['preferredIndustries'];
-            prefered_industries = List<String>.from(industry);
-          }
+              List<dynamic> industry = data['preferredIndustries'];
+              prefered_industries = List<String>.from(industry);
+            }
 
             if (data['prefferedDistrict'] != null) {
               selectPrefferedDistrict = data['prefferedDistrict'];
@@ -581,10 +581,10 @@ class _CVCreationState extends State<CVCreation> {
                       TextFormField(
                         controller: _nameWithIniController,
                         decoration: InputDecoration(
-                          labelText: DemoLocalization.of(context)
+                          labelText: Localization.of(context)
                                   .getTranslatedValue('nameWithIni') ??
                               'Name With Initials *',
-                          hintText: DemoLocalization.of(context)
+                          hintText: Localization.of(context)
                                   .getTranslatedValue('nameWithIni') ??
                               'Name With Initials *',
                           border: const OutlineInputBorder(),
@@ -593,9 +593,8 @@ class _CVCreationState extends State<CVCreation> {
                           // Regular expression to allow only letters and spaces
                           final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
                           if (value == null || value.isEmpty) {
-                            return DemoLocalization.of(context)
-                                    .getTranslatedValue(
-                                        'please enter name with initials') ??
+                            return Localization.of(context).getTranslatedValue(
+                                    'please enter name with initials') ??
                                 'Please enter full name';
                           } else if (!regex.hasMatch(value)) {
                             return 'Please enter valid name with initials (only letters and spaces)';
@@ -1853,7 +1852,7 @@ class _CVCreationState extends State<CVCreation> {
                                     horizontal: 32), // Button padding
                               ),
                               child: Text(
-                                DemoLocalization.of(context)
+                                Localization.of(context)
                                         .getTranslatedValue('Submit') ??
                                     'Submit',
                                 style: const TextStyle(
@@ -2558,4 +2557,3 @@ Future<void> generatePdfFromFirebase() async {
     print('User details not found');
   }
 }
-
