@@ -46,7 +46,7 @@ class _vacanciesState extends State<vacancies> {
   DateTime expiryDate = DateTime.now();
 
   Map<String, dynamic>? _jobProviderDetails;
-  String? orgType, _industry;
+  String? orgType, _industry, _logo;
 
   String _gender = 'Male';
 
@@ -76,6 +76,7 @@ class _vacanciesState extends State<vacancies> {
           orgType = _jobProviderDetails!['org_type'] ?? '';
           _companyName = _jobProviderDetails!['company_name'];
           _industry = _jobProviderDetails!['industry'];
+          _logo = _jobProviderDetails!['logo'] ?? '';
         }
       });
       print(_companyName);
@@ -587,20 +588,20 @@ class _vacanciesState extends State<vacancies> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _firebaseSerice!.addVacancy(
-                              _companyName!,
-                              _industry!,
-                              _jobPositionController.text,
-                              _descriptionController.text,
-                              _gender,
-                              jobType,
-                              _minimumAge.toInt(),
-                              _educationLevel,
-                              double.tryParse(_salaryController.text) ?? 0.0,
-                              _locationController.text,
-                              issuedDate,
-                              expiryDate,
-                              orgType!,
-                            );
+                                _companyName!,
+                                _industry!,
+                                _jobPositionController.text,
+                                _descriptionController.text,
+                                _gender,
+                                jobType,
+                                _minimumAge.toInt(),
+                                _educationLevel,
+                                double.tryParse(_salaryController.text) ?? 0.0,
+                                _locationController.text,
+                                issuedDate,
+                                expiryDate,
+                                orgType!,
+                                _logo!);
 
                             _companyNameController.clear();
                             selectedJobPosition = '';

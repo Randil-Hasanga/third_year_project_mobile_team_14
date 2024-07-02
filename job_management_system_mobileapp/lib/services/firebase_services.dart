@@ -207,7 +207,8 @@ class FirebaseService {
       String location,
       DateTime date,
       DateTime expiryDate,
-      String orgType) async {
+      String orgType,
+      String logo) async {
     List<String> list = [];
     DocumentReference vacancyRef = await vacancyCollection.add(
       {
@@ -227,7 +228,8 @@ class FirebaseService {
         'org_type': orgType,
         'applied_by': list,
         'active': true,
-        'disabled': false
+        'disabled': false,
+        'logo': logo
       },
     );
 
@@ -551,19 +553,16 @@ class FirebaseService {
     }
   }
 
-
-
-  
 //get CV details
-Future<Map<String,dynamic>?>editCVDetails()async{
-  DocumentSnapshot<Map<String,dynamic>?> _doc=await _db.collection(CV_COLLECTION).doc(uid).get();
-  if(_doc.exists){
-    return _doc.data();
-  }else{
-    return null;
+  Future<Map<String, dynamic>?> editCVDetails() async {
+    DocumentSnapshot<Map<String, dynamic>?> _doc =
+        await _db.collection(CV_COLLECTION).doc(uid).get();
+    if (_doc.exists) {
+      return _doc.data();
+    } else {
+      return null;
+    }
   }
-
-}
 
   //job provider details
 
