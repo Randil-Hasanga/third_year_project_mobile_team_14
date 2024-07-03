@@ -86,4 +86,37 @@ class ChatService {
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
+
+  // Get message details for unread count and last message
+  Future<Map<String, dynamic>> getMessageDetails(
+      String userID, String otherUserID) async {
+    List<String> ids = [userID, otherUserID];
+    ids.sort();
+    String chatRoomID = ids.join('_');
+
+    final unreadMessagesSnapshot = await _firestore
+        .collection('chat_rooms')
+        .doc(chatRoomID)
+        .collection('messages')
+        .where('receiverID', isEqualTo: userID)
+        .where('isRead', isEqualTo: false)
+        .get();
+
+    final lastMessageSnapshot = await _firestore
+        .collection('chat_rooms')
+        .doc(chatRoomID)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    String lastMessage = lastMessageSnapshot.docs.isNotEmpty
+        ? lastMessageSnapshot.docs.first['message']
+        : 'No messages';
+
+    return {
+      'unread': unreadMessagesSnapshot.docs.length,
+      'lastMessage': lastMessage,
+    };
+  }
 }

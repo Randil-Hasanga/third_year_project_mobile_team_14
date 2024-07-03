@@ -49,18 +49,43 @@ class SeekerChatHome extends StatelessWidget {
   _buildProviderListItem(Map<String, dynamic> userData, BuildContext context) {
     //display all provider except current user
     if (userData['email'] != _firebaseService.getCurrentUserChat()!.email) {
-      return UserTile(
-        text: userData['username'],
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatPage(
-                receiverName: userData['username'],
-                receiverEmail: userData['email'],
-                receiverID: userData['uid'],
-              ),
-            ),
+      return FutureBuilder<Map<String, dynamic>>(
+        future: _chatService.getMessageDetails(
+            userData['uid'], _firebaseService.getCurrentUserChat()!.uid),
+        builder: (context, messageSnapshot) {
+          if (messageSnapshot.connectionState == ConnectionState.waiting) {
+            return UserTile(
+              text: userData['username'],
+              lastMessage: 'Loading...',
+              unreadCount: 0,
+            );
+          }
+
+          if (messageSnapshot.hasError) {
+            return UserTile(
+              text: userData['username'],
+              lastMessage: 'Error loading messages',
+              unreadCount: 0,
+            );
+          }
+
+          final messageDetails = messageSnapshot.data!;
+          return UserTile(
+            text: userData['username'],
+            lastMessage: messageDetails['lastMessage'],
+            unreadCount: messageDetails['unread'],
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatPage(
+                    receiverName: userData['username'],
+                    receiverEmail: userData['email'],
+                    receiverID: userData['uid'],
+                  ),
+                ),
+              );
+            },
           );
         },
       );
