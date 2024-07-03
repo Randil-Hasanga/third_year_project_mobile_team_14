@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 class UserTile extends StatelessWidget {
   final String text;
   final void Function()? onTap;
+  final String lastMessage;
+  final int unreadCount;
 
-  const UserTile({super.key, required this.text, this.onTap});
+  const UserTile(
+      {super.key,
+      required this.text,
+      this.onTap,
+      required this.lastMessage,
+      required this.unreadCount});
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +24,26 @@ class UserTile extends StatelessWidget {
         ),
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
         padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Icon(Icons.person),
-            const SizedBox(width: 20),
-            Text(text),
-          ],
-        ),
+        child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: AssetImage('assets/profile_picture.jpg'),
+            ),
+            title: Text(text),
+            subtitle: Text(lastMessage),
+            trailing: unreadCount > 0
+                ? CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.red,
+                    child: Text(
+                      unreadCount.toString(),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                : null),
       ),
     );
   }
