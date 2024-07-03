@@ -55,6 +55,7 @@ class ChatService {
       receiverID: receiverID,
       message: message,
       timestamp: timestamp,
+      isRead: false,
     );
 
     //construct chat room ID for the two users
@@ -118,5 +119,23 @@ class ChatService {
       'unread': unreadMessagesSnapshot.docs.length,
       'lastMessage': lastMessage,
     };
+  }
+
+  void markMessagesAsRead(String userID, String otherUserID) async {
+    List<String> ids = [userID, otherUserID];
+    ids.sort();
+    String chatRoomID = ids.join('_');
+
+    QuerySnapshot querySnapshot = await _firestore
+        .collection("chat_rooms")
+        .doc(chatRoomID)
+        .collection("messages")
+        .where('receiverID', isEqualTo: userID)
+        .where('isRead', isEqualTo: false)
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.update({'isRead': true});
+    }
   }
 }
