@@ -34,6 +34,8 @@ class _ChatPageState extends State<ChatPage> {
     // TODO: implement initState
     super.initState();
 
+    _markMessagesAsRead();
+
     //add listener to focus node
     myFocusNode.addListener(() {
       if (myFocusNode.hasFocus) {
@@ -45,6 +47,11 @@ class _ChatPageState extends State<ChatPage> {
         );
       }
     });
+  }
+
+  void _markMessagesAsRead() async {
+    String currentUserID = firebaseService.getCurrentUserChat()!.uid;
+    _chatService.markMessagesAsRead(currentUserID, widget.receiverID);
   }
 
   @override
