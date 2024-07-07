@@ -1,5 +1,3 @@
-
-
 //import 'dart:js';
 
 import 'package:flutter/material.dart';
@@ -84,7 +82,7 @@ class Help extends StatelessWidget {
               },
               child: const Row(
                 children: [
-                  Text('Department of Employement and Manpower'),
+                  Text('Dept of Employement and Manpower'),
                   SizedBox(width: 5),
                   Icon(Icons.copy, size: 16),
                 ],

@@ -752,10 +752,9 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                   FontWeight.bold),
               onTap: () async {
                 await clearCredentials();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogInPage()),
-                );
+                await _firebaseService!.logout();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "login", (route) => false);
               },
             ),
           ],
