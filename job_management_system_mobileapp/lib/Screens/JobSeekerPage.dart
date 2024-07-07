@@ -108,7 +108,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
           break;
         }
     }
-    //MyApp.setLocale(context, _temp);
+    MyApp.setLocale(context, _temp);
   }
 
 

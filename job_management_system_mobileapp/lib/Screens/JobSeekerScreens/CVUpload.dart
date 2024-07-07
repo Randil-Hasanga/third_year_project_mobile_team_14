@@ -3,9 +3,14 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart'; // Import PDFView
+import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/seeker_chat_home.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:uuid/uuid.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
 class CVUpload extends StatefulWidget {
   final String userId;
@@ -27,20 +32,18 @@ class _CVUploadState extends State<CVUpload> {
     _fetchUploadedCVs();
   }
 
-  // Function to fetch the list of uploaded CVs
   Future<void> _fetchUploadedCVs() async {
     try {
-      final ListResult result = await FirebaseStorage.instance
-          .ref('CVs/${widget.userId}')
-          .listAll();
-      List<String> fileNames = result.items.map((Reference ref) => ref.name).toList();
+      final ListResult result =
+          await FirebaseStorage.instance.ref('CVs/${widget.userId}').listAll();
+      List<String> fileNames = result.items.map((ref) => ref.name).toList();
       setState(() {
         _uploadedCVs = fileNames;
       });
     } catch (e) {
       print('Error fetching uploaded CVs: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Failed to fetch uploaded CVs.'),
         ),
       );
@@ -58,12 +61,26 @@ class _CVUploadState extends State<CVUpload> {
       setState(() {
         _file = File(result.files.single.path!);
       });
+      // Show success message
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        title: 'Successfully selected',
+        text: 'Next, upload your CV',
+      );
     } else {
-      // User canceled the picker
+      // User canceled the picker or selection failed
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('File selection canceled.'),
+        const SnackBar(
+          content: Text('File selection failed. Please try again.'),
         ),
+      );
+      // Show failure message
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'File selection failed',
+        text: 'Please try selecting the file again.',
       );
     }
   }
@@ -72,7 +89,7 @@ class _CVUploadState extends State<CVUpload> {
   Future<void> _uploadFile() async {
     if (_file == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please select a file first.'),
         ),
       );
@@ -81,11 +98,12 @@ class _CVUploadState extends State<CVUpload> {
 
     try {
       // Generate a unique filename using UUID
-      String fileName = '${Uuid().v4()}.pdf'; // Example: '123e4567-e89b-12d3-a456-426614174000.pdf'
+      String fileName =
+          '${const Uuid().v4()}.pdf'; // Example: '123e4567-e89b-12d3-a456-426614174000.pdf'
 
       // Create a reference to the file location
-      Reference ref = FirebaseStorage.instance
-          .ref('CVs/${widget.userId}/$fileName');
+      Reference ref =
+          FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName');
 
       // Start the file upload
       UploadTask uploadTask = ref.putFile(_file!);
@@ -113,7 +131,7 @@ class _CVUploadState extends State<CVUpload> {
     } catch (e) {
       print('Error uploading CV: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Failed to upload CV.'),
         ),
       );
@@ -145,41 +163,110 @@ class _CVUploadState extends State<CVUpload> {
     } catch (e) {
       print('Error deleting CV: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Failed to delete CV.'),
         ),
       );
     }
   }
 
+  // Function to view the uploaded PDF file
+  Future<void> _viewPDF(String fileName) async {
+    String downloadURL = await FirebaseStorage.instance
+        .ref('CVs/${widget.userId}/$fileName')
+        .getDownloadURL();
+
+    // Navigate to PDF viewer using flutter_pdfview package
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text('View PDF'),
+          ),
+          body: PDFView(
+            filePath: downloadURL,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload CV'),
+        title: const Text('Upload your CV'),
+        backgroundColor: Colors.orange, // Set the background color to orange
+        elevation: 0, // Optional: Removes the shadow below the app bar
+        centerTitle: true, // Optional: Centers the title horizontally
       ),
       body: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             color: Colors.grey[200],
             child: Column(
               children: <Widget>[
-                ElevatedButton(
-                  onPressed: _selectFile,
-                  child: Text('Select File'),
+                Container(
+                  height: 200, // Adjust the height as needed
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: _selectFile,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blue, // Text color
+                        padding:
+                            const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5, // Shadow elevation
+                      ),
+                      child: const Text(
+                        'Select File',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _uploadFile,
-                  child: Text('Upload CV'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green, // Text color
+                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 5, // Shadow elevation
+                  ),
+                  child: const Text(
+                    'Upload CV',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _uploadProgress > 0
                     ? Column(
                         children: [
-                          Text('Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
-                          SizedBox(height: 10),
+                          Text(
+                              'Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
+                          const SizedBox(height: 10),
                           LinearProgressIndicator(value: _uploadProgress),
                         ],
                       )
@@ -187,35 +274,143 @@ class _CVUploadState extends State<CVUpload> {
               ],
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             color: Colors.grey[300],
             child: Column(
               children: <Widget>[
-                Text('Uploaded CVs:'),
-                SizedBox(height: 10),
+                const Text(
+                  'Uploaded Files:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 _uploadedCVs.isEmpty
-                    ? Text('No CVs uploaded.')
-                    : Container(
-                        height: 200, // Fixed height for the list
-                        child: ListView.builder(
-                          itemCount: _uploadedCVs.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(_uploadedCVs[index]),
-                              trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () => _deleteCV(_uploadedCVs[index]),
-                              ),
-                            );
-                          },
+                    ? Container(
+                        height: 200, // Adjust height as needed
+                        child: const Center(
+                          child: Text(
+                            'No files uploaded.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 117, 117, 117),
+                            ),
+                          ),
                         ),
-                      ),
+                      )
+                    :Container(
+  height: 200, // Fixed height for the list
+  child: GridView.builder(
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2, // Number of columns in the grid
+      crossAxisSpacing: 10, // Spacing between columns
+      mainAxisSpacing: 10, // Spacing between rows
+    ),
+    itemCount: _uploadedCVs.length,
+    itemBuilder: (context, index) {
+      return Card(
+        elevation: 3,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.picture_as_pdf, // PDF icon
+                size: 50, // Adjust the size as needed
+                color: Colors.red, // Icon color
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: Text(
+                  _uploadedCVs[index],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2, // Limit to 2 lines for text
+                  overflow: TextOverflow.ellipsis, // Handle text overflow
+                ),
+              ),
+              SizedBox(height: 5),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => _deleteCV(_uploadedCVs[index]),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  ),
+),
+
               ],
             ),
-          ),
+          )
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.orange.shade800,
+        shape: const CircularNotchedRectangle(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.home,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.settings,
+                    color: Color.fromARGB(
+                        255, 255, 255, 255)), // Change the color here
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileJobSeeker()));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.notifications,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.chat,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SeekerChatHome(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
