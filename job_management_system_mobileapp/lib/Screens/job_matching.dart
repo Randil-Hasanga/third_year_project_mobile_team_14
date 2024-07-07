@@ -420,8 +420,16 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
           height: _deviceHeight! * 0.01,
         ),
         if (text != null) ...{
-          _richTextWidget!
-              .simpleText(text, 21, Colors.black87, FontWeight.w600),
+          Row(
+            children: [
+              _richTextWidget!
+                  .simpleText(text, 21, Colors.black87, FontWeight.w600),
+              SizedBox(
+                width: 10,
+              ),
+              Icon(Icons.double_arrow_sharp),
+            ],
+          ),
           SizedBox(
             height: _deviceHeight * 0.01,
           ),
@@ -602,7 +610,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                           ],
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 5,
                         ),
                         if (listItem['logo'] != null &&
                             listItem['logo'] != '') ...{
@@ -610,7 +618,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                             child: Image.network(
                               listItem['logo']!, // Replace with your image URL
                               height: 50,
-                              width: 120,
+                              width: 80,
                               loadingBuilder: (BuildContext context,
                                   Widget child,
                                   ImageChunkEvent? loadingProgress) {

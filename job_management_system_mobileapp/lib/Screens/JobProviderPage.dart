@@ -158,23 +158,23 @@ class _JobProviderPageState extends State<JobProviderPage> {
               const SizedBox(
                 height: 2,
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
+              const Padding(
+                padding: EdgeInsets.all(20),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 30,
                       backgroundImage: AssetImage('assets/Default.png'),
                     ),
-                    const SizedBox(width: 20),
+                    SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("$_userName",
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 30)),
-                        const Text("Software Engineer",
+                        Text("Dashboard",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 30)),
+                        Text("Job Provider",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)),
                       ],
@@ -305,7 +305,8 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                   margin: const EdgeInsets.all(8),
                                   width: 300,
                                   decoration: BoxDecoration(
-                                    color: Color(0xff92A3FD).withOpacity(0.3),
+                                    color: const Color(0xff92A3FD)
+                                        .withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Column(
@@ -447,20 +448,20 @@ class _JobProviderPageState extends State<JobProviderPage> {
                   ],
                 ),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 30,
                     backgroundImage: AssetImage('assets/Default.jpg'),
                   ),
-                  const SizedBox(height: 15),
+                  SizedBox(height: 15),
                   Text(
-                    '$_userName',
-                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    "Quick Access",
+                    style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
-                  const Text(
-                    'Software Engineer',
+                  Text(
+                    'Job Provider',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],

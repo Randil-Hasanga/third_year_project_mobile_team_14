@@ -451,8 +451,13 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     return englishRegex.hasMatch(text);
   }
 
-  bool isEnglishWithSymbols(String text) {
-    final RegExp englishRegex = RegExp(r'^[a-zA-Z ,.!?]+$');
+  // bool isEnglishWithSymbolsAndNumbers(String text) {
+  //   final RegExp englishRegex = RegExp(r'^[a-zA-Z ,.!?]+$');
+  //   return englishRegex.hasMatch(text);
+  // }
+
+  bool isEnglishWithSymbolsAndNumbers(String text) {
+    final RegExp englishRegex = RegExp(r'^[a-zA-Z0-9 ,.!?]+$');
     return englishRegex.hasMatch(text);
   }
 
@@ -497,7 +502,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Company name cannot be empty";
-        } else if (!isEnglishWithSymbols(value)) {
+        } else if (!isEnglishWithSymbolsAndNumbers(value)) {
           return "Company name must be in English";
         } else {
           return null;
@@ -526,7 +531,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value!.isEmpty) {
           return "Address cannot be empty";
-        } else if (!isEnglishWithSymbols(value)) {
+        } else if (!isEnglishWithSymbolsAndNumbers(value)) {
           return "Address must be in English";
         } else {
           return null;
@@ -779,7 +784,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Agent name cannot be empty";
-        } else if (!isEnglishWithSymbols(value)) {
+        } else if (!isEnglishWithSymbolsAndNumbers(value)) {
           return "Agent name must be in English";
         } else {
           return null;
@@ -805,7 +810,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Agent Position cannot be empty";
-        } else if (!isEnglishWithSymbols(value)) {
+        } else if (!isEnglishWithSymbolsAndNumbers(value)) {
           return "Agent Position must be in English";
         } else {
           return null;
