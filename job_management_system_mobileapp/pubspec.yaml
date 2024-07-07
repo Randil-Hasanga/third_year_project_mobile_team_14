@@ -69,6 +69,7 @@ dependencies:
   url_launcher: ^6.2.6
   flutter_phone_direct_caller: ^2.1.1
   uuid: ^4.4.0
+  flutter_cached_pdfview: ^0.4.2
 
 dev_dependencies:
   flutter_test:
