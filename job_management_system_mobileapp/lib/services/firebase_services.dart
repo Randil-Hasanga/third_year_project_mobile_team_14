@@ -504,7 +504,7 @@ class FirebaseService {
       'englishReading': englishReading,
       'englishWriting': englishWriting,
       'tamilSpeaking': tamilSpeaking,
-      'tamilReading,': tamilReading,
+      'tamilReading': tamilReading,
       'tamilWriting': tamilWriting,
 
       //Job Expectation
