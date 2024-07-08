@@ -22,6 +22,24 @@ class RichTextWidget {
     );
   }
 
+  Widget simpleTextMax2(
+      String text, double? fontSize, Color color, FontWeight? fontweight) {
+    return RichText(
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+      softWrap: true,
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          fontSize: fontSize,
+          fontFamily: GoogleFonts.poppins().fontFamily,
+          color: color,
+          fontWeight: fontweight,
+        ),
+      ),
+    );
+  }
+
   Widget simpleTextWithIconLeft(IconData icon, String text, double? fontSize,
       Color color, FontWeight? fontweight, Color iconColor) {
     return Row(
@@ -80,7 +98,7 @@ class RichTextWidget {
   }
 
   Widget KeyValuePairRichText(
-      String keyText, String valueText, double fontSize) {
+      String keyText, String valueText, double? fontSize) {
     return Column(
       children: [
         Table(

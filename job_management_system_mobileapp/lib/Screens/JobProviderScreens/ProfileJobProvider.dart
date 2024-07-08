@@ -74,6 +74,9 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
   final TextEditingController _agentFaxController = TextEditingController();
   final TextEditingController _agentEmailController = TextEditingController();
 
+  bool? isBeingUpdated = false;
+  String? rejectionDescription, approvalId;
+
   Map<String, dynamic>? _jobProviderDetails;
 
   @override
@@ -81,11 +84,31 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
     _getProvider();
+    getUpdatedData();
+  }
+
+  void getUpdatedData() async {
+    await _firebaseService!.getUpdatedUser();
+    if (mounted) {
+      setState(() {
+        isBeingUpdated = _firebaseService!.currentUser!['isBeingUpdated'];
+        approvalId = _firebaseService!.currentUser!['approval_id'];
+      });
+    }
+
+    if (isBeingUpdated == true) {
+      rejectionDescription =
+          await _firebaseService!.getRejectionReason(approvalId!);
+      setState(() {});
+      print(rejectionDescription);
+    }
   }
 
   void _getProvider() async {
     _jobProviderDetails = await _firebaseService!.getCurrentProviderData();
+
     print(_jobProviderDetails);
+    print("is being updated : $isBeingUpdated");
 
     if (_jobProviderDetails != null) {
       setState(() {
@@ -144,6 +167,36 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(
+                height: 5,
+              ),
+              if (isBeingUpdated == true) ...{
+                Container(
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(164, 244, 67, 54),
+                      borderRadius: BorderRadius.circular(10)),
+                  padding: EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Icon(Icons.warning),
+                      _richTextWidget.simpleText(
+                          "Your Application has been rejected",
+                          15,
+                          Colors.black,
+                          FontWeight.w600),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _richTextWidget.simpleText(
+                          "Reason", 20, Colors.black, FontWeight.w600),
+                      if (rejectionDescription != null) ...{
+                        _richTextWidget.simpleTextMax2("$rejectionDescription",
+                            null, Colors.black, FontWeight.bold)
+                      }
+                    ],
+                  ),
+                )
+              },
               Padding(
                 padding: EdgeInsets.only(top: _deviceHeight! * 0.02),
                 child: Row(
@@ -1118,6 +1171,11 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
           Navigator.of(context).pop(); // Dismiss the loading dialog
           _showSuccessDialog(context);
+
+          // getUpdatedData();
+          setState(() {
+            isBeingUpdated = false;
+          });
         }
       } else {
         Navigator.of(context).pop(); // Dismiss the loading dialog
