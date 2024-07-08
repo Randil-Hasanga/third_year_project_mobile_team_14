@@ -23,6 +23,7 @@ const String CV_COLLECTION = 'CVDetails';
 const String VACANCY_COLLECTION = 'vacancy';
 const String SEEKER_PROFILE_DETAILS_COLLECTION = 'profileJobSeeker';
 const String NOTIFICATIONS = 'notifications';
+const String APPROVAL_COLLECTION = 'provider_approval_data';
 
 class FirebaseService {
   var value;
@@ -58,7 +59,7 @@ class FirebaseService {
           email: email, password: password);
 
       if (_userCredentials != null) {
-        currentUser = await _getUserData(uid: _userCredentials.user!.uid);
+        currentUser = await getUserData(uid: _userCredentials.user!.uid);
         uid = _auth.currentUser?.uid;
         this.email = email;
         userType = currentUser!['type'];
@@ -73,10 +74,14 @@ class FirebaseService {
     }
   }
 
-  Future<Map?> _getUserData({required String uid}) async {
+  Future<void> getUpdatedUser() async {
+    currentUser = await getUserData(uid: uid!);
+  }
+
+  Future<Map?> getUserData({required String uid}) async {
     DocumentSnapshot _doc =
         await _db.collection(USER_COLLECTION).doc(uid).get();
-
+    currentUser = _doc.data() as Map;
     if (_doc.exists) {
       return _doc.data() as Map;
     } else {
@@ -110,6 +115,7 @@ class FirebaseService {
           'pending': pending,
           'disabled': false,
           'registered_date': currentDate,
+          'isBeingUpdated': false,
         });
 
         if (accountType == 'seeker') {
@@ -730,6 +736,11 @@ class FirebaseService {
       "description": "Add new campany",
       "notification_go": "officer",
     });
+
+    await _db
+        .collection(USER_COLLECTION)
+        .doc(uid)
+        .update({'isBeingUpdated': false});
   }
 
   //current provider data
@@ -941,6 +952,22 @@ class FirebaseService {
       print("Logged out successfully");
     } catch (e) {
       print("Logging out failed : $e");
+    }
+  }
+
+  Future<String?> getRejectionReason(String docId) async {
+    try {
+      DocumentSnapshot doc =
+          await _db.collection(APPROVAL_COLLECTION).doc(docId).get();
+      if (doc.exists) {
+        String reason = doc['reason'];
+        return reason;
+      } else {
+        print('Document does not exist');
+        return null;
+      }
+    } catch (e) {
+      print('Error in retrieving rejection reason : $e');
     }
   }
 }
