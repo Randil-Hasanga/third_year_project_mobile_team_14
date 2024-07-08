@@ -248,7 +248,7 @@ class FirebaseService {
       'company_name': companyName,
       'job_type': jobType,
       'registered_date': currentDate,
-      'description': "Register New Job Provider",
+      'description': "Publish New Vacancy ",
       'notification_go': "officer",
     });
   }
