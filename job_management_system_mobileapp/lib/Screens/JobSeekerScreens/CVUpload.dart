@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+// ignore: depend_on_referenced_packages
 import 'package:flutter_pdfview/flutter_pdfview.dart'; // Import PDFView
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
