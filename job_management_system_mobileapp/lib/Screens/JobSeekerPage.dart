@@ -373,13 +373,24 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return Center(
+                                  return const Center(
                                     child: CircularProgressIndicator(),
                                   ); // Show loading indicator while fetching data
                                 }
 
                                 if (snapshot.hasError) {
                                   return Text('Error: ${snapshot.error}');
+                                }
+
+                                if (snapshot.data?.docs.isEmpty ?? true) {
+                                  return Center(
+                                    child: Text(
+                                      'No matching vacancies',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  );
                                 }
 
                                 return Container(
@@ -401,18 +412,22 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                         }
 
                                         return Padding(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal:
                                                   8.0), // Added padding horizontally
                                           child: Container(
                                             width: 250,
                                             decoration: BoxDecoration(
-                                              color: Color.fromARGB(255, 240, 175, 149), // Card background color
+                                              color: Color.fromARGB(
+                                                  119,
+                                                  236,
+                                                  144,
+                                                  108), // Card background color
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
                                             child: Padding(
-                                              padding: EdgeInsets.all(
+                                              padding: const EdgeInsets.all(
                                                   15.0), // Adjusted padding
                                               child: Column(
                                                 crossAxisAlignment:
@@ -420,17 +435,18 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      Icon(Icons.business,
+                                                      const Icon(Icons.business,
                                                           color: Color.fromARGB(
                                                               255,
-                                                              255,
-                                                              255,
-                                                              255)), // Icon color
-                                                      SizedBox(width: 8),
+                                                              0,
+                                                              0,
+                                                              0)), // Icon color
+                                                      const SizedBox(width: 8),
                                                       Flexible(
                                                         child: Text(
                                                           companyName,
-                                                          style: TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 15,
                                                             color: Color.fromARGB(
                                                                 255,
@@ -444,22 +460,23 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                       ),
                                                     ],
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  const SizedBox(height: 6),
                                                   Row(
                                                     children: [
-                                                      Icon(Icons.work,
+                                                      const Icon(Icons.work,
                                                           color: Color.fromARGB(
                                                               255,
-                                                              255,
-                                                              255,
-                                                              255)), // Icon color
-                                                      SizedBox(width: 8),
+                                                              0,
+                                                              0,
+                                                              0)), // Icon color
+                                                      const SizedBox(width: 8),
                                                       Flexible(
                                                         child: Text(
                                                           (vacancyData?[
                                                                   'job_position']
                                                               as String),
-                                                          style: TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 15,
                                                             color: Color.fromARGB(
                                                                 221,
@@ -475,23 +492,24 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                       ),
                                                     ],
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  const SizedBox(height: 6),
                                                   Row(
                                                     children: [
-                                                      Icon(Icons.location_on,
-                                                          color: const Color
-                                                              .fromARGB(
+                                                      const Icon(
+                                                          Icons.location_on,
+                                                          color: Color.fromARGB(
                                                               255,
-                                                              255,
-                                                              255,
-                                                              255)), // Icon color
-                                                      SizedBox(width: 8),
+                                                              0,
+                                                              0,
+                                                              0)), // Icon color
+                                                      const SizedBox(width: 8),
                                                       Flexible(
                                                         child: Text(
                                                           (vacancyData?[
                                                                   'location']
                                                               as String),
-                                                          style: TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 15,
                                                             color: Color.fromARGB(
                                                                 255,
@@ -550,14 +568,15 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const CircleAvatar(
-                    radius: 35,
-                    backgroundImage: AssetImage('assets/profile_picture.jpg'),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Hii, $_userName ...', // Replace $_userName with the actual username variable
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '$_userName',
-                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    'Services of Job Management System', // Replace with your desired text
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
               ),
