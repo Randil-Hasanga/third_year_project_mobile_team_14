@@ -9,6 +9,7 @@ import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/seeker_chat_home.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/change_password.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
@@ -107,6 +108,7 @@ class _MyAppState extends State<MyApp> {
         'edit_seeker_profile': (context) => ProfileJobSeeker(),
         'job_matching': (context) => JobMatchingScreen(),
         'change_pwd': (context) => ChangePassword(),
+        'seeker_chats': (context) => SeekerChatHome(),
       },
     );
   }

@@ -864,7 +864,7 @@ class FirebaseService {
   }
 
   Future<void> removeSeekerFromVacancy(
-      String vacancy_id, String seeker_id) async {
+      String vacancy_id, String? seeker_id) async {
     try {
       await _db.collection(VACANCY_COLLECTION).doc(vacancy_id).update({
         'applied_by': FieldValue.arrayRemove(
@@ -968,6 +968,29 @@ class FirebaseService {
       }
     } catch (e) {
       print('Error in retrieving rejection reason : $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>?> getAppliedJobs() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
+          .collection(VACANCY_COLLECTION)
+          .where('active', isEqualTo: true)
+          .where('applied_by', arrayContains: uid)
+          .get();
+
+      if (_querySnapshot.docs.isNotEmpty) {
+        List<Map<String, dynamic>> vacancies =
+            _querySnapshot.docs.map((doc) => doc.data()).toList();
+        print("applied vacancies: $vacancies");
+        return vacancies;
+      } else {
+        print("1 No vacancies found.");
+        return []; // Return an empty list if there are no vacancies
+      }
+    } catch (e) {
+      print("Error retrieving applied jobs : $e");
+      return null;
     }
   }
 }

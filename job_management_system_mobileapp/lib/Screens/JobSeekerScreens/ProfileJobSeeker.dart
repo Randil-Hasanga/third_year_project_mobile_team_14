@@ -8,7 +8,6 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
@@ -184,10 +183,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 icon: const Icon(Icons.chat,
                     color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Chattings()));
+                  Navigator.popAndPushNamed(context, "seeker_chats");
                 },
               ),
             ],

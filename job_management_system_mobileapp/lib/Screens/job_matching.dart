@@ -681,7 +681,7 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                         children: [
                           _richTextWidget!.simpleTextWithIconLeft(
                               Icons.currency_exchange,
-                              "Rs. ${listItem['minimum_salary']}",
+                              "Rs. ${listItem['minimum_salary']}0",
                               20,
                               const Color.fromARGB(255, 146, 0, 0),
                               FontWeight.w700,

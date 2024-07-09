@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-
 
 class NotificationsJobSeeker extends StatefulWidget {
   // ignore: use_super_parameters
@@ -29,12 +27,11 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
     'A company has contacted you for a job posting',
     'You have a message in your inbox',
   ];
-     double? _deviceWidth, _deviceHeight; 
-
+  double? _deviceWidth, _deviceHeight;
 
   @override
   Widget build(BuildContext context) {
- //responsiveness of the device
+    //responsiveness of the device
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
     void showAlert() {
@@ -43,7 +40,6 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
         type: QuickAlertType.success,
       );
     }
-
 
     return Scaffold(
       appBar: AppBar(
@@ -64,27 +60,49 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home,color: Colors.white,),
+                icon: const Icon(
+                  Icons.home,
+                  color: Colors.white,
+                ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const JobSeekerPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings,color: Colors.white,),
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,color: Colors.white,),
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.white,
+                ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const NotificationsJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat,color: Colors.white,),
+                icon: const Icon(
+                  Icons.chat,
+                  color: Colors.white,
+                ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const Chattings()));
+                  Navigator.popAndPushNamed(context, "seeker_chats");
                 },
               ),
             ],
@@ -113,7 +131,7 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
             ),
           );
         },
-      
       ),
-    );}
+    );
+  }
 }
