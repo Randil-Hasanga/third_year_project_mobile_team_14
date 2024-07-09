@@ -619,6 +619,7 @@ class FirebaseService {
               "repFax": repFax,
               "repEmail": repEmail,
               "districtFull": districtFull,
+              "created_date": DateTime.now(),
             }, SetOptions(merge: true)); // set user document for new user
           });
         } catch (e) {
@@ -643,6 +644,7 @@ class FirebaseService {
             "repFax": repFax,
             "repEmail": repEmail,
             "districtFull": districtFull,
+            "created_date": DateTime.now(),
           }, SetOptions(merge: true));
         } catch (e) {
           print(e);
@@ -685,6 +687,7 @@ class FirebaseService {
                 "repFax": repFax,
                 "repEmail": repEmail,
                 "districtFull": districtFull,
+                "created_date": DateTime.now(),
               }, SetOptions(merge: true)); // set user document for new user
             });
           });
@@ -718,6 +721,7 @@ class FirebaseService {
               "repFax": repFax,
               "repEmail": repEmail,
               "districtFull": districtFull,
+              "created_date": DateTime.now(),
             }, SetOptions(merge: true));
           });
         } catch (e) {
