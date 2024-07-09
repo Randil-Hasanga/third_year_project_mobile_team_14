@@ -100,5 +100,6 @@
     "physical": "Traditional",
     "topic_warning": "Please enter a topic",
     "description_warning": "Please enter a description",
-    "interview_scheduler": "Interview Scheduler"
+    "interview_scheduler": "Interview Scheduler",
+    "applied_jobs": "Applied Jobs"
 }

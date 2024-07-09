@@ -49,7 +49,7 @@ class AppBarWidget {
             IconButton(
               icon: const Icon(Icons.chat),
               onPressed: () {
-                //Navigator.push(context, MaterialPageRoute(builder: (context)=>const ));
+                //Navigator.popAndPushNamed(context, "chats");
               },
             ),
           ],
@@ -88,7 +88,7 @@ class AppBarWidget {
             IconButton(
               icon: const Icon(Icons.chat),
               onPressed: () {
-                //Navigator.push(context, MaterialPageRoute(builder: (context)=>const ));
+                Navigator.popAndPushNamed(context, "seeker_chats");
               },
             ),
           ],
