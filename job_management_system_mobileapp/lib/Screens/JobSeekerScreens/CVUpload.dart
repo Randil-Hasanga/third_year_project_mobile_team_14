@@ -36,7 +36,8 @@ class _CVUploadState extends State<CVUpload> {
 
   Future<void> _fetchUploadedCVs() async {
     try {
-      final ListResult result = await FirebaseStorage.instance.ref('CVs/${widget.userId}').listAll();
+      final ListResult result =
+          await FirebaseStorage.instance.ref('CVs/${widget.userId}').listAll();
       List<String> fileNames = result.items.map((ref) => ref.name).toList();
       setState(() {
         _uploadedCVs = fileNames;
@@ -87,66 +88,69 @@ class _CVUploadState extends State<CVUpload> {
   }
 
   // Function to upload the selected file to Firebase Storage
- // Function to upload the selected file to Firebase Storage
-Future<void> _uploadFile() async {
-  if (_file == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please select a file first.'),
-      ),
-    );
-    return;
-  }
+  // Function to upload the selected file to Firebase Storage
+  Future<void> _uploadFile() async {
+    if (_file == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a file first.'),
+        ),
+      );
+      return;
+    }
 
-  try {
-    // Generate a unique filename using UUID
-    String fileName = '${const Uuid().v4()}.pdf';
+    try {
+      // Generate a unique filename using UUID
+      String fileName = '${const Uuid().v4()}.pdf';
 
-    // Create a reference to the file location
-    Reference ref = FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName');
+      // Create a reference to the file location
+      Reference ref =
+          FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName');
 
-    // Start the file upload
-    UploadTask uploadTask = ref.putFile(_file!);
+      // Start the file upload
+      UploadTask uploadTask = ref.putFile(_file!);
 
-    // Listen to the upload task events
-    uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-      setState(() {
-        _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
+      // Listen to the upload task events
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+        setState(() {
+          _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
+        });
       });
-    });
 
-    // Wait for the upload to complete
-    await uploadTask;
+      // Wait for the upload to complete
+      await uploadTask;
 
-    // Show success alert
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.success,
-      title: 'CV uploaded successfully',
-      text: 'Your CV has been uploaded successfully.',
-    );
+      // Show success alert
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        title: 'CV uploaded successfully',
+        text: 'Your CV has been uploaded successfully.',
+      );
 
-    // Refresh the list of uploaded CVs
-    _fetchUploadedCVs();
-  } catch (e) {
-    print('Error uploading CV: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Failed to upload CV.'),
-      ),
-    );
-  } finally {
-    setState(() {
-      _uploadProgress = 0.0; // Reset the progress indicator
-    });
+      // Refresh the list of uploaded CVs
+      _fetchUploadedCVs();
+    } catch (e) {
+      print('Error uploading CV: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to upload CV.'),
+        ),
+      );
+    } finally {
+      setState(() {
+        _uploadProgress = 0.0; // Reset the progress indicator
+      });
+    }
   }
-}
 
   // Function to delete the CV from Firebase Storage
   Future<void> _deleteCV(String fileName) async {
     try {
       // Delete file from Firebase Storage
-      await FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName').delete();
+      await FirebaseStorage.instance
+          .ref('CVs/${widget.userId}/$fileName')
+          .delete();
 
       // Show success alert
       QuickAlert.show(
@@ -172,7 +176,9 @@ Future<void> _uploadFile() async {
   Future<void> _viewPDF(String fileName) async {
     try {
       // Get the download URL from Firebase Storage
-      String downloadURL = await FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName').getDownloadURL();
+      String downloadURL = await FirebaseStorage.instance
+          .ref('CVs/${widget.userId}/$fileName')
+          .getDownloadURL();
 
       // Download the file to a temporary directory
       final response = await HttpClient().getUrl(Uri.parse(downloadURL));
@@ -214,7 +220,8 @@ Future<void> _uploadFile() async {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Upload your CV'),
-        backgroundColor: Colors.orange.shade800, // Set the background color to orange
+        backgroundColor:
+            Colors.orange.shade800, // Set the background color to orange
         elevation: 0, // Optional: Removes the shadow below the app bar
         centerTitle: true, // Optional: Centers the title horizontally
       ),
@@ -236,7 +243,8 @@ Future<void> _uploadFile() async {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 3,
                         blurRadius: 7,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
                       ),
                     ],
                   ),
@@ -246,7 +254,8 @@ Future<void> _uploadFile() async {
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.blue, // Text color
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 30),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -265,7 +274,8 @@ Future<void> _uploadFile() async {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.green, // Text color
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 30),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -280,7 +290,8 @@ Future<void> _uploadFile() async {
                 _uploadProgress > 0
                     ? Column(
                         children: [
-                          Text('Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
+                          Text(
+                              'Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
                           const SizedBox(height: 10),
                           LinearProgressIndicator(value: _uploadProgress),
                         ],
@@ -292,7 +303,7 @@ Future<void> _uploadFile() async {
           const SizedBox(height: 20),
           Container(
             padding: const EdgeInsets.all(20),
-            color: Colors.grey[300],
+            color: Color.fromARGB(255, 240, 175, 149),
             child: Column(
               children: <Widget>[
                 const Text(
@@ -312,7 +323,7 @@ Future<void> _uploadFile() async {
                             'No files uploaded.',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Color.fromARGB(255, 117, 117, 117),
+                              color: Color.fromARGB(255, 255, 255, 255),
                             ),
                           ),
                         ),
@@ -320,7 +331,8 @@ Future<void> _uploadFile() async {
                     : Container(
                         height: 200, // Fixed height for the list
                         child: GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2, // Number of columns in the grid
                             crossAxisSpacing: 10, // Spacing between columns
                             mainAxisSpacing: 10, // Spacing between rows
@@ -349,21 +361,26 @@ Future<void> _uploadFile() async {
                                           color: Colors.black,
                                         ),
                                         textAlign: TextAlign.center,
-                                        maxLines: 2, // Limit to 2 lines for text
-                                        overflow: TextOverflow.ellipsis, // Handle text overflow
+                                        maxLines:
+                                            2, // Limit to 2 lines for text
+                                        overflow: TextOverflow
+                                            .ellipsis, // Handle text overflow
                                       ),
                                     ),
                                     SizedBox(height: 5),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         IconButton(
                                           icon: const Icon(Icons.visibility),
-                                          onPressed: () => _viewPDF(_uploadedCVs[index]),
+                                          onPressed: () =>
+                                              _viewPDF(_uploadedCVs[index]),
                                         ),
                                         IconButton(
                                           icon: const Icon(Icons.delete),
-                                          onPressed: () => _deleteCV(_uploadedCVs[index]),
+                                          onPressed: () =>
+                                              _deleteCV(_uploadedCVs[index]),
                                         ),
                                       ],
                                     ),
@@ -388,27 +405,45 @@ Future<void> _uploadFile() async {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home, color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.home,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const JobSeekerPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings, color: Color.fromARGB(255, 255, 255, 255)), // Change the color here
+                icon: const Icon(Icons.settings,
+                    color: Color.fromARGB(
+                        255, 255, 255, 255)), // Change the color here
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications, color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.notifications,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsJobSeeker()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat, color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.chat,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SeekerChatHome()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SeekerChatHome()));
                 },
               ),
             ],

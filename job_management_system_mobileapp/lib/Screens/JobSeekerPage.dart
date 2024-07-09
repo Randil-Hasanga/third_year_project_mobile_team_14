@@ -183,14 +183,14 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             radius: 64,
                             backgroundImage: NetworkImage(profile_image!),
                           ),
-                          SizedBox(
+                          const SizedBox(
                               height:
                                   10), // Adding some space between the profile image and the username
                           Text(
                             _userName ??
                                 '', // Assuming _userName holds the user's name
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
@@ -256,7 +256,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               decoration: BoxDecoration(
                                 color: Colors
                                     .grey.shade200, // Gray background color
-                                borderRadius: BorderRadius.only(
+                                borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(
                                       60), // Adjust as per your design
                                   topRight: Radius.circular(
@@ -269,7 +269,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
+                                  const Text(
                                     'Services',
                                     style: TextStyle(
                                       fontSize: 18,
@@ -277,7 +277,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
+                                  const SizedBox(height: 10),
                                   // Service items (replace with your icons and titles)
                                   Row(
                                     mainAxisAlignment:
@@ -314,7 +314,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => Help()),
+                                              builder: (context) =>
+                                                  const Help()),
                                         );
                                       }),
                                     ],
@@ -322,7 +323,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             const Divider(
                               height: 5,
                             ),
@@ -372,7 +373,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const Center(
+                                  return Center(
                                     child: CircularProgressIndicator(),
                                   ); // Show loading indicator while fetching data
                                 }
@@ -382,8 +383,8 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                 }
 
                                 return Container(
-                                  color: const Color.fromARGB(255, 255, 255,
-                                      255), // Background color for the list
+                                  color: Colors
+                                      .white, // Background color for the list
                                   child: Row(
                                     children: List.generate(
                                       snapshot.data?.docs.length ?? 0,
@@ -398,19 +399,20 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                   dynamic>)['company_name']
                                               as String;
                                         }
+
                                         return Padding(
-                                          padding: const EdgeInsets.symmetric(
+                                          padding: EdgeInsets.symmetric(
                                               horizontal:
                                                   8.0), // Added padding horizontally
                                           child: Container(
                                             width: 250,
                                             decoration: BoxDecoration(
-                                              color: Colors.grey.shade200,
+                                              color: Color.fromARGB(255, 240, 175, 149), // Card background color
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(
+                                              padding: EdgeInsets.all(
                                                   15.0), // Adjusted padding
                                               child: Column(
                                                 crossAxisAlignment:
@@ -418,54 +420,85 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      const Icon(
-                                                          Icons.business),
-                                                      const SizedBox(width: 8),
+                                                      Icon(Icons.business,
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255)), // Icon color
+                                                      SizedBox(width: 8),
                                                       Flexible(
                                                         child: Text(
                                                           companyName,
-                                                          style:
-                                                              const TextStyle(
+                                                          style: TextStyle(
                                                             fontSize: 15,
-                                                            color: Colors.blue,
+                                                            color: Color.fromARGB(
+                                                                255,
+                                                                0,
+                                                                0,
+                                                                0), // Text color
+                                                            fontWeight: FontWeight
+                                                                .bold, // Optional: Font weight
                                                           ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                  const SizedBox(height: 6),
+                                                  SizedBox(height: 6),
                                                   Row(
                                                     children: [
-                                                      const Icon(Icons.work),
-                                                      const SizedBox(width: 8),
+                                                      Icon(Icons.work,
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255)), // Icon color
+                                                      SizedBox(width: 8),
                                                       Flexible(
                                                         child: Text(
                                                           (vacancyData?[
                                                                   'job_position']
                                                               as String),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 15),
+                                                          style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: Color.fromARGB(
+                                                                221,
+                                                                0,
+                                                                0,
+                                                                0), // Text color
+                                                            fontWeight: FontWeight
+                                                                .bold, // Make the text bold
+                                                          ),
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                  const SizedBox(height: 6),
+                                                  SizedBox(height: 6),
                                                   Row(
                                                     children: [
-                                                      const Icon(
-                                                          Icons.location_on),
-                                                      const SizedBox(width: 8),
+                                                      Icon(Icons.location_on,
+                                                          color: const Color
+                                                              .fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255)), // Icon color
+                                                      SizedBox(width: 8),
                                                       Flexible(
                                                         child: Text(
                                                           (vacancyData?[
                                                                   'location']
                                                               as String),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 15),
+                                                          style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: Color.fromARGB(
+                                                                255,
+                                                                0,
+                                                                0,
+                                                                0), // Text color
+                                                          ),
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         ),
@@ -607,7 +640,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               title: Text(
                 Localization.of(context).getTranslatedValue('upload_CV') ??
                     'Upload CV',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -777,10 +810,10 @@ Widget serviceItem(IconData icon, String title, VoidCallback onTap) {
     child: Column(
       children: <Widget>[
         Icon(icon, size: 50, color: Colors.orange.shade900),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Text(
           title,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
       ],
     ),
