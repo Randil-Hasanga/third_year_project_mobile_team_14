@@ -1101,6 +1101,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
   void _showSuccessDialog(BuildContext context) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -1110,7 +1111,7 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
             style: TextStyle(color: Colors.green), // Customize the text color
           ),
           content: Text(
-            "Provider Details Successfully Updated",
+            "Company detailed updated",
             style:
                 TextStyle(color: Colors.green[900]), // Customize the text color
           ),
