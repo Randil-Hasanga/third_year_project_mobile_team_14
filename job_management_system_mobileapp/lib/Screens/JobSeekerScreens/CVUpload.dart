@@ -12,6 +12,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:uuid/uuid.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
+import 'package:path_provider/path_provider.dart'; // Import path_provider
 
 class CVUpload extends StatefulWidget {
   final String userId;
@@ -35,8 +36,7 @@ class _CVUploadState extends State<CVUpload> {
 
   Future<void> _fetchUploadedCVs() async {
     try {
-      final ListResult result =
-          await FirebaseStorage.instance.ref('CVs/${widget.userId}').listAll();
+      final ListResult result = await FirebaseStorage.instance.ref('CVs/${widget.userId}').listAll();
       List<String> fileNames = result.items.map((ref) => ref.name).toList();
       setState(() {
         _uploadedCVs = fileNames;
@@ -87,69 +87,66 @@ class _CVUploadState extends State<CVUpload> {
   }
 
   // Function to upload the selected file to Firebase Storage
-  Future<void> _uploadFile() async {
-    if (_file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a file first.'),
-        ),
-      );
-      return;
-    }
-
-    try {
-      // Generate a unique filename using UUID
-      String fileName =
-          '${const Uuid().v4()}.pdf'; // Example: '123e4567-e89b-12d3-a456-426614174000.pdf'
-
-      // Create a reference to the file location
-      Reference ref =
-          FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName');
-
-      // Start the file upload
-      UploadTask uploadTask = ref.putFile(_file!);
-
-      // Listen to the upload task events
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-        setState(() {
-          _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
-        });
-      });
-
-      // Wait for the upload to complete
-      await uploadTask;
-
-      // Show success alert
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        title: 'CV uploaded successfully',
-        text: 'Your CV has been uploaded successfully.',
-      );
-
-      // Refresh the list of uploaded CVs
-      _fetchUploadedCVs();
-    } catch (e) {
-      print('Error uploading CV: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to upload CV.'),
-        ),
-      );
-    } finally {
-      setState(() {
-        _uploadProgress = 0.0; // Reset the progress indicator
-      });
-    }
+ // Function to upload the selected file to Firebase Storage
+Future<void> _uploadFile() async {
+  if (_file == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Please select a file first.'),
+      ),
+    );
+    return;
   }
+
+  try {
+    // Generate a unique filename using UUID
+    String fileName = '${const Uuid().v4()}.pdf';
+
+    // Create a reference to the file location
+    Reference ref = FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName');
+
+    // Start the file upload
+    UploadTask uploadTask = ref.putFile(_file!);
+
+    // Listen to the upload task events
+    uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+      setState(() {
+        _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
+      });
+    });
+
+    // Wait for the upload to complete
+    await uploadTask;
+
+    // Show success alert
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      title: 'CV uploaded successfully',
+      text: 'Your CV has been uploaded successfully.',
+    );
+
+    // Refresh the list of uploaded CVs
+    _fetchUploadedCVs();
+  } catch (e) {
+    print('Error uploading CV: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Failed to upload CV.'),
+      ),
+    );
+  } finally {
+    setState(() {
+      _uploadProgress = 0.0; // Reset the progress indicator
+    });
+  }
+}
 
   // Function to delete the CV from Firebase Storage
   Future<void> _deleteCV(String fileName) async {
     try {
       // Delete file from Firebase Storage
-      await FirebaseStorage.instance
-          .ref('CVs/${widget.userId}/$fileName')
-          .delete();
+      await FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName').delete();
 
       // Show success alert
       QuickAlert.show(
@@ -173,24 +170,43 @@ class _CVUploadState extends State<CVUpload> {
 
   // Function to view the uploaded PDF file
   Future<void> _viewPDF(String fileName) async {
-    String downloadURL = await FirebaseStorage.instance
-        .ref('CVs/${widget.userId}/$fileName')
-        .getDownloadURL();
+    try {
+      // Get the download URL from Firebase Storage
+      String downloadURL = await FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName').getDownloadURL();
 
-    // Navigate to PDF viewer using flutter_pdfview package
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text('View PDF'),
-          ),
-          body: PDFView(
-            filePath: downloadURL,
+      // Download the file to a temporary directory
+      final response = await HttpClient().getUrl(Uri.parse(downloadURL));
+      final fileStream = await response.close();
+      final directory = await getTemporaryDirectory();
+      final filePath = '${directory.path}/$fileName';
+      final file = File(filePath);
+      final fileSink = file.openWrite();
+      await fileStream.pipe(fileSink);
+      await fileSink.flush();
+      await fileSink.close();
+
+      // Navigate to PDF viewer using flutter_pdfview package
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text('View PDF'),
+            ),
+            body: PDFView(
+              filePath: filePath,
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      print('Error viewing PDF: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to view PDF.'),
+        ),
+      );
+    }
   }
 
   @override
@@ -198,7 +214,7 @@ class _CVUploadState extends State<CVUpload> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Upload your CV'),
-        backgroundColor: Colors.orange, // Set the background color to orange
+        backgroundColor: Colors.orange.shade800, // Set the background color to orange
         elevation: 0, // Optional: Removes the shadow below the app bar
         centerTitle: true, // Optional: Centers the title horizontally
       ),
@@ -230,8 +246,7 @@ class _CVUploadState extends State<CVUpload> {
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.blue, // Text color
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -265,8 +280,7 @@ class _CVUploadState extends State<CVUpload> {
                 _uploadProgress > 0
                     ? Column(
                         children: [
-                          Text(
-                              'Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
+                          Text('Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
                           const SizedBox(height: 10),
                           LinearProgressIndicator(value: _uploadProgress),
                         ],
@@ -303,55 +317,63 @@ class _CVUploadState extends State<CVUpload> {
                           ),
                         ),
                       )
-                    :Container(
-  height: 200, // Fixed height for the list
-  child: GridView.builder(
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2, // Number of columns in the grid
-      crossAxisSpacing: 10, // Spacing between columns
-      mainAxisSpacing: 10, // Spacing between rows
-    ),
-    itemCount: _uploadedCVs.length,
-    itemBuilder: (context, index) {
-      return Card(
-        elevation: 3,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.picture_as_pdf, // PDF icon
-                size: 50, // Adjust the size as needed
-                color: Colors.red, // Icon color
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Text(
-                  _uploadedCVs[index],
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2, // Limit to 2 lines for text
-                  overflow: TextOverflow.ellipsis, // Handle text overflow
-                ),
-              ),
-              SizedBox(height: 5),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () => _deleteCV(_uploadedCVs[index]),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  ),
-),
-
+                    : Container(
+                        height: 200, // Fixed height for the list
+                        child: GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, // Number of columns in the grid
+                            crossAxisSpacing: 10, // Spacing between columns
+                            mainAxisSpacing: 10, // Spacing between rows
+                          ),
+                          itemCount: _uploadedCVs.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              elevation: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.picture_as_pdf, // PDF icon
+                                      size: 50, // Adjust the size as needed
+                                      color: Colors.red, // Icon color
+                                    ),
+                                    SizedBox(height: 10),
+                                    Expanded(
+                                      child: Text(
+                                        _uploadedCVs[index],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2, // Limit to 2 lines for text
+                                        overflow: TextOverflow.ellipsis, // Handle text overflow
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.visibility),
+                                          onPressed: () => _viewPDF(_uploadedCVs[index]),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () => _deleteCV(_uploadedCVs[index]),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
               ],
             ),
           )
@@ -366,47 +388,27 @@ class _CVUploadState extends State<CVUpload> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home,
-                    color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.home, color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const JobSeekerPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings,
-                    color: Color.fromARGB(
-                        255, 255, 255, 255)), // Change the color here
+                icon: const Icon(Icons.settings, color: Color.fromARGB(255, 255, 255, 255)), // Change the color here
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileJobSeeker()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,
-                    color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.notifications, color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const NotificationsJobSeeker()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat,
-                    color: Color.fromARGB(255, 255, 255, 255)),
+                icon: const Icon(Icons.chat, color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SeekerChatHome(),
-                    ),
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SeekerChatHome()));
                 },
               ),
             ],

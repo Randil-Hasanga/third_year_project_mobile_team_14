@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/seeker_chat_home.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
+//import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
@@ -31,38 +32,46 @@ class Help extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.home, color: Colors.white),
+                icon: const Icon(Icons.home,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const JobSeekerPage()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JobSeekerPage()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.settings, color: Colors.white),
+                icon: const Icon(Icons.settings,
+                    color: Color.fromARGB(
+                        255, 255, 255, 255)), // Change the color here
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfileJobSeeker()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.white),
+                icon: const Icon(Icons.notifications,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NotificationsJobSeeker()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationsJobSeeker()));
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.chat, color: Colors.white),
+                icon: const Icon(Icons.chat,
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Chattings()),
+                    MaterialPageRoute(
+                      builder: (context) => SeekerChatHome(),
+                    ),
                   );
                 },
               ),
