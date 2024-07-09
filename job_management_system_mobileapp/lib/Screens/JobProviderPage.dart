@@ -278,7 +278,67 @@ class _JobProviderPageState extends State<JobProviderPage> {
                             }
 
                             if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
+                            }
+
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return Center(
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    bool isCompanyExist =
+                                        await _firebaseService!
+                                            .checkCompanyExist();
+
+                                    if (isCompanyExist) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Vacancies()));
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text("Alert"),
+                                            content: Text(
+                                              Localization.of(context)
+                                                  .getTranslatedValue(
+                                                      'create_vacancy_warning')!,
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Close the dialog
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                    // Navigate to find jobs page
+                                  },
+                                  child: Container(
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "+",
+                                          style: TextStyle(fontSize: 100),
+                                        ),
+                                        Text("Create Vacancies"),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
                             }
 
                             List<DocumentSnapshot> vacancies =
@@ -419,6 +479,63 @@ class _JobProviderPageState extends State<JobProviderPage> {
                             if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             }
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return Center(
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    bool isCompanyExist =
+                                        await _firebaseService!
+                                            .checkCompanyExist();
+
+                                    if (isCompanyExist) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InterviewScheduler()));
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text("Alert"),
+                                            content: Text(
+                                              Localization.of(context)
+                                                  .getTranslatedValue(
+                                                      'create_vacancy_warning')!,
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Close the dialog
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                    // Navigate to find jobs page
+                                  },
+                                  child: Container(
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "+",
+                                          style: TextStyle(fontSize: 100),
+                                        ),
+                                        Text("Shedule Interviews"),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
                             return _bulidInterviewList(
                                 context, snapshot.data!.docs);
                           },
@@ -479,7 +596,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
 
                 if (isCompanyExist) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => vacancies()));
+                      MaterialPageRoute(builder: (context) => Vacancies()));
                 } else {
                   showDialog(
                     context: context,
@@ -512,12 +629,38 @@ class _JobProviderPageState extends State<JobProviderPage> {
                 Localization.of(context)
                     .getTranslatedValue('schedule_inverviews')!,
               ),
-              onTap: () {
-                //Navigate to interview scheduler page
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => InterviewScheduler()));
+              onTap: () async {
+                bool isCompanyExist =
+                    await _firebaseService!.checkCompanyExist();
+
+                if (isCompanyExist) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InterviewScheduler()));
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Alert"),
+                        content: Text(
+                          Localization.of(context)
+                              .getTranslatedValue('create_vacancy_warning')!,
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text("OK"),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+                // Navigate to find jobs page
               },
             ),
             ListTile(
