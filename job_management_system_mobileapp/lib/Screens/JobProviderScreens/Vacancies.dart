@@ -11,14 +11,14 @@ import 'package:job_management_system_mobileapp/localization/demo_localization.d
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:quickalert/quickalert.dart';
 
-class vacancies extends StatefulWidget {
-  vacancies({super.key});
+class Vacancies extends StatefulWidget {
+  Vacancies({super.key});
 
   @override
-  State<vacancies> createState() => _vacanciesState();
+  State<Vacancies> createState() => _VacanciesState();
 }
 
-class _vacanciesState extends State<vacancies> {
+class _VacanciesState extends State<Vacancies> {
   final _formKey = GlobalKey<FormState>();
 
   final _companyNameController = TextEditingController();
