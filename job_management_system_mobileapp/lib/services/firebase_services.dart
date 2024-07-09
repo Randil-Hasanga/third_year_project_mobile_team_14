@@ -719,7 +719,7 @@ class FirebaseService {
         }
       }
     }
-    //Add new campany after insert Notification data db
+    //Add new company after insert Notification data db
     DateTime currentDate = DateTime.now();
     String notificationId = _db.collection(NOTIFICATIONS).doc().id;
     await _db.collection(NOTIFICATIONS).doc(notificationId).set({
@@ -727,7 +727,7 @@ class FirebaseService {
       "membership_number": membershipNumber,
       "org_type": orgType,
       "registered_date": currentDate,
-      "description": "Add new campany",
+      "description": "Add new company",
       "notification_go": "officer",
     });
   }
