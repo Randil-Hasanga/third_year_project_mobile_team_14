@@ -1,9 +1,11 @@
-//import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
 class Help extends StatelessWidget {
   const Help({Key? key}) : super(key: key);
@@ -20,92 +22,164 @@ class Help extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          const Text(
-            'Contact Information',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.orange.shade800,
+        shape: const CircularNotchedRectangle(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.home, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const JobSeekerPage()),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.settings, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileJobSeeker()),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.notifications, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotificationsJobSeeker()),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.chat, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Chattings()),
+                  );
+                },
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
-          ListTile(
-            leading: const Icon(Icons.phone),
-            title: const Text('Contact Number'),
-            subtitle: InkWell(
-              onTap: () {
-                _callNumber(context, '071');
-              },
-              child: const Row(
-                children: [
-                  Text('0714587892'),
-                  SizedBox(width: 5),
-                  Icon(Icons.copy, size: 16),
-                ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Contact Information',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.orange,
               ),
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.email),
-            title: const Text('Email'),
-            subtitle: InkWell(
+            const SizedBox(height: 20),
+            _buildContactTile(
+              context,
+              icon: Icons.phone,
+              title: 'Contact Number',
+              subtitle: '0714587892',
+              onTap: () {
+                _callNumber(context, '0714587892');
+              },
+              onLongPress: () {
+                _copyToClipboard(context, '0714587892');
+              },
+            ),
+            _buildContactTile(
+              context,
+              icon: Icons.email,
+              title: 'Email',
+              subtitle: 'defnir@gmail.com',
               onTap: () {
                 _launchEmail(context, 'defnir@gmail.com');
               },
-              child: const Row(
-                children: [
-                  Text('defnir@gmail.com'),
-                  SizedBox(width: 5),
-                  Icon(Icons.copy, size: 16),
-                ],
+              onLongPress: () {
+                _copyToClipboard(context, 'defnir@gmail.com');
+              },
+            ),
+            const SizedBox(height: 30),
+            const Text(
+              'Social Media',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.orange,
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Social Media',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          ListTile(
-            leading: const Icon(Icons.facebook),
-            title: const Text('Facebook'),
-            subtitle: InkWell(
+            const SizedBox(height: 20),
+            _buildContactTile(
+              context,
+              icon: Icons.facebook,
+              title: 'Facebook',
+              subtitle: 'Dept of Employment and Manpower',
               onTap: () {
                 _launchURL(context,
                     'https://www.facebook.com/share/G99Wj1gb3AEcZfuD/?mibextid=qi2Omg');
               },
-              child: const Row(
-                children: [
-                  Text('Dept of Employement and Manpower'),
-                  SizedBox(width: 5),
-                  Icon(Icons.copy, size: 16),
-                ],
-              ),
+              onLongPress: () {
+                _copyToClipboard(context,
+                    'https://www.facebook.com/share/G99Wj1gb3AEcZfuD/?mibextid=qi2Omg');
+              },
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.call),
-            title: const Text('WhatsApp'),
-            subtitle: InkWell(
+            _buildContactTile(
+              context,
+              icon: Icons.call,
+              title: 'WhatsApp',
+              subtitle: '+1234567890',
               onTap: () {
                 _launchURL(context, 'https://wa.me/+1234567890');
               },
-              child: const Row(
-                children: [
-                  Text('+1234567890'),
-                  SizedBox(width: 5),
-                  Icon(Icons.copy, size: 16),
-                ],
-              ),
+              onLongPress: () {
+                _copyToClipboard(context, 'https://wa.me/+1234567890');
+              },
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContactTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required void Function() onTap,
+    required void Function() onLongPress,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.orange.shade800),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),
+      ),
+      subtitle: InkWell(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        child: Row(
+          children: [
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.black54),
+            ),
+            const SizedBox(width: 5),
+            Icon(Icons.copy, size: 16, color: Colors.orange.shade800),
+          ],
+        ),
       ),
     );
   }
@@ -121,7 +195,6 @@ class Help extends StatelessWidget {
 
   void _callNumber(BuildContext context, String number) async {
     try {
-      var FlutterPhoneDirectCaller;
       final bool? result = await FlutterPhoneDirectCaller.callNumber(number);
       if (result != null && result) {
         ScaffoldMessenger.of(context).showSnackBar(
