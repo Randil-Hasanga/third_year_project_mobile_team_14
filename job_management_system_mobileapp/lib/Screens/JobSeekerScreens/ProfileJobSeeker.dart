@@ -630,16 +630,3 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
     return XFile(compressedImgPath);
   }
 }
-//  Additional field
-//                   TextFormField(
-//                         controller: _additionalField,
-//                         decoration: const InputDecoration(
-//                             labelText: 'Additional field',
-//                             border: OutlineInputBorder()),
-//                         validator: (value) {
-//                           if (value == null || value.isEmpty) {
-//                             return 'required';
-//                           }
-//                           return null;
-//                         },
-//                       ),
