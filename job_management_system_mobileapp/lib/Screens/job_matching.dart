@@ -531,115 +531,149 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                   SizedBox(
                     height: 2,
                   ),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                        color: Colors.grey,
-                        style: BorderStyle.solid,
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        barrierDismissible: true,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Address"),
+                            content: Row(
+                              children: [
+                                Icon(Icons.location_pin, color: Colors.red),
+                                SizedBox(
+                                    width:
+                                        8), // Adds some spacing between the icon and the text
+                                Expanded(
+                                  child: Text(listItem['address'] ?? ''),
+                                ),
+                              ],
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.grey,
+                          style: BorderStyle.solid,
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _richTextWidget!.simpleTextWithIconLeft(
-                                Icons.business,
-                                listItem['company_name'],
-                                15,
-                                Colors.black,
-                                FontWeight.w700,
-                                iconColor),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: 25,
-                                ),
-                                _richTextWidget!.simpleTextWithIconLeft(
-                                    Icons.construction,
-                                    listItem['industry'],
-                                    13,
-                                    Colors.black,
-                                    FontWeight.w600,
-                                    iconColor),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: 25,
-                                ),
-                                _richTextWidget!.simpleTextWithIconLeft(
-                                    Icons.account_balance,
-                                    listItem['org_type'],
-                                    13,
-                                    Colors.black,
-                                    FontWeight.w600,
-                                    iconColor),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: 25,
-                                ),
-                                _richTextWidget!.simpleTextWithIconLeft(
-                                    Icons.access_time,
-                                    listItem['job_type'],
-                                    13,
-                                    Colors.black,
-                                    FontWeight.w600,
-                                    iconColor),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        if (listItem['logo'] != null &&
-                            listItem['logo'] != '') ...{
-                          Center(
-                            child: Image.network(
-                              listItem['logo']!, // Replace with your image URL
-                              height: 50,
-                              width: 80,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                );
-                              },
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace) {
-                                return Text(
-                                    'Image not found'); // Placeholder for error case
-                              },
-                            ),
+                      child: Row(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _richTextWidget!.simpleTextWithIconLeft(
+                                  Icons.business,
+                                  listItem['company_name'],
+                                  15,
+                                  Colors.black,
+                                  FontWeight.w700,
+                                  iconColor),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: 25,
+                                  ),
+                                  _richTextWidget!.simpleTextWithIconLeft(
+                                      Icons.construction,
+                                      listItem['industry'],
+                                      13,
+                                      Colors.black,
+                                      FontWeight.w600,
+                                      iconColor),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: 25,
+                                  ),
+                                  _richTextWidget!.simpleTextWithIconLeft(
+                                      Icons.account_balance,
+                                      listItem['org_type'],
+                                      13,
+                                      Colors.black,
+                                      FontWeight.w600,
+                                      iconColor),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: 25,
+                                  ),
+                                  _richTextWidget!.simpleTextWithIconLeft(
+                                      Icons.access_time,
+                                      listItem['job_type'],
+                                      13,
+                                      Colors.black,
+                                      FontWeight.w600,
+                                      iconColor),
+                                ],
+                              ),
+                            ],
                           ),
-                        }
-                      ],
+                          SizedBox(
+                            width: 5,
+                          ),
+                          if (listItem['logo'] != null &&
+                              listItem['logo'] != '') ...{
+                            Center(
+                              child: Image.network(
+                                listItem[
+                                    'logo']!, // Replace with your image URL
+                                height: 50,
+                                width: 80,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  );
+                                },
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
+                                  return Text(
+                                      'Image not found'); // Placeholder for error case
+                                },
+                              ),
+                            ),
+                          }
+                        ],
+                      ),
                     ),
                   ),
                 ],
