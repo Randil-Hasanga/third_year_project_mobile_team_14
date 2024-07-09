@@ -214,7 +214,8 @@ class FirebaseService {
       DateTime date,
       DateTime expiryDate,
       String orgType,
-      String logo) async {
+      String logo,
+      String address) async {
     List<String> list = [];
     DocumentReference vacancyRef = await vacancyCollection.add(
       {
@@ -235,7 +236,8 @@ class FirebaseService {
         'applied_by': list,
         'active': true,
         'disabled': false,
-        'logo': logo
+        'logo': logo,
+        'address': address
       },
     );
 

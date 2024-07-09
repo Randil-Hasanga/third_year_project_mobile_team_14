@@ -46,7 +46,7 @@ class _VacanciesState extends State<Vacancies> {
   DateTime expiryDate = DateTime.now();
 
   Map<String, dynamic>? _jobProviderDetails;
-  String? orgType, _industry, _logo;
+  String? orgType, _industry, _logo, _address;
 
   String _gender = 'Male';
 
@@ -77,6 +77,7 @@ class _VacanciesState extends State<Vacancies> {
           _companyName = _jobProviderDetails!['company_name'];
           _industry = _jobProviderDetails!['industry'];
           _logo = _jobProviderDetails!['logo'] ?? '';
+          _address = _jobProviderDetails!['company_address'] ?? '';
         }
       });
       print(_companyName);
@@ -601,7 +602,8 @@ class _VacanciesState extends State<Vacancies> {
                                 issuedDate,
                                 expiryDate,
                                 orgType!,
-                                _logo!);
+                                _logo!,
+                                _address!);
 
                             _companyNameController.clear();
                             selectedJobPosition = '';
