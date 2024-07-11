@@ -622,7 +622,12 @@ class FirebaseService {
               "repEmail": repEmail,
               "districtFull": districtFull,
               "created_date": DateTime.now(),
-            }, SetOptions(merge: true)); // set user document for new user
+            }, SetOptions(merge: true));
+
+            await _db.collection(USER_COLLECTION).doc(uid).update({
+              'isBeingUpdated': false,
+              'pending': true
+            }); // set user document for new user
           });
         } catch (e) {
           print(e);
@@ -648,6 +653,11 @@ class FirebaseService {
             "districtFull": districtFull,
             "created_date": DateTime.now(),
           }, SetOptions(merge: true));
+
+          await _db
+              .collection(USER_COLLECTION)
+              .doc(uid)
+              .update({'isBeingUpdated': false, 'pending': true});
         } catch (e) {
           print(e);
         }
@@ -690,7 +700,11 @@ class FirebaseService {
                 "repEmail": repEmail,
                 "districtFull": districtFull,
                 "created_date": DateTime.now(),
-              }, SetOptions(merge: true)); // set user document for new user
+              }, SetOptions(merge: true));
+              await _db.collection(USER_COLLECTION).doc(uid).update({
+                'isBeingUpdated': false,
+                'pending': true
+              }); // set user document for new user
             });
           });
         } catch (e) {
@@ -725,6 +739,10 @@ class FirebaseService {
               "districtFull": districtFull,
               "created_date": DateTime.now(),
             }, SetOptions(merge: true));
+            await _db
+                .collection(USER_COLLECTION)
+                .doc(uid)
+                .update({'isBeingUpdated': false, 'pending': true});
           });
         } catch (e) {
           print(e);
@@ -742,11 +760,6 @@ class FirebaseService {
       "description": "Add new company",
       "notification_go": "officer",
     });
-
-    await _db
-        .collection(USER_COLLECTION)
-        .doc(uid)
-        .update({'isBeingUpdated': false});
   }
 
   //current provider data
