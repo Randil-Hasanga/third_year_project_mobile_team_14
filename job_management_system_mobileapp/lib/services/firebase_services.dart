@@ -1,20 +1,13 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:job_management_system_mobileapp/model/message.dart';
-import 'package:path/path.dart' as p;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:job_management_system_mobileapp/Screens/job_vacancy.dart';
+import 'package:path/path.dart' as p;
 
 const String USER_COLLECTION = 'users';
 const String PROVIDER_DETAILS_COLLECTION = 'provider_details';
@@ -290,6 +283,29 @@ class FirebaseService {
         'date': date,
       },
     );
+  }
+
+  Future<List<JobVacancy>> getExpiringVacancies() async {
+    final now = DateTime.now();
+    final threeDaysLater = now.add(Duration(days: 3));
+
+    final QuerySnapshot snapshot = await FirebaseService()
+        .vacancyCollection
+        .where('expiry_date', isGreaterThanOrEqualTo: Timestamp.fromDate(now))
+        .where('expiry_date',
+            isLessThanOrEqualTo: Timestamp.fromDate(threeDaysLater))
+        .where('active', isEqualTo: true)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return JobVacancy(
+        id: doc.id,
+        title: data['title'],
+        closingDate: (data['expiry_date'] as Timestamp).toDate(),
+        isActive: data['active'],
+      );
+    }).toList();
   }
 
   //job seeker details refference

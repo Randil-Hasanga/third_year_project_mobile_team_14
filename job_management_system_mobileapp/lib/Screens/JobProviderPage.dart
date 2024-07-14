@@ -9,6 +9,7 @@ import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/feedb
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/interview_scheduler.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/updateVacancy.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/main.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -273,7 +274,8 @@ class _JobProviderPageState extends State<JobProviderPage> {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return const Center(
-                                child: CircularProgressIndicator(),
+                                child: //CircularProgressIndicator(),
+                                    Text('Loading...'),
                               ); // Show loading indicator while fetching data
                             }
 
@@ -365,7 +367,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                   margin: const EdgeInsets.all(8),
                                   width: 300,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff92A3FD)
+                                    color: cardBackgroundColorLayer4
                                         .withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -380,7 +382,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           Text(
                                             companyName,
                                             style:
-                                                const TextStyle(fontSize: 20),
+                                                const TextStyle(fontSize: 15),
                                           ),
                                         ],
                                       ),
@@ -838,13 +840,13 @@ class _JobProviderPageState extends State<JobProviderPage> {
       margin: const EdgeInsets.all(8),
       width: 300,
       decoration: BoxDecoration(
-        color: const Color(0xff92A3FD).withOpacity(0.3),
+        color: cardBackgroundColorLayer4.withOpacity(0.3),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _bulidInterviewDetailsRow(Icons.topic, topic, 20),
+          _bulidInterviewDetailsRow(Icons.topic, topic, 15),
           const SizedBox(
             height: 4,
           ),
@@ -859,9 +861,11 @@ class _JobProviderPageState extends State<JobProviderPage> {
       children: [
         Icon(icon),
         const SizedBox(width: 8),
-        Text(
-          text,
-          style: TextStyle(fontSize: fonSize),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(fontSize: fonSize),
+          ),
         ),
       ],
     );

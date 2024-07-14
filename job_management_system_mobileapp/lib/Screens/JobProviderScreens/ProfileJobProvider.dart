@@ -1,16 +1,11 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -85,6 +80,13 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     _firebaseService = GetIt.instance.get<FirebaseService>();
     _getProvider();
     getUpdatedData();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _districtController.dispose();
+    super.dispose();
   }
 
   void getUpdatedData() async {

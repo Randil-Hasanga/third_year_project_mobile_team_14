@@ -11,9 +11,9 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVUploa
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/applied_jobs.dart';
-import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/change_password.dart';
 import 'package:job_management_system_mobileapp/Screens/job_matching.dart';
+import 'package:job_management_system_mobileapp/Screens/job_vacancy.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/main.dart';
@@ -32,8 +32,11 @@ class JobSeekerPage extends StatefulWidget {
 }
 
 final FirebaseService firebaseService = FirebaseService();
+final now = DateTime.now();
+final threeDaysLater = now.add(Duration(days: 3));
 
 class _JobSeekerPageState extends State<JobSeekerPage> {
+  late Future<List<JobVacancy>> futureVacancies;
   //Variables of JobSeeker Dashboard
   SharedPreferences? _sharedPreferences;
   FirebaseService? _firebaseService;
@@ -435,12 +438,11 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      const Icon(Icons.business,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              0,
-                                                              0,
-                                                              0)), // Icon color
+                                                      const Icon(
+                                                        Icons.business,
+                                                        color: Color.fromARGB(
+                                                            255, 0, 0, 0),
+                                                      ), // Icon color
                                                       const SizedBox(width: 8),
                                                       Flexible(
                                                         child: Text(
@@ -537,6 +539,175 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           ),
                         ),
                         const SizedBox(height: 15),
+
+                        //Soon to expire vacancies
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            _richTextWidget.simpleText("Soon to Expire", 16,
+                                Colors.black, FontWeight.bold),
+                          ],
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                            height: 130,
+                            child: StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('vacancy')
+                                  /*.where('expiry_date',
+                                      isGreaterThanOrEqualTo:
+                                          Timestamp.fromDate(now))*/
+                                  .where('expiry_date',
+                                      isLessThanOrEqualTo:
+                                          Timestamp.fromDate(threeDaysLater))
+                                  .where('active', isEqualTo: true)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+
+                                if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+
+                                if (snapshot.data?.docs.isEmpty ?? true) {
+                                  return const Center(
+                                    child: Text(
+                                      'No matching vacancies',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  );
+                                }
+
+                                List<DocumentSnapshot> vacancies =
+                                    snapshot.data!.docs;
+
+                                return ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  itemBuilder: (context, index) {
+                                    String vacancyID = vacancies[index].id;
+                                    String companyName =
+                                        vacancies[index]['company_name'];
+                                    String jobPosition =
+                                        vacancies[index]['job_position'];
+                                    String location =
+                                        vacancies[index]['location'];
+
+                                    return Container(
+                                      width: 250,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(119, 236, 144,
+                                            108), // Card background color
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.business,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                ), // Icon color
+                                                const SizedBox(width: 8),
+                                                Flexible(
+                                                  child: Text(
+                                                    companyName,
+                                                    style: const TextStyle(
+                                                      fontSize: 15,
+                                                      color: Color.fromARGB(
+                                                          255,
+                                                          0,
+                                                          0,
+                                                          0), // Text color
+                                                      fontWeight: FontWeight
+                                                          .bold, // Optional: Font weight
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.work,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                ), // Icon color
+                                                const SizedBox(width: 8),
+                                                Flexible(
+                                                  child: Text(
+                                                    jobPosition,
+                                                    style: const TextStyle(
+                                                      fontSize: 15,
+                                                      color: Color.fromARGB(
+                                                          255,
+                                                          0,
+                                                          0,
+                                                          0), // Text color
+                                                      fontWeight: FontWeight
+                                                          .bold, // Optional: Font weight
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.location_on,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                ), // Icon color
+                                                const SizedBox(width: 8),
+                                                Flexible(
+                                                  child: Text(
+                                                    location,
+                                                    style: const TextStyle(
+                                                      fontSize: 15,
+                                                      color: Color.fromARGB(
+                                                          255,
+                                                          0,
+                                                          0,
+                                                          0), // Text color
+                                                      fontWeight: FontWeight
+                                                          .bold, // Optional: Font weight
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    width: 10,
+                                  ),
+                                  itemCount: vacancies.length,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 120),
                       ],
                     ),

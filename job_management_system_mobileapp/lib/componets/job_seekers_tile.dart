@@ -22,11 +22,17 @@ class JobSeekerTile extends StatelessWidget {
           children: [
             Icon(Icons.person_3_rounded),
             const SizedBox(width: 20),
-            Column(
-              children: [
-                Text(name),
-                //Text('Education Level: $eduStatus'),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  //Text('Education Level: $eduStatus'),
+                ],
+              ),
             ),
             const SizedBox(width: 20),
             ElevatedButton(
