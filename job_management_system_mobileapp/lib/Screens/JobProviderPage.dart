@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/SeekerList.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
@@ -551,6 +552,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
           ),
         ),
       ),
+
+      //drawer
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -754,7 +758,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => JobProviderPage()));
+                          builder: (context) => JobProviderProfile()));
                 },
               ),
               IconButton(
@@ -851,6 +855,23 @@ class _JobProviderPageState extends State<JobProviderPage> {
             height: 4,
           ),
           _bulidInterviewDetailsRow(Icons.calendar_month, interviewDate, 15),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 143, 255, 120),
+                ),
+                onPressed: () {},
+                child: const Text(
+                  'set reminder',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
