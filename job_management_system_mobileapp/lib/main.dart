@@ -1,4 +1,3 @@
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,11 +11,11 @@ import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/Profile
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/seeker_chat_home.dart';
 import 'package:job_management_system_mobileapp/Screens/LogInPage.dart';
 import 'package:job_management_system_mobileapp/Screens/change_password.dart';
-import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/Screens/job_matching.dart';
 import 'package:job_management_system_mobileapp/Screens/splash_screen.dart';
 import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/firebase_options.dart';
+import 'package:job_management_system_mobileapp/local_notification.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
 import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -40,6 +39,7 @@ void main() async {
   GetIt.instance.registerSingleton<ButtonWidgets>(
     ButtonWidgets(),
   );
+  await LocalNotifications.init();
   runApp(const MyApp());
 }
 
