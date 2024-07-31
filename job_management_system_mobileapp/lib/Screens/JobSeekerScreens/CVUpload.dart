@@ -145,7 +145,7 @@ class _CVUploadState extends State<CVUpload> {
   }
 
   // Function to delete the CV from Firebase Storage
-  Future<void> _deleteCV(String fileName) async {
+  /*Future<void> _deleteCV(String fileName) async {
     try {
       // Delete file from Firebase Storage
       await FirebaseStorage.instance
@@ -170,10 +170,10 @@ class _CVUploadState extends State<CVUpload> {
         ),
       );
     }
-  }
+  }*/
 
   // Function to view the uploaded PDF file
-  Future<void> _viewPDF(String fileName) async {
+  /*Future<void> _viewPDF(String fileName) async {
     try {
       // Get the download URL from Firebase Storage
       String downloadURL = await FirebaseStorage.instance
@@ -213,7 +213,7 @@ class _CVUploadState extends State<CVUpload> {
         ),
       );
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -225,176 +225,178 @@ class _CVUploadState extends State<CVUpload> {
         elevation: 0, // Optional: Removes the shadow below the app bar
         centerTitle: true, // Optional: Centers the title horizontally
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(20),
-            color: Colors.grey[200],
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: 200, // Adjust the height as needed
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 3,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: ElevatedButton(
-                      onPressed: _selectFile,
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue, // Text color
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 30),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 5, // Shadow elevation
-                      ),
-                      child: const Text(
-                        'Select File',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _uploadFile,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green, // Text color
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 30),
-                    shape: RoundedRectangleBorder(
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(20),
+              color: Colors.grey[200],
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 200, // Adjust the height as needed
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
-                    ),
-                    elevation: 5, // Shadow elevation
-                  ),
-                  child: const Text(
-                    'Upload CV',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _uploadProgress > 0
-                    ? Column(
-                        children: [
-                          Text(
-                              'Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
-                          const SizedBox(height: 10),
-                          LinearProgressIndicator(value: _uploadProgress),
-                        ],
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(20),
-            color: Color.fromARGB(255, 240, 175, 149),
-            child: Column(
-              children: <Widget>[
-                const Text(
-                  'Uploaded Files:',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _uploadedCVs.isEmpty
-                    ? Container(
-                        height: 200, // Adjust height as needed
-                        child: const Center(
-                          child: Text(
-                            'No files uploaded.',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 255, 255, 255),
-                            ),
-                          ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 3,
+                          blurRadius: 7,
+                          offset:
+                              const Offset(0, 3), // changes position of shadow
                         ),
-                      )
-                    : Container(
-                        height: 200, // Fixed height for the list
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, // Number of columns in the grid
-                            crossAxisSpacing: 10, // Spacing between columns
-                            mainAxisSpacing: 10, // Spacing between rows
+                      ],
+                    ),
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: _selectFile,
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue, // Text color
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          itemCount: _uploadedCVs.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              elevation: 3,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.picture_as_pdf, // PDF icon
-                                      size: 50, // Adjust the size as needed
-                                      color: Colors.red, // Icon color
-                                    ),
-                                    SizedBox(height: 10),
-                                    Expanded(
-                                      child: Text(
-                                        _uploadedCVs[index],
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        maxLines:
-                                            2, // Limit to 2 lines for text
-                                        overflow: TextOverflow
-                                            .ellipsis, // Handle text overflow
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.visibility),
-                                          onPressed: () =>
-                                              _viewPDF(_uploadedCVs[index]),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () =>
-                                              _deleteCV(_uploadedCVs[index]),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
+                          elevation: 5, // Shadow elevation
+                        ),
+                        child: const Text(
+                          'Select File',
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
-              ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _uploadFile,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green, // Text color
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 30),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 5, // Shadow elevation
+                    ),
+                    child: const Text(
+                      'Upload CV',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _uploadProgress > 0
+                      ? Column(
+                          children: [
+                            Text(
+                                'Uploading: ${(_uploadProgress * 100).toStringAsFixed(2)}%'),
+                            const SizedBox(height: 10),
+                            LinearProgressIndicator(value: _uploadProgress),
+                          ],
+                        )
+                      : Container(),
+                ],
+              ),
             ),
-          )
-        ],
+            const SizedBox(height: 20),
+            // Container(
+            //   padding: const EdgeInsets.all(20),
+            //   color: Color.fromARGB(255, 240, 175, 149),
+            //   child: Column(
+            //     children: <Widget>[
+            //       const Text(
+            //         'Uploaded Files:',
+            //         style: TextStyle(
+            //           fontSize: 18,
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.black87,
+            //         ),
+            //       ),
+            //       const SizedBox(height: 10),
+            //       _uploadedCVs.isEmpty
+            //           ? Container(
+            //               height: 200, // Adjust height as needed
+            //               child: const Center(
+            //                 child: Text(
+            //                   'No files uploaded.',
+            //                   style: TextStyle(
+            //                     fontSize: 16,
+            //                     color: Color.fromARGB(255, 255, 255, 255),
+            //                   ),
+            //                 ),
+            //               ),
+            //             )
+            //           : Container(
+            //               height: 200, // Fixed height for the list
+            //               child: GridView.builder(
+            //                 gridDelegate:
+            //                     const SliverGridDelegateWithFixedCrossAxisCount(
+            //                   crossAxisCount: 2, // Number of columns in the grid
+            //                   crossAxisSpacing: 10, // Spacing between columns
+            //                   mainAxisSpacing: 10, // Spacing between rows
+            //                 ),
+            //                 itemCount: _uploadedCVs.length,
+            //                 itemBuilder: (context, index) {
+            //                   return Card(
+            //                     elevation: 3,
+            //                     child: Padding(
+            //                       padding: const EdgeInsets.all(10),
+            //                       child: Column(
+            //                         mainAxisAlignment: MainAxisAlignment.center,
+            //                         crossAxisAlignment: CrossAxisAlignment.center,
+            //                         children: [
+            //                           Icon(
+            //                             Icons.picture_as_pdf, // PDF icon
+            //                             size: 50, // Adjust the size as needed
+            //                             color: Colors.red, // Icon color
+            //                           ),
+            //                           SizedBox(height: 10),
+            //                           Expanded(
+            //                             child: Text(
+            //                               _uploadedCVs[index],
+            //                               style: const TextStyle(
+            //                                 fontSize: 16,
+            //                                 color: Colors.black,
+            //                               ),
+            //                               textAlign: TextAlign.center,
+            //                               maxLines:
+            //                                   2, // Limit to 2 lines for text
+            //                               overflow: TextOverflow
+            //                                   .ellipsis, // Handle text overflow
+            //                             ),
+            //                           ),
+            //                           SizedBox(height: 5),
+            //                           Row(
+            //                             mainAxisAlignment:
+            //                                 MainAxisAlignment.center,
+            //                             children: [
+            //                               IconButton(
+            //                                 icon: const Icon(Icons.visibility),
+            //                                 onPressed: () =>
+            //                                     _viewPDF(_uploadedCVs[index]),
+            //                               ),
+            //                               IconButton(
+            //                                 icon: const Icon(Icons.delete),
+            //                                 onPressed: () =>
+            //                                     _deleteCV(_uploadedCVs[index]),
+            //                               ),
+            //                             ],
+            //                           ),
+            //                         ],
+            //                       ),
+            //                     ),
+            //                   );
+            //                 },
+            //               ),
+            //             ),
+            //     ],
+            //   ),
+            // )
+          ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange.shade800,
