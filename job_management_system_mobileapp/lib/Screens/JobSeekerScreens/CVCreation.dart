@@ -150,6 +150,7 @@ class _CVCreationState extends State<CVCreation> {
   }
 
 //date picker
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -160,7 +161,23 @@ class _CVCreationState extends State<CVCreation> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        _calculateAge(); // Update age when a new date is selected
       });
+    }
+  }
+
+  void _calculateAge() {
+    if (_selectedDate != null) {
+      final DateTime today = DateTime.now();
+      int age = today.year - _selectedDate!.year;
+      if (today.month < _selectedDate!.month ||
+          (today.month == _selectedDate!.month &&
+              today.day < _selectedDate!.day)) {
+        age--;
+      }
+      _ageController.text = age.toString();
+    } else {
+      _ageController.text = '';
     }
   }
 
@@ -574,47 +591,137 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: _nameWithIniController,
-                        decoration: InputDecoration(
-                          labelText: Localization.of(context)
-                                  .getTranslatedValue('nameWithIni') ??
-                              'Name With Initials *',
-                          hintText: Localization.of(context)
-                                  .getTranslatedValue('nameWithIni') ??
-                              'Name With Initials *',
-                          border: const OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          // Regular expression to allow only letters and spaces
-                          final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
-                          if (value == null || value.isEmpty) {
-                            return Localization.of(context).getTranslatedValue(
-                                    'please enter name with initials') ??
-                                'Please enter full name';
-                          } else if (!regex.hasMatch(value)) {
-                            return 'Please enter valid name with initials (only letters and spaces)';
-                          }
-                          return null;
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _nameWithIniController,
+                              decoration: InputDecoration(
+                                labelText: Localization.of(context)
+                                        .getTranslatedValue('nameWithIni') ??
+                                    'Name With Initials *',
+                                hintText: Localization.of(context)
+                                        .getTranslatedValue('nameWithIni') ??
+                                    'Name With Initials *',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    // Show a tooltip or dialog with information about the input
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title:
+                                              const Text('Input Information'),
+                                          content: const Text(
+                                            'Please enter your name with initials. Only letters and spaces are allowed.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip:
+                                      'Text only. Letters and spaces are allowed.',
+                                ),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
+                                if (value == null || value.isEmpty) {
+                                  return Localization.of(context)
+                                          .getTranslatedValue(
+                                              'please enter name with initials') ??
+                                      'Please enter full name';
+                                } else if (!regex.hasMatch(value)) {
+                                  return 'Only letters and spaces are allowed';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: _fullNameController,
-                        decoration: const InputDecoration(
-                            labelText: 'Full Name *',
-                            border: OutlineInputBorder()),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Full Name is required';
-                          } else if (!RegExp(r'^[a-zA-Z\s]+$')
-                              .hasMatch(value)) {
-                            return 'Full Name must only contain letters and spaces';
-                          }
-                          return null;
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _fullNameController,
+                              decoration: InputDecoration(
+                                labelText: 'Full Name *',
+                                hintText: 'Enter your full name',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    // Show a dialog with information about the input
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title:
+                                              const Text('Input Information'),
+                                          content: const Text(
+                                            'Please enter your full name. Only letters and spaces are allowed.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip:
+                                      'Text only. Letters and spaces are allowed.',
+                                ),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Full Name is required';
+                                } else if (!RegExp(r'^[a-zA-Z\s]+$')
+                                    .hasMatch(value)) {
+                                  return 'Full Name must only contain letters and spaces';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,
@@ -629,70 +736,162 @@ class _CVCreationState extends State<CVCreation> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: _nicController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'NIC cannot be empty';
-                          }
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _nicController,
+                              decoration: InputDecoration(
+                                labelText: 'NIC*',
+                                hintText: 'Enter your NIC',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    // Show a dialog with information about the NIC format
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'NIC Format Information'),
+                                          content: const Text(
+                                            'Please enter your NIC in the correct format:\n'
+                                            '- Old NIC: 9 digits followed by "V" or "X" (e.g., 123456789V)\n'
+                                            '- New NIC: 12 digits (e.g., 123456789123)\n'
+                                            '- Spaces are not allowed.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip: 'NIC format information',
+                                ),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'NIC is required';
+                                }
 
-                          // Remove any whitespaces
-                          value = value.replaceAll(' ', '');
+                                // Remove any whitespaces (if applicable)
+                                value = value.replaceAll(' ', '');
 
-                          // Check if the input starts with digits
-                          if (!RegExp(r'^[0-9]').hasMatch(value)) {
-                            return 'Invalid NIC format';
-                          }
+                                // Check if the input starts with digits
+                                if (!RegExp(r'^[0-9]').hasMatch(value)) {
+                                  return 'Invalid NIC format';
+                                }
 
-                          // Check the length of the NIC
-                          if (value.length != 10 && value.length != 12) {
-                            return 'NIC must be 10 or 12 characters long';
-                          }
+                                // Check the length of the NIC
+                                if (value.length != 10 && value.length != 12) {
+                                  return 'NIC must be 10 (Old NIC) or 12 (New NIC) characters long';
+                                }
 
-                          // Check for old version NIC (9 digits + 'V' or 'X')
-                          if (value.length == 10 &&
-                              !RegExp(r'^[0-9]{9}[VX]$').hasMatch(value)) {
-                            return 'Invalid NIC format';
-                          }
+                                // Check for old version NIC (9 digits + 'V' or 'X')
+                                if (value.length == 10 &&
+                                    !RegExp(r'^[0-9]{9}[VX]$')
+                                        .hasMatch(value)) {
+                                  return 'Invalid NIC format';
+                                }
 
-                          // Check for new version NIC (12 digits)
-                          if (value.length == 12 &&
-                              !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
-                            return 'Invalid NIC format';
-                          }
+                                // Check for new version NIC (12 digits)
+                                if (value.length == 12 &&
+                                    !RegExp(r'^[0-9]{12}$').hasMatch(value)) {
+                                  return 'Invalid NIC format';
+                                }
 
-                          // Valid NIC
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'NIC*',
-                          border: OutlineInputBorder(),
-                        ),
+                                // Valid NIC
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: _drivingLicenceController,
-                        decoration: const InputDecoration(
-                          labelText: 'Driving License',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          // Regular expression pattern for Sri Lankan driving license
-                          RegExp regex = RegExp(
-                              r'^[A-Z]{2}\d{9}$'); // Example pattern: AB123456789
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _drivingLicenceController,
+                              decoration: InputDecoration(
+                                labelText: 'Driving License',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'Driving License Format Information'),
+                                          content: const Text(
+                                            'If you provide a driving license number, it must follow the Sri Lankan format:\n'
+                                            '- Format: Two uppercase letters followed by 9 digits (e.g., AB123456789).\n'
+                                            'Spaces are not allowed.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip: 'Driving license format information',
+                                ),
+                              ),
+                              autovalidateMode: AutovalidateMode
+                                  .onUserInteraction, // Enable validation only during user interaction
+                              validator: (value) {
+                                // Regular expression pattern for Sri Lankan driving license
+                                RegExp regex = RegExp(
+                                    r'^[A-Z]{2}\d{9}$'); // Example pattern: AB123456789
 
-                          if (value == null || value.isEmpty) {
-                            // Return null if the field is empty (validation passed)
-                            return null;
-                          } else if (!regex.hasMatch(value)) {
-                            // Return an error message if the value doesn't match the pattern
-                            return 'Invalid driving license format';
-                          }
-                          // Return null if the input is valid
-                          return null;
-                        },
+                                // Only validate if the field is not empty
+                                if (value != null &&
+                                    value.isNotEmpty &&
+                                    !regex.hasMatch(value)) {
+                                  return 'Invalid driving license format';
+                                }
+
+                                // Return null if the input is valid or if the field is empty
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
@@ -704,7 +903,7 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         onTap: () => _selectDate(context),
                         decoration: const InputDecoration(
-                          labelText: 'Select Date of Birth',
+                          labelText: 'Select Date of Birth*',
                           hintText: 'Date of Birth',
                           border: OutlineInputBorder(),
                         ),
@@ -742,9 +941,42 @@ class _CVCreationState extends State<CVCreation> {
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.digitsOnly
                         ],
-                        decoration: const InputDecoration(
-                          labelText: 'Age',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: 'Age*',
+                          border: const OutlineInputBorder(),
+                          errorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.info_outline),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Age Field Information'),
+                                    content: const Text(
+                                      'Please enter your age as an integer.\n'
+                                      'Only numbers are allowed.\n'
+                                      'The age should be between 1 and 99.',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            tooltip: 'Age input information',
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -755,10 +987,10 @@ class _CVCreationState extends State<CVCreation> {
                           try {
                             age = int.parse(value);
                           } catch (e) {
-                            return 'Invalid age';
+                            return 'Invalid age: Only numbers are allowed';
                           }
                           // Check if age is within the range of 1 to 99
-                          if (age <= 0 || age >= 100) {
+                          if (age < 1 || age > 99) {
                             return 'Age must be between 1 and 99';
                           }
 
@@ -770,84 +1002,260 @@ class _CVCreationState extends State<CVCreation> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email Address',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: 'Email Address*',
+                          hintText: 'Enter your email address',
+                          border: const OutlineInputBorder(),
+                          errorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.info_outline),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title:
+                                        const Text('Email Format Information'),
+                                    content: const Text(
+                                      '-Please enter a valid email address.\n'
+                                      '-Format: example@domain.com\n'
+                                      '-Ensure there are no spaces and the domain has at least two characters.',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            tooltip: 'Email format information',
+                          ),
                         ),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Email Address is required';
                           }
+
                           // Regular expression pattern for email validation
                           RegExp regex =
-                              RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                              RegExp(r'^[\w-\.]+@([\w-]+\.)+[a-zA-Z]{2,}$');
                           if (!regex.hasMatch(value)) {
                             return 'Enter a valid email address';
                           }
+
                           return null; // Return null if the input is valid
                         },
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: _contactMobileController,
-                        decoration: const InputDecoration(
-                          labelText: 'Tel (Mobile)',
-                          hintText: 'EX: +94718524560',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Mobile number is required';
-                          }
-                          // Regular expression pattern for Sri Lankan mobile number format
-                          RegExp regex = RegExp(
-                              r'^(?:\+?94)?0?(7(?:[0125678]\d|9[0-4])\d{7})$');
-                          if (!regex.hasMatch(value)) {
-                            return 'Invalid mobile format';
-                          }
-                          return null; // Return null if the input is valid
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _contactMobileController,
+                              decoration: InputDecoration(
+                                labelText: 'Tel (Mobile)*F',
+                                hintText: 'EX: +94718524560/ 0718524560',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'Mobile Number Format Information'),
+                                          content: const Text(
+                                            '-Please enter a valid Sri Lankan mobile number.\n'
+                                            '-Format: +94xxxxxxxxx or 0xxxxxxxxx\n'
+                                            '-Example: +9471272009 or 0712752009\n'
+                                            '-Ensure the number starts with +94 or 0',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip: 'Mobile number format information',
+                                ),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Mobile number is required';
+                                }
+
+                                // Regular expression pattern for Sri Lankan mobile number format
+                                RegExp regex = RegExp(
+                                    r'^(?:\+94|0)?[1-9][0-9]{8}$'); // +94 or 0 followed by 9 digits
+
+                                if (!regex.hasMatch(value)) {
+                                  return 'Invalid mobile number format';
+                                }
+
+                                return null; // Return null if the input is valid
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: _contactHomeController,
-                        decoration: const InputDecoration(
-                          labelText: 'Tel (Home)',
-                          hintText: 'EX: +94718524560',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Home number is required';
-                          }
-                          // Regular expression pattern for Sri Lankan home contact number format
-                          RegExp regex = RegExp(r'^(?:\+?94)?0?([1-9]\d{8})$');
-                          if (!regex.hasMatch(value)) {
-                            return 'Enter a valid Sri Lankan home contact number';
-                          }
-                          return null; // Return null if the input is valid
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _contactHomeController,
+                              decoration: InputDecoration(
+                                labelText: 'Tel (Home)',
+                                hintText: 'EX: +94718524560',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'Contact Number Format Information'),
+                                          content: const Text(
+                                            'If you provide a home contact number, it must follow the Sri Lankan format:\n'
+                                            'Format: +94xxxxxxxxx or 0xxxxxxxxx\n'
+                                            'Example: +94718524560 or 0718524560\n'
+                                            'Ensure the number starts with +94 or 0, followed by 9 digits.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip: 'Contact number format information',
+                                ),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                // Only validate if a value is provided
+                                if (value != null && value.isNotEmpty) {
+                                  // Regular expression pattern for Sri Lankan home contact number format
+                                  RegExp regex =
+                                      RegExp(r'^(?:\+94|0)[1-9][0-9]{8}$');
+                                  if (!regex.hasMatch(value)) {
+                                    return 'Enter a valid Sri Lankan home contact number';
+                                  }
+                                }
+                                // Return null if the input is valid or if the field is empty
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: _addressController,
-                        maxLines: 2,
-                        decoration: const InputDecoration(
-                          labelText: 'Address',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Address is required';
-                          }
-                          return null; // Return null if the input is valid
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _addressController,
+                              maxLines: 2,
+                              decoration: InputDecoration(
+                                labelText: 'Address*',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title:
+                                              const Text('Address Information'),
+                                          content: const Text(
+                                            'Please enter your address.\n'
+                                            'The address is required and must not be empty.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip: 'Address information',
+                                ),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Address is required';
+                                }
+                                return null; // Return null if the input is valid
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,
@@ -917,33 +1325,74 @@ class _CVCreationState extends State<CVCreation> {
                         height: 20,
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _salaryController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _salaryController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                labelText: 'Minimum Salary Expectation (LKR)*',
+                                hintText: '25000',
+                                border: const OutlineInputBorder(),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title:
+                                              const Text('Salary Information'),
+                                          content: const Text(
+                                            '-Please enter your minimum salary expectation in Sri Lankan Rupees (LKR).\n'
+                                            '-The amount should be an integer value only (e.g: 25000).\n',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  tooltip: 'Salary expectation information',
+                                ),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Minimum Salary Expectation is required';
+                                }
+                                int salary;
+                                try {
+                                  salary = int.parse(value);
+                                } catch (e) {
+                                  return 'Enter a valid salary amount (e.g., 25000)';
+                                }
+                                // Check if the salary meets the minimum expectation
+                               
+                                return null; // Return null if the input is valid
+                              },
+                            ),
+                          ),
                         ],
-                        decoration: const InputDecoration(
-                          labelText: 'Minimum Salary Expectation (LKR)',
-                          hintText: '25000',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Minimum Salary Expectation is required';
-                          }
-                          int salary;
-                          try {
-                            salary = int.parse(value);
-                          } catch (e) {
-                            return 'Enter a valid salary amount (e.g., 25000)';
-                          }
-                          // Check if the salary meets the minimum expectation
-                          if (salary < 25000) {
-                            return 'Minimum Salary Expectation must be at least LKR 25,000';
-                          }
-                          return null; // Return null if the input is valid
-                        },
                       ),
                       const SizedBox(height: 20),
                       const Text("Swap to go to Educational section"),
@@ -1662,7 +2111,7 @@ class _CVCreationState extends State<CVCreation> {
                                 ].map<CheckboxListTile>((industry) {
                                   return CheckboxListTile(
                                     checkColor:
-                                        Color.fromARGB(255, 255, 183, 0),
+                                        const Color.fromARGB(255, 255, 183, 0),
                                     activeColor: Colors.white,
                                     value:
                                         prefered_industries.contains(industry),
