@@ -1387,7 +1387,7 @@ class _CVCreationState extends State<CVCreation> {
                                   return 'Enter a valid salary amount (e.g., 25000)';
                                 }
                                 // Check if the salary meets the minimum expectation
-                               
+
                                 return null; // Return null if the input is valid
                               },
                             ),
@@ -1395,7 +1395,30 @@ class _CVCreationState extends State<CVCreation> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      const Text("Swap to go to Educational section"),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons
+                                .swap_horizontal_circle, // You can choose any icon you like
+                            color:
+                                Color.fromARGB(255, 231, 75, 75), // Icon color
+                            size: 20.0, // Icon size
+                          ),
+                          SizedBox(
+                              width: 8.0), // Space between the icon and text
+                          Text(
+                            "Swap to go to Educational section",
+                            style: TextStyle(
+                              color: Color.fromARGB(
+                                  255, 231, 75, 75), // Text color
+                              fontSize: 16.0, // Font size
+                              fontWeight: FontWeight.bold, // Font weight
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -1431,7 +1454,7 @@ class _CVCreationState extends State<CVCreation> {
                           'Below O/L',
                           'Passed O/L',
                           'Passed A/L',
-                          'undergraduate',
+                          'Undergraduate',
                           'Graduate',
                           'Post Graduate Diploma'
                         ].map<DropdownMenuItem<String>>((String value) {
@@ -1447,385 +1470,626 @@ class _CVCreationState extends State<CVCreation> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Professional Qualification Dropdown
-                      DropdownButtonFormField<String>(
-                        value: _selectProfQualification,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectProfQualification = newValue;
-                          });
-                        },
-                        items: <String>[
-                          'NVQ01',
-                          'NVQ02',
-                          'NVQ03',
-                          'NVQ04',
-                          'NVQ05',
-                          'NVQ06',
-                          'NVQ07',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'NVQ Level',
-                          border: OutlineInputBorder(),
+                      // Conditionally display NVQ Level Dropdown
+                      if (_selectEduQalification != 'Below O/L') ...[
+                        DropdownButtonFormField<String>(
+                          value: _selectProfQualification,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectProfQualification = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'NVQ01',
+                            'NVQ02',
+                            'NVQ03',
+                            'NVQ04',
+                            'NVQ05',
+                            'NVQ06',
+                            'NVQ07',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                            labelText: 'NVQ Level',
+                            border: OutlineInputBorder(),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
+                      ],
 
-                      // Educational Qualification Section
-                      const Text(
-                        'Educational Qualification:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      // Conditionally display GCE O/L Exam Section
+                      if (_selectEduQalification != 'Below O/L') ...[
+                        const Text(
+                          'GCE O/L Exam:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      // GCE O/L Exam Section
-                      const Text(
-                        'GCE O/L Exam:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _OLYearController,
-                        decoration: const InputDecoration(
-                          labelText: 'Year',
-                          hintText: 'Ex: 2016',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            // Return null if the field is empty (validation passed)
+                        const SizedBox(height: 10),
+                   TextFormField(
+  controller: _OLYearController,
+  decoration: InputDecoration(
+    labelText: 'Year*',
+    hintText: 'Ex: 2016',
+    border: const OutlineInputBorder(),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: _selectEduQalification != 'Below O/L' &&
+               (_OLYearController.text.isEmpty ||
+                !RegExp(r'^\d{4}$').hasMatch(_OLYearController.text))
+            ? Colors.red
+            : Colors.grey,
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: _selectEduQalification != 'Below O/L' &&
+               (_OLYearController.text.isEmpty ||
+                !RegExp(r'^\d{4}$').hasMatch(_OLYearController.text))
+            ? Colors.red
+            : Colors.grey,
+      ),
+    ),
+    errorText: (_selectEduQalification != 'Below O/L' &&
+                (_OLYearController.text.isEmpty ||
+                 !RegExp(r'^\d{4}$').hasMatch(_OLYearController.text)))
+        ? 'Enter a valid 4-digit year'
+        : null,
+    suffixIcon: IconButton(
+      icon: const Icon(Icons.info_outline),
+      onPressed: () {
+        // Show a tooltip or dialog with information about the input
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Input Information'),
+              content: const Text(
+                'Please enter a 4-digit year. For example, 2016.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      tooltip: 'Enter a 4-digit year',
+    ),
+  ),
+  autovalidateMode: AutovalidateMode.onUserInteraction,
+  validator: (value) {
+    if (_selectEduQalification != 'Below O/L') {
+      if (value == null || value.isEmpty) {
+        return 'Year is required';
+      }
+      if (!RegExp(r'^\d{4}$').hasMatch(value)) {
+        return 'Enter a valid 4-digit year';
+      }
+    }
+    return null;
+  },
+),
+
+
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _OLIndexController,
+                          decoration: InputDecoration(
+                            labelText: 'Index No',
+                            border: const OutlineInputBorder(),
+                            // Change the border color to red if validation fails
+                            focusedBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLIndexController.text.isEmpty ||
+                                        !RegExp(r'^[0-9]+$')
+                                            .hasMatch(_OLIndexController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                            enabledBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLIndexController.text.isEmpty ||
+                                        !RegExp(r'^[0-9]+$')
+                                            .hasMatch(_OLIndexController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                          ),
+                          validator: (value) {
+                            if (_selectEduQalification != 'Below O/L') {
+                              if (value == null || value.isEmpty) {
+                                return 'Index No is required';
+                              }
+                              RegExp regex = RegExp(r'^[0-9]+$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid index number (numbers only)';
+                              }
+                            }
                             return null;
-                          }
-                          // Regular expression pattern to match only numbers
-                          RegExp regex = RegExp(r'^[0-9]+$');
-                          if (!regex.hasMatch(value)) {
-                            // Return an error message if the value doesn't match the pattern
-                            return 'Enter a valid year (numbers only)';
-                          }
-                          // Return null if the input is valid
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _OLIndexController,
-                        decoration: const InputDecoration(
-                          labelText: 'Index No',
-                          border: OutlineInputBorder(),
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            // Return null if the field is empty (validation passed)
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _OLMediumController,
+                          decoration: InputDecoration(
+                            labelText: 'Medium',
+                            hintText: 'Ex: Sinhala',
+                            border: const OutlineInputBorder(),
+                            // Change the border color to red if validation fails
+                            focusedBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLMediumController.text.isEmpty ||
+                                        !RegExp(r'^[a-zA-Z]+$')
+                                            .hasMatch(_OLMediumController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                            enabledBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLMediumController.text.isEmpty ||
+                                        !RegExp(r'^[a-zA-Z]+$')
+                                            .hasMatch(_OLMediumController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                          ),
+                          validator: (value) {
+                            if (_selectEduQalification != 'Below O/L') {
+                              if (value == null || value.isEmpty) {
+                                return 'Medium is required';
+                              }
+                              RegExp regex = RegExp(r'^[a-zA-Z]+$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid medium (letters only)';
+                              }
+                            }
                             return null;
-                          }
-                          // Regular expression pattern to match only numbers
-                          RegExp regex = RegExp(r'^[0-9]+$');
-                          if (!regex.hasMatch(value)) {
-                            // Return an error message if the value doesn't match the pattern
-                            return 'Enter a valid index number (numbers only)';
-                          }
-                          // Return null if the input is valid
-                          return null;
-                        },
-                      ),
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _OLSchoolController,
+                          decoration: InputDecoration(
+                            labelText: 'School',
+                            border: const OutlineInputBorder(),
+                            // Change the border color to red if validation fails
+                            focusedBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLSchoolController.text.isEmpty ||
+                                        !RegExp(r'^[a-zA-Z\s]+$')
+                                            .hasMatch(_OLSchoolController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                            enabledBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLSchoolController.text.isEmpty ||
+                                        !RegExp(r'^[a-zA-Z\s]+$')
+                                            .hasMatch(_OLSchoolController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                          ),
+                          validator: (value) {
+                            if (_selectEduQalification != 'Below O/L') {
+                              if (value == null || value.isEmpty) {
+                                return 'School is required';
+                              }
+                              RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid school name (letters and spaces only)';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _OLAttemptController,
+                          decoration: InputDecoration(
+                            labelText: 'Attempt',
+                            hintText: 'Ex: 1',
+                            border: const OutlineInputBorder(),
+                            // Change the border color to red if validation fails
+                            focusedBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLAttemptController.text.isEmpty ||
+                                        !RegExp(r'^[1-9]$').hasMatch(
+                                            _OLAttemptController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                            enabledBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_OLAttemptController.text.isEmpty ||
+                                        !RegExp(r'^[1-9]$').hasMatch(
+                                            _OLAttemptController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                          ),
+                          validator: (value) {
+                            if (_selectEduQalification != 'Below O/L') {
+                              if (value == null || value.isEmpty) {
+                                return 'Attempt is required';
+                              }
+                              RegExp regex = RegExp(r'^[1-9]$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid attempt (single number only)';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        DropdownButtonFormField<String>(
+                          value: _selectOLStatus,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectOLStatus = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                            labelText: 'Do you pass the O/L exam?',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
 
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _OLMediumController,
-                        decoration: const InputDecoration(
-                          labelText: 'Medium',
-                          hintText: 'Ex: Sinhala',
-                          border: OutlineInputBorder(),
+                      // Conditionally display GCE A/L Exam Section
+                      if (_selectEduQalification == 'Passed A/L' ||
+                          _selectEduQalification == 'Undergraduate' ||
+                          _selectEduQalification == 'Graduate' ||
+                          _selectEduQalification ==
+                              'Post Graduate Diploma') ...[
+                        const Text(
+                          'GCE A/L Exam:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            // Return null if the field is empty (validation passed)
-                            return " ";
-                          }
-                          // Regular expression pattern to match only letters
-                          RegExp regex = RegExp(r'^[a-zA-Z]+$');
-                          if (!regex.hasMatch(value)) {
-                            // Return an error message if the value doesn't match the pattern
-                            return 'Enter a valid medium (letters only)';
-                          }
-                          // Return null if the input is valid
-                          return null;
-                        },
-                      ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _ALYearController,
+                          decoration: InputDecoration(
+                            labelText: 'Year',
+                            hintText: 'Ex: 2016',
+                            border: const OutlineInputBorder(),
+                            // Change the border color to red if validation fails
+                            focusedBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_ALYearController.text.isEmpty ||
+                                        !RegExp(r'^\d{4}$')
+                                            .hasMatch(_ALYearController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                            enabledBorder: _selectEduQalification !=
+                                        'Below O/L' &&
+                                    (_ALYearController.text.isEmpty ||
+                                        !RegExp(r'^\d{4}$')
+                                            .hasMatch(_ALYearController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                          ),
+                          validator: (value) {
+                            if (_selectEduQalification != 'Below O/L') {
+                              if (value == null || value.isEmpty) {
+                                return 'Year is required';
+                              }
+                              RegExp regex = RegExp(r'^\d{4}$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid year (4 digits only)';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _ALIndexController,
+                          decoration: InputDecoration(
+                            labelText: 'Index No',
+                            border: const OutlineInputBorder(),
+                            // Change the border color to red if validation fails
+                            focusedBorder: (_selectEduQalification ==
+                                            'Passed A/L' ||
+                                        _selectEduQalification ==
+                                            'Undergraduate' ||
+                                        _selectEduQalification == 'Graduate' ||
+                                        _selectEduQalification ==
+                                            'Post Graduate Diploma') &&
+                                    (_ALIndexController.text.isEmpty ||
+                                        !RegExp(r'^[0-9]+$')
+                                            .hasMatch(_ALIndexController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                            enabledBorder: (_selectEduQalification ==
+                                            'Passed A/L' ||
+                                        _selectEduQalification ==
+                                            'Undergraduate' ||
+                                        _selectEduQalification == 'Graduate' ||
+                                        _selectEduQalification ==
+                                            'Post Graduate Diploma') &&
+                                    (_ALIndexController.text.isEmpty ||
+                                        !RegExp(r'^[0-9]+$')
+                                            .hasMatch(_ALIndexController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                          ),
+                          validator: (value) {
+                            if (_selectEduQalification == 'Passed A/L' ||
+                                _selectEduQalification == 'Undergraduate' ||
+                                _selectEduQalification == 'Graduate' ||
+                                _selectEduQalification ==
+                                    'Post Graduate Diploma') {
+                              if (value == null || value.isEmpty) {
+                                return 'Index No is required';
+                              }
+                              RegExp regex = RegExp(r'^[0-9]+$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid index number (numbers only)';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _ALMediumController,
+                          decoration: InputDecoration(
+                            labelText: 'Medium',
+                            hintText: 'Ex: Sinhala',
+                            border: const OutlineInputBorder(),
+                            // Change the border color to red if validation fails
+                            focusedBorder: (_selectEduQalification ==
+                                            'Passed A/L' ||
+                                        _selectEduQalification ==
+                                            'Undergraduate' ||
+                                        _selectEduQalification == 'Graduate' ||
+                                        _selectEduQalification ==
+                                            'Post Graduate Diploma') &&
+                                    (_ALMediumController.text.isEmpty ||
+                                        !RegExp(r'^[a-zA-Z\s]+$')
+                                            .hasMatch(_ALMediumController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                            enabledBorder: (_selectEduQalification ==
+                                            'Passed A/L' ||
+                                        _selectEduQalification ==
+                                            'Undergraduate' ||
+                                        _selectEduQalification == 'Graduate' ||
+                                        _selectEduQalification ==
+                                            'Post Graduate Diploma') &&
+                                    (_ALMediumController.text.isEmpty ||
+                                        !RegExp(r'^[a-zA-Z\s]+$')
+                                            .hasMatch(_ALMediumController.text))
+                                ? const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                  )
+                                : null,
+                          ),
+                          validator: (value) {
+                            if (_selectEduQalification == 'Passed A/L' ||
+                                _selectEduQalification == 'Undergraduate' ||
+                                _selectEduQalification == 'Graduate' ||
+                                _selectEduQalification ==
+                                    'Post Graduate Diploma') {
+                              if (value == null || value.isEmpty) {
+                                return 'Medium is required';
+                              }
+                              RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Enter a valid medium (letters only)';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _ALSchoolController,
+                          decoration: const InputDecoration(
+                            labelText: 'School',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _ALAttemptController,
+                          decoration: const InputDecoration(
+                            labelText: 'Attempt',
+                            hintText: 'Ex: 1',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            RegExp regex = RegExp(r'^[0-9]+$');
+                            if (!regex.hasMatch(value)) {
+                              return 'Enter a valid attempt (numbers only)';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        DropdownButtonFormField<String>(
+                          value: _selectALStatus,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectALStatus = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                            labelText: 'Did you pass the A/L?',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
 
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _OLSchoolController,
-                        decoration: const InputDecoration(
-                          labelText: 'School',
-                          border: OutlineInputBorder(),
+                      // Conditionally display Professional Qualifications Section
+                      if (_selectEduQalification == 'Undergraduate' ||
+                          _selectEduQalification == 'Graduate' ||
+                          _selectEduQalification ==
+                              'Post Graduate Diploma') ...[
+                        const Text(
+                          'Professional Qualifications: section 01',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        validator: (value) {
-                          if (value != null && value.isEmpty) {
-                            return 'School is required';
-                          }
-                          return null; // Return null if the input is valid or null
-                        },
-                      ),
-
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _OLAttemptController,
-                        decoration: const InputDecoration(
-                          labelText: 'Attempt',
-                          hintText: 'Ex: 1',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sec01NameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Name of Qualification',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          // Regular expression pattern to match only numbers
-                          RegExp regex = RegExp(r'^[0-9]+$');
-                          if (!regex.hasMatch(value)) {
-                            return 'Enter a valid attempt (numbers only)';
-                          }
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-
-                      const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        value: _selectOLStatus,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectOLStatus = newValue;
-                          });
-                        },
-                        items: <String>[
-                          'Yes',
-                          'No',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Do you pass the O/L exam?',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sec01InstituteController,
+                          decoration: const InputDecoration(
+                            labelText: 'Institute/Organization',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // GCE A/L Exam Section
-                      const Text(
-                        'GCE A/L Exam:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sec01durationController,
+                          decoration: const InputDecoration(
+                            labelText: 'Completion Year',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _ALYearController,
-                        decoration: const InputDecoration(
-                          labelText: 'Year',
-                          hintText: 'Ex: 2016',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Professional Qualifications: section 02',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          // You can add additional validation rules here if needed
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _ALIndexController,
-                        decoration: const InputDecoration(
-                          labelText: 'Index No',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sec02NameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Name of Qualification',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          // You can add additional validation rules here if needed
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _ALMediumController,
-                        decoration: const InputDecoration(
-                          labelText: 'Medium',
-                          hintText: 'Ex: Sinhala',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sec02InstituteController,
+                          decoration: const InputDecoration(
+                            labelText: 'Institute/Organization',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          // You can add additional validation rules here if needed
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _ALSchoolController,
-                        decoration: const InputDecoration(
-                          labelText: 'School',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sec02durationController,
+                          decoration: const InputDecoration(
+                            labelText: 'Completion Year',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return null;
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          // You can add additional validation rules here if needed
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _ALAttemptController,
-                        decoration: const InputDecoration(
-                          labelText: 'Attempt',
-                          hintText: 'Ex: 1',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          // Regular expression pattern to match only numbers
-                          RegExp regex = RegExp(r'^[0-9]+$');
-                          if (!regex.hasMatch(value)) {
-                            return 'Enter a valid attempt (numbers only)';
-                          }
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-
-                      const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        value: _selectALStatus,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectALStatus = newValue;
-                          });
-                        },
-                        items: <String>[
-                          'Yes',
-                          'No',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Did you pass the A/L?',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // Professional Qualifications Section
-                      const Text(
-                        'Professional Qualifications: section 01',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _sec01NameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Qualification Name',
-                          hintText: 'Ex: BICT(hons)',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _sec01InstituteController,
-                        decoration: const InputDecoration(
-                          labelText: 'Institute Name',
-                          hintText: '',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _sec01durationController,
-                        decoration: const InputDecoration(
-                          labelText: 'Duration',
-                          hintText: 'Ex: 2 months',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null; // Return null if the field is empty
-                          }
-                          return null; // Return null if the input is valid
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'Professional Qualifications: section 02',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _sec02NameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Qualification Name',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _sec02InstituteController,
-                        decoration: const InputDecoration(
-                          labelText: 'Institute Name',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _sec02durationController,
-                        decoration: const InputDecoration(
-                          labelText: 'Duration',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      const Text("Swap to go to Skills section"),
+                        const SizedBox(height: 20),
+                      ],
                     ],
                   ),
                 ),
               ),
+
               // Skills Tab***************************************************************************************
 
               SingleChildScrollView(
