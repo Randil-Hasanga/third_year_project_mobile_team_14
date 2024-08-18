@@ -68,9 +68,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     Map<String, dynamic>? cvDetails = await _getCV();
     if (cvDetails != null) {
       _CV_details = cvDetails;
-      print(_CV_details);
-      print(_CV_details!['uid']);
-
       if (mounted) {
         setState(() {
           seekerID = _CV_details!['uid'];
@@ -84,7 +81,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
 
         setState(() {
           jobType = _CV_details!['jobType'];
-          print("job Type ${_CV_details!['jobType']}");
           _selectedJobType = jobType;
         });
       }
@@ -845,8 +841,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
                 ),
               ),
             );
-
-            print("Best matching vacancies : $bestMatchingVacancies");
           });
           print(vacancies);
         } else {
@@ -879,8 +873,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
         return ((vacancy['gender'] == seeker_gender) ||
             (vacancy['gender'] == "Any"));
       }).toList();
-
-      print("Filtered vacancies by Gender: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");
@@ -896,8 +888,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return (vacancy['org_type'] == seeker_prefered_org_type);
       }).toList();
-
-      print("Filtered vacancies by Gender: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");
@@ -913,8 +903,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return vacancy['location'] == seeker_Prefered_District;
       }).toList();
-
-      print("Filtered vacancies by district: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");
@@ -937,7 +925,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
           return districtsInProvince.contains(vacancy['location']);
         }).toList();
 
-        print("Filtered vacancies by provice: $filteredVacancies");
         return filteredVacancies;
       } else {
         print("Cannot determine preferred province");
@@ -1021,8 +1008,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
     List<Map<String, dynamic>> filteredVacancies = list!.where((vacancy) {
       return _educationList.contains(vacancy['max_education']);
     }).toList();
-
-    print("Filtered vacancies by education: $filteredVacancies");
     return filteredVacancies;
   }
 
@@ -1060,8 +1045,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return vacancy['minimum_salary'] >= expected_salary;
       }).toList();
-
-      print("Filtered vacancies by salary: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");
@@ -1077,8 +1060,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return vacancy['job_type'] == "Full Time";
       }).toList();
-
-      print("Filtered vacancies by jobType: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");
@@ -1092,8 +1073,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return vacancy['job_type'] == "Part Time";
       }).toList();
-
-      print("Filtered vacancies by jobType: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");
@@ -1109,8 +1088,6 @@ class _JobMatchingScreenState extends State<JobMatchingScreen> {
       List<Map<String, dynamic>> filteredVacancies = list.where((vacancy) {
         return ((vacancy['active'] == true) && (vacancy['disabled'] == false));
       }).toList();
-
-      print("Filtered vacancies by jobType: $filteredVacancies");
       return filteredVacancies;
     } else {
       print("Cannot filter");

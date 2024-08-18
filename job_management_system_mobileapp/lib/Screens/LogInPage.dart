@@ -3,10 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get_it/get_it.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/SignUp.dart';
-import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

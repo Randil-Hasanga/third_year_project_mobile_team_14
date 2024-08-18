@@ -27,8 +27,7 @@ class JobProviderPage extends StatefulWidget {
 
 class _JobProviderPageState extends State<JobProviderPage> {
   FirebaseService? _firebaseService;
-  String? _userName, uid;
-  Map<String, dynamic>? _jobProviderDetails;
+  String? uid;
   SharedPreferences? _sharedPreferences;
 
   @override
@@ -112,9 +111,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
 
   @override
   Widget build(BuildContext context) {
-    _userName = _firebaseService!.currentUser!['username'];
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     // You can adjust this factor according to your preference
     double fontSize = screenWidth * 0.04; // Example factor
 

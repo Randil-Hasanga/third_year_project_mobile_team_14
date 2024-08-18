@@ -56,7 +56,6 @@ class FirebaseService {
         uid = _auth.currentUser?.uid;
         this.email = email;
         userType = currentUser!['type'];
-        print("User type $userType");
         return true;
       } else {
         return false;
@@ -568,7 +567,6 @@ class FirebaseService {
       if (querySnapshot.exists) {
         return querySnapshot;
       } else {
-        print('No CVDetails document found for user $uid');
         return null;
       }
     } catch (error) {
@@ -798,7 +796,6 @@ class FirebaseService {
 
     if (_doc.exists) {
       currentSeekerCV = _doc.data() as Map;
-      print("Current CV : $currentSeekerCV");
       return _doc.data();
     } else {
       return null;
@@ -860,7 +857,6 @@ class FirebaseService {
   Future<List<Map<String, dynamic>>?> getVacanciesInPrefferedIndustry(
       List<String> preferedIndustries) async {
     int age = int.parse(currentSeekerCV!['age']);
-    print(preferedIndustries);
 
     try {
       QuerySnapshot<Map<String, dynamic>> _querySnapshot = await _db
@@ -872,7 +868,6 @@ class FirebaseService {
       if (_querySnapshot.docs.isNotEmpty) {
         List<Map<String, dynamic>> vacancies =
             _querySnapshot.docs.map((doc) => doc.data()).toList();
-        print("Male:Industry:age: $vacancies");
         return vacancies;
       } else {
         print("1 No vacancies found.");

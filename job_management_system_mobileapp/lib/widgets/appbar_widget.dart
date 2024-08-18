@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
-import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
-import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
 class AppBarWidget {
   AppBarWidget();

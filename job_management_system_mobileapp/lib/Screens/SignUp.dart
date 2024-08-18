@@ -1,11 +1,6 @@
-import 'dart:math';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get_it/get_it.dart';
-
-import 'package:job_management_system_mobileapp/Screens/ForgotPassword.dart';
 import 'package:job_management_system_mobileapp/Screens/enter_OTP.dart';
 import 'package:job_management_system_mobileapp/services/email_services.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -29,21 +24,16 @@ class _SignUpPageState extends State<SignUpPage> {
   bool showTextPwd = true;
   bool showTextRePwd = true;
 
-  FirebaseService? _firebaseService;
-  EmailService? _emailService;
   TextFieldWidgets _textFieldWidgets = TextFieldWidgets();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _firebaseService = GetIt.instance.get<FirebaseService>();
-    _emailService = GetIt.instance.get<EmailService>();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_accountType);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -255,6 +245,5 @@ class _SignUpPageState extends State<SignUpPage> {
         );
       }
     }
-    print(_userName);
   } // write codes tp generate random otp
 }

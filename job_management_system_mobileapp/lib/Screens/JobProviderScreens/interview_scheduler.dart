@@ -206,8 +206,6 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                                       .toString();
 
                                   selectedvacancy = vacancyValue;
-
-                                  print(vacancyValue);
                                 },
                                 value: selectedvacancy,
                                 isExpanded: false,
@@ -306,7 +304,6 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                                   setState(
                                     () {
                                       groupValue = value!;
-                                      print(groupValue);
                                       showLinkFeild = true;
                                       linkPopup();
                                     },

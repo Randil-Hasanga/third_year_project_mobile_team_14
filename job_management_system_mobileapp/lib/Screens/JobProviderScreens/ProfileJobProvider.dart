@@ -102,15 +102,11 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
       rejectionDescription =
           await _firebaseService!.getRejectionReason(approvalId!);
       setState(() {});
-      print(rejectionDescription);
     }
   }
 
   void _getProvider() async {
     _jobProviderDetails = await _firebaseService!.getCurrentProviderData();
-
-    print(_jobProviderDetails);
-    print("is being updated : $isBeingUpdated");
 
     if (_jobProviderDetails != null) {
       setState(() {
@@ -631,7 +627,6 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
           setState(() {
             _selectedDistrict = englishDistrict;
           });
-          print("$_selectedDistrict,$_selectedOrgType,$_selectedIndustry");
         },
       ),
     );
@@ -703,8 +698,6 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
             _selectedOrgType = englishWord;
           });
-
-          print("$_selectedDistrict,$_selectedOrgType,$_selectedIndustry");
         },
         child: Material(
           elevation: 1,
@@ -797,8 +790,6 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
 
             _selectedIndustry = englishPart;
           });
-
-          print("$_selectedDistrict,$_selectedOrgType,$_selectedIndustry");
         },
         child: Material(
           elevation: 1,

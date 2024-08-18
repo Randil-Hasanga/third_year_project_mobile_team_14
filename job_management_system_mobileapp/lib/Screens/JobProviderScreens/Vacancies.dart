@@ -76,7 +76,6 @@ class _VacanciesState extends State<Vacancies> {
           _address = _jobProviderDetails!['company_address'] ?? '';
         }
       });
-      print(_companyName);
     }
 
     orgType = _jobProviderDetails!['org_type'];
@@ -306,7 +305,6 @@ class _VacanciesState extends State<Vacancies> {
                     onSelected: (String value) {
                       if (value != null && jobPositions.contains(value)) {
                         _jobPositionController.text = value;
-                        debugPrint('You selected $value');
                       }
                     },
                     fieldViewBuilder: (BuildContext context,

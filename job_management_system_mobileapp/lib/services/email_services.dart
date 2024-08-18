@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emailjs/emailjs.dart';
-import 'package:flutter/material.dart';
 
 class EmailService {
   final serviceID = "service_1un6rrh";
