@@ -47,7 +47,6 @@ class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
 
   void _getProvider() async {
     _jobProviderDetails = await _firebaseService!.getCurrentProviderData();
-    print(_jobProviderDetails);
 
     if (_jobProviderDetails != null) {
       setState(() {

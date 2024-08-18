@@ -1,6 +1,5 @@
 import "package:animated_splash_screen/animated_splash_screen.dart";
 import "package:flutter/material.dart";
-import "package:job_management_system_mobileapp/Screens/LogInPage.dart";
 import "package:job_management_system_mobileapp/Screens/onboardScreen.dart";
 
 class SplashScreen extends StatelessWidget {

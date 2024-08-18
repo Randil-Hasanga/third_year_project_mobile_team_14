@@ -65,9 +65,6 @@ class _EnterOTPState extends State<EnterOTP> {
 
   @override
   Widget build(BuildContext context) {
-    print(otp);
-    print(_userName);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Verify Email'),

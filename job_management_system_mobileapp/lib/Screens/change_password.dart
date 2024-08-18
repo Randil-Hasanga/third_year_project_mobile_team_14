@@ -75,7 +75,6 @@ class _ChangePasswordState extends State<ChangePassword> {
             }, (value) {
               setState(() {
                 _oldPwd = value;
-                print(value);
               });
             },
                 Localization.of(context)
