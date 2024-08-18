@@ -501,15 +501,10 @@ class _JobProviderProfileState extends State<JobProviderProfile> {
     final RegExp englishRegex = RegExp(r'^[a-zA-Z ]+$');
     return englishRegex.hasMatch(text);
   }
-
-  // bool isEnglishWithSymbolsAndNumbers(String text) {
-  //   final RegExp englishRegex = RegExp(r'^[a-zA-Z ,.!?]+$');
-  //   return englishRegex.hasMatch(text);
-  // }
-
+  
   bool isEnglishWithSymbolsAndNumbers(String text) {
-    final RegExp englishRegex = RegExp(r'^[a-zA-Z0-9 ,.!?]+$');
-    return englishRegex.hasMatch(text);
+    final RegExp englishRegex = RegExp(r'^[a-zA-Z0-9 ,.!?\n\r]+$');
+    return englishRegex.hasMatch(text.trim());
   }
 
   Widget _memberNumberTextField() {
