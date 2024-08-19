@@ -623,7 +623,7 @@ class _CVCreationState extends State<CVCreation> {
                                           title:
                                               const Text('Input Information'),
                                           content: const Text(
-                                            'Please enter your name with initials. Only letters and spaces are allowed.',
+                                            'Please enter your name with initials. Only letters, spaces, and dots are allowed.',
                                           ),
                                           actions: [
                                             TextButton(
@@ -638,20 +638,20 @@ class _CVCreationState extends State<CVCreation> {
                                     );
                                   },
                                   tooltip:
-                                      'Text only. Letters and spaces are allowed.',
+                                      'Text only. Letters, spaces, and dots are allowed.',
                                 ),
                               ),
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: (value) {
-                                final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
+                                final RegExp regex = RegExp(r'^[a-zA-Z\s.]+$');
                                 if (value == null || value.isEmpty) {
                                   return Localization.of(context)
                                           .getTranslatedValue(
                                               'please enter name with initials') ??
                                       'Please enter full name';
                                 } else if (!regex.hasMatch(value)) {
-                                  return 'Only letters and spaces are allowed';
+                                  return 'Only letters, spaces, and dots are allowed';
                                 }
                                 return null;
                               },
@@ -713,7 +713,7 @@ class _CVCreationState extends State<CVCreation> {
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Full Name is required';
-                                } else if (!RegExp(r'^[a-zA-Z\s]+$')
+                                } else if (!RegExp(r'^[a-zA-Z\s.]+$')
                                     .hasMatch(value)) {
                                   return 'Full Name must only contain letters and spaces';
                                 }
@@ -1066,7 +1066,7 @@ class _CVCreationState extends State<CVCreation> {
                             child: TextFormField(
                               controller: _contactMobileController,
                               decoration: InputDecoration(
-                                labelText: 'Tel (Mobile)*F',
+                                labelText: 'Tel (Mobile)*',
                                 hintText: 'EX: +94718524560/ 0718524560',
                                 border: const OutlineInputBorder(),
                                 errorBorder: const OutlineInputBorder(
@@ -1321,9 +1321,7 @@ class _CVCreationState extends State<CVCreation> {
                           return null; // Return null if the input is valid
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      
                       const SizedBox(height: 20),
                       Row(
                         children: [
@@ -1510,111 +1508,113 @@ class _CVCreationState extends State<CVCreation> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                   TextFormField(
-  controller: _OLYearController,
-  decoration: InputDecoration(
-    labelText: 'Year*',
-    hintText: 'Ex: 2016',
-    border: const OutlineInputBorder(),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: _selectEduQalification != 'Below O/L' &&
-               (_OLYearController.text.isEmpty ||
-                !RegExp(r'^\d{4}$').hasMatch(_OLYearController.text))
-            ? Colors.red
-            : Colors.grey,
-      ),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: _selectEduQalification != 'Below O/L' &&
-               (_OLYearController.text.isEmpty ||
-                !RegExp(r'^\d{4}$').hasMatch(_OLYearController.text))
-            ? Colors.red
-            : Colors.grey,
-      ),
-    ),
-    errorText: (_selectEduQalification != 'Below O/L' &&
-                (_OLYearController.text.isEmpty ||
-                 !RegExp(r'^\d{4}$').hasMatch(_OLYearController.text)))
-        ? 'Enter a valid 4-digit year'
-        : null,
-    suffixIcon: IconButton(
-      icon: const Icon(Icons.info_outline),
-      onPressed: () {
-        // Show a tooltip or dialog with information about the input
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Input Information'),
-              content: const Text(
-                'Please enter a 4-digit year. For example, 2016.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      tooltip: 'Enter a 4-digit year',
-    ),
-  ),
-  autovalidateMode: AutovalidateMode.onUserInteraction,
-  validator: (value) {
-    if (_selectEduQalification != 'Below O/L') {
-      if (value == null || value.isEmpty) {
-        return 'Year is required';
-      }
-      if (!RegExp(r'^\d{4}$').hasMatch(value)) {
-        return 'Enter a valid 4-digit year';
-      }
-    }
-    return null;
-  },
-),
-
-
+                        TextFormField(
+                          controller: _OLYearController,
+                          decoration: InputDecoration(
+                            labelText: 'Year*',
+                            hintText: 'Ex: 2016',
+                            border: const OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLYearController.text.isNotEmpty &&
+                                        !RegExp(r'^\d{4}$')
+                                            .hasMatch(_OLYearController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLYearController.text.isNotEmpty &&
+                                        !RegExp(r'^\d{4}$')
+                                            .hasMatch(_OLYearController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            errorText: _selectEduQalification != 'Below O/L' &&
+                                    _OLYearController.text.isNotEmpty &&
+                                    !RegExp(r'^\d{4}$')
+                                        .hasMatch(_OLYearController.text)
+                                ? 'Enter a valid 4-digit year'
+                                : null,
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.info_outline),
+                              onPressed: () {
+                                // Show a tooltip or dialog with information about the input
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Input Information'),
+                                      content: const Text(
+                                        'Please enter a 4-digit year. For example, 2016.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              tooltip: 'Enter a 4-digit year',
+                            ),
+                          ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            if (_selectEduQalification != 'Below O/L') {
+                              if (value == null || value.isEmpty) {
+                                return 'Year is required';
+                              }
+                              if (!RegExp(r'^\d{4}$').hasMatch(value)) {
+                                return 'Enter a valid 4-digit year';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _OLIndexController,
                           decoration: InputDecoration(
                             labelText: 'Index No',
                             border: const OutlineInputBorder(),
-                            // Change the border color to red if validation fails
-                            focusedBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLIndexController.text.isEmpty ||
-                                        !RegExp(r'^[0-9]+$')
-                                            .hasMatch(_OLIndexController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
-                            enabledBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLIndexController.text.isEmpty ||
-                                        !RegExp(r'^[0-9]+$')
-                                            .hasMatch(_OLIndexController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLIndexController.text.isNotEmpty &&
+                                        !RegExp(r'^[a-zA-Z0-9]+$')
+                                            .hasMatch(_OLIndexController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLIndexController.text.isNotEmpty &&
+                                        !RegExp(r'^[a-zA-Z0-9]+$')
+                                            .hasMatch(_OLIndexController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (_selectEduQalification != 'Below O/L') {
                               if (value == null || value.isEmpty) {
                                 return 'Index No is required';
                               }
-                              RegExp regex = RegExp(r'^[0-9]+$');
-                              if (!regex.hasMatch(value)) {
-                                return 'Enter a valid index number (numbers only)';
+                              if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                                return 'Enter a valid index number (letters and/or numbers only)';
                               }
                             }
                             return null;
@@ -1627,33 +1627,34 @@ class _CVCreationState extends State<CVCreation> {
                             labelText: 'Medium',
                             hintText: 'Ex: Sinhala',
                             border: const OutlineInputBorder(),
-                            // Change the border color to red if validation fails
-                            focusedBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLMediumController.text.isEmpty ||
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLMediumController.text.isNotEmpty &&
                                         !RegExp(r'^[a-zA-Z]+$')
-                                            .hasMatch(_OLMediumController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
-                            enabledBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLMediumController.text.isEmpty ||
+                                            .hasMatch(_OLMediumController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLMediumController.text.isNotEmpty &&
                                         !RegExp(r'^[a-zA-Z]+$')
-                                            .hasMatch(_OLMediumController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
+                                            .hasMatch(_OLMediumController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (_selectEduQalification != 'Below O/L') {
                               if (value == null || value.isEmpty) {
                                 return 'Medium is required';
                               }
-                              RegExp regex = RegExp(r'^[a-zA-Z]+$');
-                              if (!regex.hasMatch(value)) {
+                              if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
                                 return 'Enter a valid medium (letters only)';
                               }
                             }
@@ -1666,34 +1667,35 @@ class _CVCreationState extends State<CVCreation> {
                           decoration: InputDecoration(
                             labelText: 'School',
                             border: const OutlineInputBorder(),
-                            // Change the border color to red if validation fails
-                            focusedBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLSchoolController.text.isEmpty ||
-                                        !RegExp(r'^[a-zA-Z\s]+$')
-                                            .hasMatch(_OLSchoolController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
-                            enabledBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLSchoolController.text.isEmpty ||
-                                        !RegExp(r'^[a-zA-Z\s]+$')
-                                            .hasMatch(_OLSchoolController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLSchoolController.text.isNotEmpty &&
+                                        !RegExp(r'^[a-zA-Z\s./]+$')
+                                            .hasMatch(_OLSchoolController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLSchoolController.text.isNotEmpty &&
+                                        !RegExp(r'^[a-zA-Z\s./]+$')
+                                            .hasMatch(_OLSchoolController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (_selectEduQalification != 'Below O/L') {
                               if (value == null || value.isEmpty) {
                                 return 'School is required';
                               }
-                              RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
-                              if (!regex.hasMatch(value)) {
-                                return 'Enter a valid school name (letters and spaces only)';
+                              if (!RegExp(r'^[a-zA-Z\s./]+$').hasMatch(value)) {
+                                return 'Enter a valid school name (letters,spaces, . /  only)';
                               }
                             }
                             return null;
@@ -1706,33 +1708,34 @@ class _CVCreationState extends State<CVCreation> {
                             labelText: 'Attempt',
                             hintText: 'Ex: 1',
                             border: const OutlineInputBorder(),
-                            // Change the border color to red if validation fails
-                            focusedBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLAttemptController.text.isEmpty ||
-                                        !RegExp(r'^[1-9]$').hasMatch(
-                                            _OLAttemptController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
-                            enabledBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_OLAttemptController.text.isEmpty ||
-                                        !RegExp(r'^[1-9]$').hasMatch(
-                                            _OLAttemptController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLAttemptController.text.isNotEmpty &&
+                                        !RegExp(r'^[1-9]$')
+                                            .hasMatch(_OLAttemptController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _OLAttemptController.text.isNotEmpty &&
+                                        !RegExp(r'^[1-9]$')
+                                            .hasMatch(_OLAttemptController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (_selectEduQalification != 'Below O/L') {
                               if (value == null || value.isEmpty) {
                                 return 'Attempt is required';
                               }
-                              RegExp regex = RegExp(r'^[1-9]$');
-                              if (!regex.hasMatch(value)) {
+                              if (!RegExp(r'^[1-9]$').hasMatch(value)) {
                                 return 'Enter a valid attempt (single number only)';
                               }
                             }
@@ -1783,33 +1786,34 @@ class _CVCreationState extends State<CVCreation> {
                             labelText: 'Year',
                             hintText: 'Ex: 2016',
                             border: const OutlineInputBorder(),
-                            // Change the border color to red if validation fails
-                            focusedBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_ALYearController.text.isEmpty ||
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _ALYearController.text.isNotEmpty &&
                                         !RegExp(r'^\d{4}$')
-                                            .hasMatch(_ALYearController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
-                            enabledBorder: _selectEduQalification !=
-                                        'Below O/L' &&
-                                    (_ALYearController.text.isEmpty ||
+                                            .hasMatch(_ALYearController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: _selectEduQalification != 'Below O/L' &&
+                                        _ALYearController.text.isNotEmpty &&
                                         !RegExp(r'^\d{4}$')
-                                            .hasMatch(_ALYearController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
+                                            .hasMatch(_ALYearController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (_selectEduQalification != 'Below O/L') {
                               if (value == null || value.isEmpty) {
                                 return 'Year is required';
                               }
-                              RegExp regex = RegExp(r'^\d{4}$');
-                              if (!regex.hasMatch(value)) {
+                              if (!RegExp(r'^\d{4}$').hasMatch(value)) {
                                 return 'Enter a valid year (4 digits only)';
                               }
                             }
@@ -1822,36 +1826,42 @@ class _CVCreationState extends State<CVCreation> {
                           decoration: InputDecoration(
                             labelText: 'Index No',
                             border: const OutlineInputBorder(),
-                            // Change the border color to red if validation fails
-                            focusedBorder: (_selectEduQalification ==
-                                            'Passed A/L' ||
-                                        _selectEduQalification ==
-                                            'Undergraduate' ||
-                                        _selectEduQalification == 'Graduate' ||
-                                        _selectEduQalification ==
-                                            'Post Graduate Diploma') &&
-                                    (_ALIndexController.text.isEmpty ||
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: (_selectEduQalification ==
+                                                'Passed A/L' ||
+                                            _selectEduQalification ==
+                                                'Undergraduate' ||
+                                            _selectEduQalification ==
+                                                'Graduate' ||
+                                            _selectEduQalification ==
+                                                'Post Graduate Diploma') &&
+                                        _ALIndexController.text.isNotEmpty &&
                                         !RegExp(r'^[0-9]+$')
-                                            .hasMatch(_ALIndexController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
-                            enabledBorder: (_selectEduQalification ==
-                                            'Passed A/L' ||
-                                        _selectEduQalification ==
-                                            'Undergraduate' ||
-                                        _selectEduQalification == 'Graduate' ||
-                                        _selectEduQalification ==
-                                            'Post Graduate Diploma') &&
-                                    (_ALIndexController.text.isEmpty ||
+                                            .hasMatch(_ALIndexController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: (_selectEduQalification ==
+                                                'Passed A/L' ||
+                                            _selectEduQalification ==
+                                                'Undergraduate' ||
+                                            _selectEduQalification ==
+                                                'Graduate' ||
+                                            _selectEduQalification ==
+                                                'Post Graduate Diploma') &&
+                                        _ALIndexController.text.isNotEmpty &&
                                         !RegExp(r'^[0-9]+$')
-                                            .hasMatch(_ALIndexController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
+                                            .hasMatch(_ALIndexController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (_selectEduQalification == 'Passed A/L' ||
                                 _selectEduQalification == 'Undergraduate' ||
@@ -1861,8 +1871,7 @@ class _CVCreationState extends State<CVCreation> {
                               if (value == null || value.isEmpty) {
                                 return 'Index No is required';
                               }
-                              RegExp regex = RegExp(r'^[0-9]+$');
-                              if (!regex.hasMatch(value)) {
+                              if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
                                 return 'Enter a valid index number (numbers only)';
                               }
                             }
@@ -1876,36 +1885,42 @@ class _CVCreationState extends State<CVCreation> {
                             labelText: 'Medium',
                             hintText: 'Ex: Sinhala',
                             border: const OutlineInputBorder(),
-                            // Change the border color to red if validation fails
-                            focusedBorder: (_selectEduQalification ==
-                                            'Passed A/L' ||
-                                        _selectEduQalification ==
-                                            'Undergraduate' ||
-                                        _selectEduQalification == 'Graduate' ||
-                                        _selectEduQalification ==
-                                            'Post Graduate Diploma') &&
-                                    (_ALMediumController.text.isEmpty ||
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: (_selectEduQalification ==
+                                                'Passed A/L' ||
+                                            _selectEduQalification ==
+                                                'Undergraduate' ||
+                                            _selectEduQalification ==
+                                                'Graduate' ||
+                                            _selectEduQalification ==
+                                                'Post Graduate Diploma') &&
+                                        _ALMediumController.text.isNotEmpty &&
                                         !RegExp(r'^[a-zA-Z\s]+$')
-                                            .hasMatch(_ALMediumController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
-                            enabledBorder: (_selectEduQalification ==
-                                            'Passed A/L' ||
-                                        _selectEduQalification ==
-                                            'Undergraduate' ||
-                                        _selectEduQalification == 'Graduate' ||
-                                        _selectEduQalification ==
-                                            'Post Graduate Diploma') &&
-                                    (_ALMediumController.text.isEmpty ||
+                                            .hasMatch(_ALMediumController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: (_selectEduQalification ==
+                                                'Passed A/L' ||
+                                            _selectEduQalification ==
+                                                'Undergraduate' ||
+                                            _selectEduQalification ==
+                                                'Graduate' ||
+                                            _selectEduQalification ==
+                                                'Post Graduate Diploma') &&
+                                        _ALMediumController.text.isNotEmpty &&
                                         !RegExp(r'^[a-zA-Z\s]+$')
-                                            .hasMatch(_ALMediumController.text))
-                                ? const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  )
-                                : null,
+                                            .hasMatch(_ALMediumController.text)
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (_selectEduQalification == 'Passed A/L' ||
                                 _selectEduQalification == 'Undergraduate' ||
@@ -1915,8 +1930,7 @@ class _CVCreationState extends State<CVCreation> {
                               if (value == null || value.isEmpty) {
                                 return 'Medium is required';
                               }
-                              RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
-                              if (!regex.hasMatch(value)) {
+                              if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
                                 return 'Enter a valid medium (letters only)';
                               }
                             }
@@ -1949,7 +1963,7 @@ class _CVCreationState extends State<CVCreation> {
                             if (value == null || value.isEmpty) {
                               return null;
                             }
-                            RegExp regex = RegExp(r'^[0-9]+$');
+                            RegExp regex = RegExp(r'^[0-9]+$./');
                             if (!regex.hasMatch(value)) {
                               return 'Enter a valid attempt (numbers only)';
                             }
@@ -2084,6 +2098,31 @@ class _CVCreationState extends State<CVCreation> {
                           },
                         ),
                         const SizedBox(height: 20),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons
+                                  .swap_horizontal_circle, // You can choose any icon you like
+                              color: Color.fromARGB(
+                                  255, 231, 75, 75), // Icon color
+                              size: 20.0, // Icon size
+                            ),
+                            SizedBox(
+                                width: 8.0), // Space between the icon and text
+                            Text(
+                              "Swap to go to Persomal information Tab \n or Skill Tab",
+                              style: TextStyle(
+                                color: Color.fromARGB(
+                                    255, 231, 75, 75), // Text color
+                                fontSize: 16.0, // Font size
+                                fontWeight: FontWeight.bold, // Font weight
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ],
                   ),
@@ -2107,6 +2146,29 @@ class _CVCreationState extends State<CVCreation> {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        Wrap(
+                          spacing: MediaQuery.of(context).size.width *
+                              0.02, // Spacing between icon and text
+                          children: [
+                            // Icon(
+                            //   Icons.warning,
+                            //   color: Colors.orange,
+                            //   size: MediaQuery.of(context).size.width *
+                            //       0.05, // Dynamic icon size
+                            // ),
+                            Text(
+                              'Fill this Job Experience section if you have any experience',
+                              style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.width *
+                                    0.04, // Dynamic font size
+                                color: Colors.orange,
+                              ),
+                              overflow: TextOverflow
+                                  .visible, // Allow text to wrap to a new line
+                            ),
+                          ],
+                        ), const SizedBox(height: 10),
+
                         // Job Experience fields
                         TextFormField(
                           controller: _yearOfExperienceController,
@@ -2279,7 +2341,31 @@ class _CVCreationState extends State<CVCreation> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Text("Swap to go to Job Expectation Tab"),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons
+                                  .swap_horizontal_circle, // You can choose any icon you like
+                              color: Color.fromARGB(
+                                  255, 231, 75, 75), // Icon color
+                              size: 20.0, // Icon size
+                            ),
+                            SizedBox(
+                                width: 8.0), // Space between the icon and text
+                            Text(
+                              "Swap to go to  Education Tab \n or Job Experience Tab",
+                              style: TextStyle(
+                                color: Color.fromARGB(
+                                    255, 231, 75, 75), // Text color
+                                fontSize: 16.0, // Font size
+                                fontWeight: FontWeight.bold, // Font weight
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -2453,6 +2539,33 @@ class _CVCreationState extends State<CVCreation> {
                           }).toList(),
                         ),
                         const SizedBox(height: 20),
+
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons
+                                  .swap_horizontal_circle, // You can choose any icon you like
+                              color: Color.fromARGB(
+                                  255, 231, 75, 75), // Icon color
+                              size: 20.0, // Icon size
+                            ),
+                            SizedBox(
+                                width: 8.0), // Space between the icon and text
+                            Text(
+                              "Swap to go to Skill Section section",
+                              style: TextStyle(
+                                color: Color.fromARGB(
+                                    255, 231, 75, 75), // Text color
+                                fontSize: 16.0, // Font size
+                                fontWeight: FontWeight.bold, // Font weight
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 30),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
