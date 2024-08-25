@@ -382,7 +382,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                 }
 
                                 if (snapshot.data?.docs.isEmpty ?? true) {
-                                  return Center(
+                                  return const Center(
                                     child: Text(
                                       'No matching vacancies',
                                       style: TextStyle(
@@ -417,7 +417,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                                           child: Container(
                                             width: 250,
                                             decoration: BoxDecoration(
-                                              color: Color.fromARGB(
+                                              color: const Color.fromARGB(
                                                   119,
                                                   236,
                                                   144,
@@ -573,9 +573,9 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                     style: const TextStyle(color: Colors.white, fontSize: 24),
                   ),
                   const SizedBox(height: 10),
-                  Text(
+                  const Text(
                     'Services of Job Management System', // Replace with your desired text
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
               ),

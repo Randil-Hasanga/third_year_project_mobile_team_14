@@ -91,7 +91,7 @@ class _CVCreationState extends State<CVCreation> {
       TextEditingController();
 
   //Tab 03:Skill
-
+  String? _selectedExperience;
   final TextEditingController _yearOfExperienceController =
       TextEditingController();
   final TextEditingController _currentJobPositionController =
@@ -138,7 +138,31 @@ class _CVCreationState extends State<CVCreation> {
   final TextEditingController _refeeTwoController = TextEditingController();
 
   // ignore: non_constant_identifier_names
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   List<String> prefered_industries = [];
+  String? _userDocId;
+  List<String> allIndustries = [
+    'Transportation and Storage',
+    'Extra Territorial Organizations',
+    'Private Household with Employed Personals',
+    'Other Community, Social and Personal Services',
+    'Health and Social Services',
+    'Public Administration and Defence',
+    'Research and Development Services',
+    'Computer Related Services',
+    'Real Estate Services',
+    'Financial Services',
+    'Hotel and Restaurant',
+    'Wholesale and Retail Trade',
+    'Construction',
+    'Electricity, Gas and Water Supply',
+    'Manufacturing',
+    'Mining and Quarrying',
+    'Fishing',
+    'Agriculture, Animal Husbandry and Forestry'
+  ];
   String? selectPrefferedDistrict;
   double? _deviceWidth, _deviceHeight;
 
@@ -147,6 +171,25 @@ class _CVCreationState extends State<CVCreation> {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
     _editCVDetails();
+    _userDocId = _auth.currentUser?.uid; // Get the UID of the current user
+    fetchPreferredIndustries(); // Load preferred industries from Firebase
+  }
+
+  Future<void> fetchPreferredIndustries() async {
+    if (_userDocId == null) return;
+
+    try {
+      DocumentSnapshot doc =
+          await _firestore.collection('CVDetails').doc(_userDocId).get();
+      if (doc.exists) {
+        List<dynamic> industries = doc['prefered_industries'] ?? [];
+        setState(() {
+          prefered_industries = List<String>.from(industries);
+        });
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
 
 //date picker
@@ -182,141 +225,104 @@ class _CVCreationState extends State<CVCreation> {
   }
 
   void _editCVDetails() async {
-    await _firebaseService?.editCVDetails().then((data) {
-      if (mounted) {
-        if (data != null) {
-          setState(() {
-            if (data['title'] != null) {
-              _selectedtitle = data['title'];
-            }
-            if (data['gender'] != null) {
-              _selectedgender = data['gender'];
-            }
-            if (data['jobType'] != null) {
-              _selectedjobType = data['jobType'];
-            }
-            if (data['workingSection'] != null) {
-              _selectedworkingSection = data['workingSection'];
-            }
-            if (data['maritalStatus'] != null) {
-              _selectedmaritalStatus = data['maritalStatus'];
-            }
-            if (data['maritalStatus'] != null) {
-              _selectedmaritalStatus = data['maritalStatus'];
-            }
-            if (data['currentJobStatus'] != null) {
-              _selectedcurrentJobStatus = data['currentJobStatus'];
-            }
-            _nameWithIniController.text = data['nameWithIni'] ?? '';
-            _fullNameController.text = data['fullname'] ?? '';
-            _nationalityController.text = data['nationality'] ?? '';
-            _nicController.text = data['nic'] ?? '';
-            _drivingLicenceController.text = data['drivingLicence'] ?? '';
-            if (data['selectedDate'] != null) {
-              _selectedDate = data['selectedDate'].toDate() ?? '';
-            }
-            if (data['religion'] != null) {
-              _selectReligion = data['religion'];
-            }
-            _ageController.text = data['age'] ?? '';
-            _emailController.text = data['cv_email'] ?? '';
-            _contactMobileController.text = data['contactMobile'] ?? '';
-            _contactHomeController.text = data['ContactHome'] ?? '';
-            _addressController.text = data['address'] ?? '';
-            if (data['district'] != null) {
-              _selecteddistrict = data['district'];
-            }
-            _divisionalSecController.text = data['divisionalSecretariat'] ?? '';
-            _salaryController.text = data['salary'] ?? '';
-            if (data['EduQalification'] != null) {
-              _selectEduQalification = data['EduQalification'];
-            }
-            if (data['ProfQualification'] != null) {
-              _selectProfQualification = data['ProfQualification'];
-            }
+    try {
+      final data = await _firebaseService?.editCVDetails();
+      if (mounted && data != null) {
+        setState(() {
+          // Update dropdown selections
+          _selectedtitle = data['title'] ?? _selectedtitle;
+          _selectedgender = data['gender'] ?? _selectedgender;
+          _selectedjobType = data['jobType'] ?? _selectedjobType;
+          _selectedworkingSection =
+              data['workingSection'] ?? _selectedworkingSection;
+          _selectedmaritalStatus =
+              data['maritalStatus'] ?? _selectedmaritalStatus;
+          _selectedcurrentJobStatus =
+              data['currentJobStatus'] ?? _selectedcurrentJobStatus;
+          _selectReligion = data['religion'] ?? _selectReligion;
+          _selecteddistrict = data['district'] ?? _selecteddistrict;
+          _selectEduQalification =
+              data['EduQalification'] ?? _selectEduQalification;
+          _selectProfQualification =
+              data['ProfQualification'] ?? _selectProfQualification;
+          _selectOLStatus = data['OLStatus'] ?? _selectOLStatus;
+          _selectALStatus = data['ALStatus'] ?? _selectALStatus;
 
-            _OLYearController.text = data['OLYear'] ?? '';
-            _OLIndexController.text = data['OLIndex'] ?? '';
-            _OLMediumController.text = data['OLMedium'] ?? '';
-            _OLSchoolController.text = data['OLSchool'] ?? '';
-            _OLAttemptController.text = data['OLAttempt'] ?? '';
-            if (data['OLStatus'] != null) {
-              _selectOLStatus = data['OLStatus'];
-            }
-            _ALYearController.text = data['ALYear'] ?? '';
-            _ALIndexController.text = data['ALIndex'] ?? '';
-            _ALMediumController.text = data['ALMedium'] ?? '';
-            _ALSchoolController.text = data['ALSchool'] ?? '';
-            _ALAttemptController.text = data['ALAttempt'] ?? '';
-            if (data['ALStatus'] != null) {
-              _selectALStatus = data['ALStatus'];
-            }
+          // Update text controllers
+          _nameWithIniController.text = data['nameWithIni'] ?? '';
+          _fullNameController.text = data['fullname'] ?? '';
+          _nationalityController.text = data['nationality'] ?? '';
+          _nicController.text = data['nic'] ?? '';
+          _drivingLicenceController.text = data['drivingLicence'] ?? '';
+          _ageController.text = data['age'] ?? '';
+          _emailController.text = data['cv_email'] ?? '';
+          _contactMobileController.text = data['contactMobile'] ?? '';
+          _contactHomeController.text = data['ContactHome'] ?? '';
+          _addressController.text = data['address'] ?? '';
+          _divisionalSecController.text = data['divisionalSecretariat'] ?? '';
+          _salaryController.text = data['salary'] ?? '';
+          _OLYearController.text = data['OLYear'] ?? '';
+          _OLIndexController.text = data['OLIndex'] ?? '';
+          _OLMediumController.text = data['OLMedium'] ?? '';
+          _OLSchoolController.text = data['OLSchool'] ?? '';
+          _OLAttemptController.text = data['OLAttempt'] ?? '';
+          _ALYearController.text = data['ALYear'] ?? '';
+          _ALIndexController.text = data['ALIndex'] ?? '';
+          _ALMediumController.text = data['ALMedium'] ?? '';
+          _ALSchoolController.text = data['ALSchool'] ?? '';
+          _ALAttemptController.text = data['ALAttempt'] ?? '';
+          _sec01NameController.text = data['sec01Ins'] ?? '';
+          _sec01InstituteController.text = data['sec01Name'] ?? '';
+          _sec01durationController.text = data['sec01duration'] ?? '';
+          _sec02NameController.text = data['sec01Ins'] ?? '';
+          _sec02InstituteController.text = data['sec01Name'] ?? '';
+          _sec02durationController.text = data['sec01duration'] ?? '';
+          _yearOfExperienceController.text = data['yearOfExperience'] ?? '';
+          _currentJobPositionController.text = data['currentJobPosition'] ?? '';
+          _dateOfJoinController.text = data['dateOfJoin'] ?? '';
+          _companyController.text = data['currentEmployee'] ?? '';
+          _responsibilitiesController.text = data['responsibilities'] ?? '';
+          _specialSkillController.text = data['specialSkill'] ?? '';
+          _computerSkillController.text = data['computerSkill'] ?? '';
+          _otherSkillController.text = data['otherSkill'] ?? '';
+          _achievementsController.text = data['achievements'] ?? '';
+          _extraCurricularController.text = data['extraCurricular'] ?? '';
+          _trainingReqController.text = data['trainingReq'] ?? '';
+          _careerGuidanceController.text = data['careerGuidance'] ?? '';
+          _careerObjectiveController.text = data['careerObjective'] ?? '';
+          _refeeOneController.text = data['refeeOne'] ?? '';
+          _refeeTwoController.text = data['refeeTwo'] ?? '';
 
-            _sec01NameController.text = data['sec01Ins'] ?? '';
-            _sec01InstituteController.text = data['sec01Name'] ?? '';
-            _sec01durationController.text = data['sec01duration'] ?? '';
+          // Update language skills
+          sinhalaSpeaking = data['sinhalaSpeaking'] ?? sinhalaSpeaking;
+          sinhalaReading = data['sinhalaReading'] ?? sinhalaReading;
+          sinhalaWriting = data['sinhalaWriting'] ?? sinhalaWriting;
+          englishSpeaking = data['englishSpeaking'] ?? englishSpeaking;
+          englishReading = data['englishReading'] ?? englishReading;
+          englishWriting = data['englishWriting'] ?? englishWriting;
+          tamilSpeaking = data['tamilSpeaking'] ?? tamilSpeaking;
+          tamilReading = data['tamilReading'] ?? tamilReading;
+          tamilWriting = data['tamilWriting'] ?? tamilWriting;
 
-            _sec02NameController.text = data['sec01Ins'] ?? '';
-            _sec02InstituteController.text = data['sec01Name'] ?? '';
-            _sec02durationController.text = data['sec01duration'] ?? '';
+          // Update preferred industries
+          if (data['preferredIndustries'] != null) {
+            List<dynamic> industry = data['preferredIndustries'];
+            prefered_industries = List<String>.from(industry);
+          }
 
-            _yearOfExperienceController.text = data['yearOfExperience'] ?? '';
-            _currentJobPositionController.text =
-                data['currentJobPosition'] ?? '';
-            _dateOfJoinController.text = data['dateOfJoin'] ?? '';
-            _companyController.text = data['currentEmployee'] ?? '';
-            _responsibilitiesController.text = data['responsibilities'] ?? '';
-            _specialSkillController.text = data['specialSkill'] ?? '';
-            _computerSkillController.text = data['computerSkill'] ?? '';
-            _otherSkillController.text = data['otherSkill'] ?? '';
-            _achievementsController.text = data['achievements'] ?? '';
-            _extraCurricularController.text = data['extraCurricular'] ?? '';
-            _trainingReqController.text = data['trainingReq'] ?? '';
-            _careerGuidanceController.text = data['careerGuidance'] ?? '';
+          // Update preferred districts
+          selectPrefferedDistrict =
+              data['prefferedDistrict'] ?? selectPrefferedDistrict;
 
-            if (data['sinhalaSpeaking'] != null) {
-              sinhalaSpeaking = data['sinhalaSpeaking'];
-            }
-            if (data['sinhalaReading'] != null) {
-              sinhalaReading = data['sinhalaReading'];
-            }
-            if (data['sinhalaWriting'] != null) {
-              sinhalaWriting = data['sinhalaWriting'];
-            }
-            if (data['englishSpeaking'] != null) {
-              englishSpeaking = data['englishSpeaking'];
-            }
-            if (data['englishReading'] != null) {
-              englishReading = data['englishReading'];
-            }
-            if (data['englishWriting'] != null) {
-              englishWriting = data['englishWriting'];
-            }
-            if (data['tamilSpeaking'] != null) {
-              tamilSpeaking = data['tamilSpeaking'];
-            }
-            if (data['tamilReading'] != null) {
-              tamilReading = data['tamilReading'];
-            }
-            if (data['tamilWriting'] != null) {
-              tamilWriting = data['tamilWriting'];
-            }
-            _careerObjectiveController.text = data['careerObjective'] ?? '';
-            _refeeOneController.text = data['refeeOne'] ?? '';
-            _refeeTwoController.text = data['refeeTwo'] ?? '';
-
-            if (data['preferredIndustries'] != null) {
-              List<dynamic> industry = data['preferredIndustries'];
-              prefered_industries = List<String>.from(industry);
-            }
-
-            if (data['prefferedDistrict'] != null) {
-              selectPrefferedDistrict = data['prefferedDistrict'];
-            }
-          });
-        }
+          // Handle the date conversion if needed
+          if (data['selectedDate'] != null) {
+            _selectedDate = data['selectedDate'].toDate();
+          }
+        });
       }
-    });
+    } catch (e) {
+      print('Error editing CV details: $e');
+    }
   }
 
   @override
@@ -2137,123 +2143,7 @@ class _CVCreationState extends State<CVCreation> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Job Experience:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
                         const SizedBox(height: 10),
-                        Wrap(
-                          spacing: MediaQuery.of(context).size.width *
-                              0.02, // Spacing between icon and text
-                          children: [
-                            // Icon(
-                            //   Icons.warning,
-                            //   color: Colors.orange,
-                            //   size: MediaQuery.of(context).size.width *
-                            //       0.05, // Dynamic icon size
-                            // ),
-                            Text(
-                              'Fill this Job Experience section if you have any experience',
-                              style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width *
-                                    0.04, // Dynamic font size
-                                color: Colors.orange,
-                              ),
-                              overflow: TextOverflow
-                                  .visible, // Allow text to wrap to a new line
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Job Experience fields
-                        TextFormField(
-                          controller: _yearOfExperienceController,
-                          decoration: const InputDecoration(
-                            labelText: 'Year of job experience',
-                            hintText: 'Ex: 2 years',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Year of job experience is required';
-                            }
-                            // Regular expression to match the pattern "<number> years"
-                            RegExp regExp = RegExp(r'^\d+ years$');
-                            if (!regExp.hasMatch(value)) {
-                              return 'Please enter a valid year of job experience in the format: <number> years';
-                            }
-                            return null; // Return null if the input is valid
-                          },
-                        ),
-
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _currentJobPositionController,
-                          decoration: const InputDecoration(
-                            labelText: 'Job Position',
-                            hintText: 'HR Manager',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'job position is required';
-                            }
-                            return null; // Return null if the input is valid
-                          },
-                        ),
-
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _dateOfJoinController,
-                          decoration: const InputDecoration(
-                            labelText: 'Date of join',
-                            hintText: 'xxxx-xx-xx',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Date of join is required';
-                            }
-                            // Regular expression to match the pattern "xxxx-xx-xx"
-                            RegExp regExp = RegExp(r'^\d{4}-\d{2}-\d{2}$');
-                            if (!regExp.hasMatch(value)) {
-                              return 'Please enter a valid date in the format: xxxx-xx-xx';
-                            }
-                            return null; // Return null if the input is valid
-                          },
-                        ),
-
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _companyController,
-                          decoration: const InputDecoration(
-                            labelText: 'Company Name',
-                            hintText: ' Ex: MAS company',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _responsibilitiesController,
-                          decoration: const InputDecoration(
-                            labelText: 'Responsibilities',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _specialSkillController,
-                          decoration: const InputDecoration(
-                            labelText: 'Special Skills',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
                         const Text(
                           'Basic Skills:',
                           style: TextStyle(
@@ -2263,6 +2153,14 @@ class _CVCreationState extends State<CVCreation> {
                         ),
                         const SizedBox(height: 10),
                         // Basic Skills fields
+                        TextFormField(
+                          controller: _specialSkillController,
+                          decoration: const InputDecoration(
+                            labelText: 'Special Skills',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: _computerSkillController,
                           maxLines: 3,
@@ -2341,31 +2239,141 @@ class _CVCreationState extends State<CVCreation> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons
-                                  .swap_horizontal_circle, // You can choose any icon you like
-                              color: Color.fromARGB(
-                                  255, 231, 75, 75), // Icon color
-                              size: 20.0, // Icon size
-                            ),
-                            SizedBox(
-                                width: 8.0), // Space between the icon and text
-                            Text(
-                              "Swap to go to  Education Tab \n or Job Experience Tab",
-                              style: TextStyle(
-                                color: Color.fromARGB(
-                                    255, 231, 75, 75), // Text color
-                                fontSize: 16.0, // Font size
-                                fontWeight: FontWeight.bold, // Font weight
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                        const Text(
+                          'Job Experience:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                        const SizedBox(height: 20),
+
+                        SizedBox(height: 20),
+
+                        SizedBox(height: 10),
+                        DropdownButtonFormField<String>(
+                          value: _selectedExperience,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedExperience = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Yes',
+                            'No',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                            labelText: 'Do you have job experience?',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+
+                        SizedBox(height: 20),
+
+                        // Conditionally display Job Experience fields
+                        if (_selectedExperience == 'Yes') ...[
+                          TextFormField(
+                            controller: _yearOfExperienceController,
+                            decoration: const InputDecoration(
+                              labelText: 'Year of job experience',
+                              hintText: 'Ex: 2 years',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Year of job experience is required';
+                              }
+                              // Regular expression to match the pattern "<number> years"
+                              RegExp regExp = RegExp(r'^\d+ years$');
+                              if (!regExp.hasMatch(value)) {
+                                return 'Please enter a valid year of job experience in the format: <number> years';
+                              }
+                              return null; // Return null if the input is valid
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _currentJobPositionController,
+                            decoration: const InputDecoration(
+                              labelText: 'Job Position',
+                              hintText: 'HR Manager',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Job position is required';
+                              }
+                              return null; // Return null if the input is valid
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _dateOfJoinController,
+                            decoration: const InputDecoration(
+                              labelText: 'Date of join',
+                              hintText: 'xxxx-xx-xx',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Date of join is required';
+                              }
+                              // Regular expression to match the pattern "xxxx-xx-xx"
+                              RegExp regExp = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+                              if (!regExp.hasMatch(value)) {
+                                return 'Please enter a valid date in the format: xxxx-xx-xx';
+                              }
+                              return null; // Return null if the input is valid
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _companyController,
+                            decoration: const InputDecoration(
+                              labelText: 'Company Name',
+                              hintText: 'Ex: MAS company',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _responsibilitiesController,
+                            decoration: const InputDecoration(
+                              labelText: 'Responsibilities',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons
+                                    .swap_horizontal_circle, // You can choose any icon you like
+                                color: Color.fromARGB(
+                                    255, 231, 75, 75), // Icon color
+                                size: 20.0, // Icon size
+                              ),
+                              SizedBox(
+                                  width:
+                                      8.0), // Space between the icon and text
+                              Text(
+                                "Swap to go to  Education Tab \n or Job Experience Tab",
+                                style: TextStyle(
+                                  color: Color.fromARGB(
+                                      255, 231, 75, 75), // Text color
+                                  fontSize: 16.0, // Font size
+                                  fontWeight: FontWeight.bold, // Font weight
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -2439,26 +2447,7 @@ class _CVCreationState extends State<CVCreation> {
                             ),
                             Column(
                               children: <Widget>[
-                                ...<String>[
-                                  'Agriculture, Animal Husbandry and Forestry',
-                                  'Fishing',
-                                  'Mining and Quarrying',
-                                  'Manufacturing',
-                                  'Electricity, Gas and Water Supply',
-                                  'Construction',
-                                  'Wholesale and Retail Trade',
-                                  'Hotel and Restaurant',
-                                  'Financial Services',
-                                  'Real Estate Services',
-                                  'Computer Related Services',
-                                  'Research and Development Services',
-                                  'Public Administration and Defence',
-                                  'Health and Social Services',
-                                  'Other Community, Social and Personal Services',
-                                  'Private Household with Employed Personals',
-                                  'Extra Territorial Organizations',
-                                  'Transportation and Storage',
-                                ].map<CheckboxListTile>((industry) {
+                                ...allIndustries.map<Widget>((industry) {
                                   return CheckboxListTile(
                                     checkColor:
                                         const Color.fromARGB(255, 255, 183, 0),
@@ -2472,8 +2461,7 @@ class _CVCreationState extends State<CVCreation> {
                                         } else {
                                           prefered_industries.remove(industry);
                                         }
-                                        print(prefered_industries);
-                                        // Update Firebase with the new `prefered_industries` list if needed
+                                        _updatePreferredIndustries();
                                       });
                                     },
                                     title: Text(industry),
@@ -2481,226 +2469,229 @@ class _CVCreationState extends State<CVCreation> {
                                 }).toList(),
                               ],
                             ),
-                          ],
-                        ),
 
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Select Preferred Districts to Work:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        // Select Preferred Districts to Work field
-                        DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(
-                            labelText: 'District',
-                            border: OutlineInputBorder(),
-                          ),
-                          value: selectPrefferedDistrict,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectPrefferedDistrict = newValue;
-                            });
-                          },
-                          items: <String>[
-                            'Matara',
-                            'Galle',
-                            'Kalutara',
-                            'Colombo',
-                            'Gampaha',
-                            'Kandy',
-                            'Matale',
-                            'Nuwara Eliya',
-                            'Hambantota',
-                            'Jaffna',
-                            'Kilinochchi',
-                            'Mannar',
-                            'Mullaitivu',
-                            'Vavuniya',
-                            'Batticaloa',
-                            'Ampara',
-                            'Trincomalee',
-                            'Kurunegala',
-                            'Puttalam',
-                            'Anuradhapura',
-                            'Polonnaruwa',
-                            'Badulla',
-                            'Moneragala',
-                            'Ratnapura',
-                            'Kegalle'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                        const SizedBox(height: 20),
-
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons
-                                  .swap_horizontal_circle, // You can choose any icon you like
-                              color: Color.fromARGB(
-                                  255, 231, 75, 75), // Icon color
-                              size: 20.0, // Icon size
-                            ),
-                            SizedBox(
-                                width: 8.0), // Space between the icon and text
-                            Text(
-                              "Swap to go to Skill Section section",
+                            const SizedBox(height: 20),
+                            const Text(
+                              'Select Preferred Districts to Work:',
                               style: TextStyle(
-                                color: Color.fromARGB(
-                                    255, 231, 75, 75), // Text color
-                                fontSize: 16.0, // Font size
-                                fontWeight: FontWeight.bold, // Font weight
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
+                            const SizedBox(height: 10),
+                            // Select Preferred Districts to Work field
+                            DropdownButtonFormField<String>(
+                              decoration: const InputDecoration(
+                                labelText: 'District',
+                                border: OutlineInputBorder(),
+                              ),
+                              value: selectPrefferedDistrict,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectPrefferedDistrict = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'Matara',
+                                'Galle',
+                                'Kalutara',
+                                'Colombo',
+                                'Gampaha',
+                                'Kandy',
+                                'Matale',
+                                'Nuwara Eliya',
+                                'Hambantota',
+                                'Jaffna',
+                                'Kilinochchi',
+                                'Mannar',
+                                'Mullaitivu',
+                                'Vavuniya',
+                                'Batticaloa',
+                                'Ampara',
+                                'Trincomalee',
+                                'Kurunegala',
+                                'Puttalam',
+                                'Anuradhapura',
+                                'Polonnaruwa',
+                                'Badulla',
+                                'Moneragala',
+                                'Ratnapura',
+                                'Kegalle'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 20),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  // Call the function to add job seeker profile
-                                  await _firebaseService!.addCVdetails(
-                                    _selectedtitle!,
-                                    _selectedgender!,
-                                    _selectedjobType!,
-                                    _selectedworkingSection!,
-                                    _selectedmaritalStatus!,
-                                    _selectedcurrentJobStatus!,
-                                    _nameWithIniController.text,
-                                    _fullNameController.text,
-                                    _nationalityController.text,
-                                    _nicController.text,
-                                    _drivingLicenceController.text,
-                                    _selectedDate,
-                                    _selectReligion!,
-                                    _ageController.text,
-                                    _emailController.text,
-                                    _contactMobileController.text,
-                                    _contactHomeController.text,
-                                    _addressController.text,
-                                    _selecteddistrict!,
-                                    _divisionalSecController.text,
-                                    _salaryController.text,
-                                    _selectEduQalification!,
-                                    _selectProfQualification,
-                                    _OLYearController.text,
-                                    _OLIndexController.text,
-                                    _OLMediumController.text,
-                                    _OLSchoolController.text,
-                                    _OLAttemptController.text,
-                                    _selectOLStatus,
-                                    _ALYearController.text,
-                                    _ALIndexController.text,
-                                    _ALMediumController.text,
-                                    _ALSchoolController.text,
-                                    _ALAttemptController.text,
-                                    _selectALStatus,
-                                    _sec01NameController.text,
-                                    _sec01InstituteController.text,
-                                    _sec01durationController.text,
-                                    _sec02NameController.text,
-                                    _sec02InstituteController.text,
-                                    _sec02durationController.text,
-                                    _yearOfExperienceController.text,
-                                    _currentJobPositionController.text,
-                                    _dateOfJoinController.text,
-                                    _companyController.text,
-                                    _responsibilitiesController.text,
-                                    _specialSkillController.text,
-                                    _computerSkillController.text,
-                                    _otherSkillController.text,
-                                    _achievementsController.text,
-                                    _extraCurricularController.text,
-                                    _trainingReqController.text,
-                                    //_prefferedAreaController.text,
-                                    _careerGuidanceController.text,
-                                    sinhalaWriting!,
-                                    sinhalaReading!,
-                                    sinhalaWriting!,
-                                    englishSpeaking!,
-                                    englishReading!,
-                                    englishWriting!,
-                                    tamilSpeaking!,
-                                    tamilReading!,
-                                    tamilWriting!,
-                                    _careerObjectiveController.text,
-                                    _refeeOneController.text,
-                                    _refeeTwoController.text,
-                                    prefered_industries,
-                                    selectPrefferedDistrict!,
-                                  );
-                                  QuickAlert.show(
-                                    context: context,
-                                    type: QuickAlertType.success,
-                                    title: 'Data confirmation Success',
-                                    text:
-                                        'Press "Create CV" button to download your CV',
-                                  );
-                                } else {
-                                  // If the form is invalid, show an error message
-                                  QuickAlert.show(
-                                    context: context,
-                                    type: QuickAlertType.error,
-                                    title: 'Error',
-                                    text:
-                                        'Please fill in all the required fields',
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(
-                                    255, 9, 116, 41), // Background color
-                                elevation: 4, // Elevation (shadow)
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      10), // Rounded corners
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons
+                                      .swap_horizontal_circle, // You can choose any icon you like
+                                  color: Color.fromARGB(
+                                      255, 231, 75, 75), // Icon color
+                                  size: 20.0, // Icon size
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                    horizontal: 32), // Button padding
-                              ),
-                              child: Text(
-                                Localization.of(context)
-                                        .getTranslatedValue('Submit') ??
-                                    'Submit',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 19), // Text color
-                              ), // Background color
+                                SizedBox(
+                                    width:
+                                        8.0), // Space between the icon and text
+                                Text(
+                                  "Swap to go to Skill Section section",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(
+                                        255, 231, 75, 75), // Text color
+                                    fontSize: 16.0, // Font size
+                                    fontWeight: FontWeight.bold, // Font weight
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                generatePdfFromFirebase();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: const Color.fromARGB(
-                                    255, 9, 116, 41), // Text color
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 20), // Padding
-                                shape: RoundedRectangleBorder(
-                                  // Border radius
-                                  borderRadius: BorderRadius.circular(10),
+                            const SizedBox(height: 30),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      // Call the function to add job seeker profile
+                                      await _firebaseService!.addCVdetails(
+                                        _selectedtitle!,
+                                        _selectedgender!,
+                                        _selectedjobType!,
+                                        _selectedworkingSection!,
+                                        _selectedmaritalStatus!,
+                                        _selectedcurrentJobStatus!,
+                                        _nameWithIniController.text,
+                                        _fullNameController.text,
+                                        _nationalityController.text,
+                                        _nicController.text,
+                                        _drivingLicenceController.text,
+                                        _selectedDate,
+                                        _selectReligion!,
+                                        _ageController.text,
+                                        _emailController.text,
+                                        _contactMobileController.text,
+                                        _contactHomeController.text,
+                                        _addressController.text,
+                                        _selecteddistrict!,
+                                        _divisionalSecController.text,
+                                        _salaryController.text,
+                                        _selectEduQalification!,
+                                        _selectProfQualification,
+                                        _OLYearController.text,
+                                        _OLIndexController.text,
+                                        _OLMediumController.text,
+                                        _OLSchoolController.text,
+                                        _OLAttemptController.text,
+                                        _selectOLStatus,
+                                        _ALYearController.text,
+                                        _ALIndexController.text,
+                                        _ALMediumController.text,
+                                        _ALSchoolController.text,
+                                        _ALAttemptController.text,
+                                        _selectALStatus,
+                                        _sec01NameController.text,
+                                        _sec01InstituteController.text,
+                                        _sec01durationController.text,
+                                        _sec02NameController.text,
+                                        _sec02InstituteController.text,
+                                        _sec02durationController.text,
+                                        _yearOfExperienceController.text,
+                                        _currentJobPositionController.text,
+                                        _dateOfJoinController.text,
+                                        _companyController.text,
+                                        _responsibilitiesController.text,
+                                        _specialSkillController.text,
+                                        _computerSkillController.text,
+                                        _otherSkillController.text,
+                                        _achievementsController.text,
+                                        _extraCurricularController.text,
+                                        _trainingReqController.text,
+                                        //_prefferedAreaController.text,
+                                        _careerGuidanceController.text,
+                                        sinhalaWriting!,
+                                        sinhalaReading!,
+                                        sinhalaWriting!,
+                                        englishSpeaking!,
+                                        englishReading!,
+                                        englishWriting!,
+                                        tamilSpeaking!,
+                                        tamilReading!,
+                                        tamilWriting!,
+                                        _careerObjectiveController.text,
+                                        _refeeOneController.text,
+                                        _refeeTwoController.text,
+                                        prefered_industries,
+                                        selectPrefferedDistrict!,
+                                      );
+                                      QuickAlert.show(
+                                        context: context,
+                                        type: QuickAlertType.success,
+                                        title: 'Data confirmation Success',
+                                        text:
+                                            'Press "Create CV" button to download your CV',
+                                      );
+                                    } else {
+                                      // If the form is invalid, show an error message
+                                      QuickAlert.show(
+                                        context: context,
+                                        type: QuickAlertType.error,
+                                        title: 'Error',
+                                        text:
+                                            'Please fill in all the required fields',
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 9, 116, 41), // Background color
+                                    elevation: 4, // Elevation (shadow)
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10), // Rounded corners
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                        horizontal: 32), // Button padding
+                                  ),
+                                  child: Text(
+                                    Localization.of(context)
+                                            .getTranslatedValue('Submit') ??
+                                        'Submit',
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 19), // Text color
+                                  ), // Background color
                                 ),
-                              ),
-                              child: const Text(
-                                'Get PDF',
-                                style: TextStyle(fontSize: 16), // Text style
-                              ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    generatePdfFromFirebase();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 9, 116, 41), // Text color
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15,
+                                        horizontal: 20), // Padding
+                                    shape: RoundedRectangleBorder(
+                                      // Border radius
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Get PDF',
+                                    style:
+                                        TextStyle(fontSize: 16), // Text style
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -2714,6 +2705,18 @@ class _CVCreationState extends State<CVCreation> {
         ),
       ),
     );
+  }
+
+  Future<void> _updatePreferredIndustries() async {
+    if (_userDocId == null) return;
+
+    try {
+      await _firestore.collection('CVDetails').doc(_userDocId).update({
+        'prefered_industries': prefered_industries,
+      });
+    } catch (e) {
+      print('Error updating data: $e');
+    }
   }
 
   Widget _buildLanguageSkillsDropdown(String language) {
