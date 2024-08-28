@@ -8,6 +8,7 @@ import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacan
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/chat_home.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/feedback_home.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/interview_scheduler.dart';
+import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/my_vacanices.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/updateVacancy.dart';
 import 'package:job_management_system_mobileapp/classes/language.dart';
 import 'package:job_management_system_mobileapp/colors/colors.dart';
@@ -196,46 +197,6 @@ class _JobProviderPageState extends State<JobProviderPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromRGBO(225, 95, 27, .3),
-                              blurRadius: 20,
-                              offset: Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            const Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: "Search",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: InputBorder.none,
-                                  icon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                // Add your job filter logic here
-                              },
-                              icon: const Icon(
-                                Icons.filter_list,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,7 +211,12 @@ class _JobProviderPageState extends State<JobProviderPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              // Add your logic to navigate to see all posted jobs
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MyVacanices(),
+                                ),
+                              );
                             },
                             child: const Text(
                               "See All",
