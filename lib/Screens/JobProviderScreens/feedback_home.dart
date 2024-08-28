@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/FeedBack.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/componets/interview_details_tile.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
@@ -36,6 +37,7 @@ class _FeedbackHomeState extends State<FeedbackHome> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        backgroundColor: appBarColor,
       ),
       body: _buildInterviewDetailsList(),
     );
