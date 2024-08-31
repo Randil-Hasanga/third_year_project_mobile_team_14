@@ -854,6 +854,19 @@ class FirebaseService {
     );
   }
 
+  //get vacancy details for relevant company
+  Stream<List<Map<String, dynamic>>> getVacancyDetails() {
+    return vacancyCollection.where('uid', isEqualTo: uid).snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          final vacancyDetials = doc.data() as Map<String, dynamic>;
+
+          return vacancyDetials;
+        }).toList();
+      },
+    );
+  }
+
   Future<List<Map<String, dynamic>>?> getVacanciesInPrefferedIndustry(
       List<String> preferedIndustries) async {
     int age = int.parse(currentSeekerCV!['age']);
