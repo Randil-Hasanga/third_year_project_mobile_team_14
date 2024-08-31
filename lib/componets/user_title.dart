@@ -25,7 +25,7 @@ class UserTile extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
         padding: const EdgeInsets.all(20),
         child: ListTile(
-            leading: CircleAvatar(
+            leading: const CircleAvatar(
               backgroundImage: AssetImage('assets/profile_picture.jpg'),
             ),
             title: Text(text),
@@ -36,7 +36,7 @@ class UserTile extends StatelessWidget {
                     backgroundColor: Colors.red,
                     child: Text(
                       unreadCount.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,

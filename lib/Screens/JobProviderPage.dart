@@ -238,8 +238,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return const Center(
-                                child: //CircularProgressIndicator(),
-                                    Text('Loading...'),
+                                child: Text('Loading...'),
                               ); // Show loading indicator while fetching data
                             }
 
