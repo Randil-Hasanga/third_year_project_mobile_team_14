@@ -71,15 +71,20 @@ class _MyVacanicesState extends State<MyVacanices> {
 
   Widget _buildVacancyListItems(
       Map<String, dynamic> userData, BuildContext context) {
+    String vacancyId = userData['vacancy_id'];
     String jobPosition = userData['job_position'];
     String jobType = userData['job_type'];
     String location = userData['location'];
     double salary = userData['minimum_salary'];
+    String description = userData['description'];
 
     return VacancyTile(
-        jobPosition: jobPosition,
-        jobType: jobType,
-        location: location,
-        salary: salary);
+      vId: vacancyId,
+      jobPosition: jobPosition,
+      jobType: jobType,
+      location: location,
+      salary: salary,
+      description: description,
+    );
   }
 }

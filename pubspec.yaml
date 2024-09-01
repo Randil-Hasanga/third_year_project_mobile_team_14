@@ -74,6 +74,7 @@ dependencies:
   flutter_local_notifications: ^17.2.1+2
   flutter_timezone: ^2.1.0
   rxdart: ^0.28.0
+  modal_bottom_sheet: ^3.0.0
 
 dev_dependencies:
   flutter_test:
