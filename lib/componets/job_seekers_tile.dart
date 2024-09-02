@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class JobSeekerTile extends StatelessWidget {
   final String name;
-  final String eduStatus;
 
-  const JobSeekerTile({super.key, required this.name, required this.eduStatus});
+  const JobSeekerTile({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {

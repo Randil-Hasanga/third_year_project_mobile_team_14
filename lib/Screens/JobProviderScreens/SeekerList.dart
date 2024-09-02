@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/componets/job_seekers_tile.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
@@ -33,8 +35,9 @@ class _JobSeekerListState extends State<JobSeekerList> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        backgroundColor: appBarColor,
       ),
-      body: _buildJobSeekersList(),
+      body: _buildApplicantListByProvider(),
     );
   }
 
@@ -70,8 +73,76 @@ class _JobSeekerListState extends State<JobSeekerList> {
   Widget _buildJobSeekerListItems(
       Map<String, dynamic> userData, BuildContext context) {
     String name = userData['fullname'];
-    String eduStatus = userData['EduQalification'];
 
-    return JobSeekerTile(name: name, eduStatus: eduStatus);
+    return JobSeekerTile(name: name);
+  }
+
+  Widget _buildApplicantListByProvider() {
+    return FutureBuilder(
+      future: _firebaseService!.getAllApplicantUidsByJobProvider(
+          _firebaseService!.getCurrentUserUid()),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text("there is a error to view data"),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text("no applicant found"),
+          );
+        }
+
+        List<String> applicantUids = snapshot.data!;
+
+        return _buildApplicantDetails(applicantUids);
+      },
+    );
+  }
+
+  Widget _buildApplicantDetails(List<String> applicantUids) {
+    return FutureBuilder(
+      future: _firebaseService!.getApplicantsDetails(applicantUids),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text("there is a error to view data"),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text("no applicant found"),
+          );
+        }
+        List<DocumentSnapshot> applicantDetails = snapshot.data!;
+
+        return _buildApplicantList(applicantDetails);
+      },
+    );
+  }
+
+  Widget _buildApplicantList(List<DocumentSnapshot> applicantDetails) {
+    return ListView.builder(
+      itemCount: applicantDetails.length,
+      itemBuilder: (context, index) {
+        var applicantData =
+            applicantDetails[index].data() as Map<String, dynamic>;
+        return JobSeekerTile(name: applicantData['fullname']);
+      },
+    );
   }
 }
