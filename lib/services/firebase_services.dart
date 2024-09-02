@@ -307,6 +307,46 @@ class FirebaseService {
     }).toList();
   }
 
+  //get vacancy by providers
+  Future<List<DocumentSnapshot>> getVacanciesByJobProviders(
+      String? providerId) async {
+    QuerySnapshot vacanciesSnapshot = await _db
+        .collection(VACANCY_COLLECTION)
+        .where(uid!, isEqualTo: providerId)
+        .get();
+
+    return vacanciesSnapshot.docs;
+  }
+
+  //get applicants for all vacanies for relevant provider
+  Future<List<String>> getAllApplicantUidsByJobProvider(
+      String? providerId) async {
+    List<DocumentSnapshot> vacancyDocuments =
+        await getVacanciesByJobProviders(providerId);
+
+    Set<String> allApplicantsUids = {};
+
+    for (var vacancy in vacancyDocuments) {
+      List<dynamic> appliedBy = vacancy['applied_by'];
+      allApplicantsUids.addAll(List<String>.from(appliedBy));
+    }
+    return allApplicantsUids.toList();
+  }
+
+  //get all applicant detials
+  Future<List<DocumentSnapshot>> getApplicantsDetails(
+      List<String> applicantUids) async {
+    List<DocumentSnapshot> applicantDetails = [];
+
+    for (String uid in applicantUids) {
+      DocumentSnapshot applicantSnapshot =
+          await _db.collection(CV_COLLECTION).doc(uid).get();
+
+      applicantDetails.add(applicantSnapshot);
+    }
+    return applicantDetails;
+  }
+
   //job seeker details refference
   final CollectionReference seekerDetailsCollection =
       FirebaseFirestore.instance.collection('profileJobSeeker');
