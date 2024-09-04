@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/feedback_stepper.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/componets/user_title_feedback.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
@@ -48,6 +49,7 @@ class _Feedback_pageState extends State<Feedback_page> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        backgroundColor: appBarColor,
       ),
       body: _buildApplicantsList(),
     );

@@ -13,11 +13,13 @@ class JobSeekerList extends StatefulWidget {
 }
 
 class _JobSeekerListState extends State<JobSeekerList> {
+  String uid = '001';
   FirebaseService? _firebaseService;
   @override
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    uid = _firebaseService!.getCurrentUserUid() ?? 'default uid';
   }
 
   @override
@@ -79,8 +81,7 @@ class _JobSeekerListState extends State<JobSeekerList> {
 
   Widget _buildApplicantListByProvider() {
     return FutureBuilder(
-      future: _firebaseService!.getAllApplicantUidsByJobProvider(
-          _firebaseService!.getCurrentUserUid()),
+      future: _firebaseService!.getAllApplicantUidsByJobProvider(uid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -96,7 +97,7 @@ class _JobSeekerListState extends State<JobSeekerList> {
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
-            child: Text("no applicant found"),
+            child: Text("no applicant found in list"),
           );
         }
 

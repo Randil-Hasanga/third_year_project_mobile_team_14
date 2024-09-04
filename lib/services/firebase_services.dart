@@ -309,18 +309,20 @@ class FirebaseService {
 
   //get vacancy by providers
   Future<List<DocumentSnapshot>> getVacanciesByJobProviders(
-      String? providerId) async {
+      String providerId) async {
     QuerySnapshot vacanciesSnapshot = await _db
         .collection(VACANCY_COLLECTION)
         .where(uid!, isEqualTo: providerId)
         .get();
+
+    print("Number of vacancies found: ${vacanciesSnapshot.docs.length}");
 
     return vacanciesSnapshot.docs;
   }
 
   //get applicants for all vacanies for relevant provider
   Future<List<String>> getAllApplicantUidsByJobProvider(
-      String? providerId) async {
+      String providerId) async {
     List<DocumentSnapshot> vacancyDocuments =
         await getVacanciesByJobProviders(providerId);
 
@@ -328,8 +330,10 @@ class FirebaseService {
 
     for (var vacancy in vacancyDocuments) {
       List<dynamic> appliedBy = vacancy['applied_by'];
+      print("AppliedBy for vacancy ${vacancy.id}: $appliedBy");
       allApplicantsUids.addAll(List<String>.from(appliedBy));
     }
+    print("All Applicant UIDs: $allApplicantsUids");
     return allApplicantsUids.toList();
   }
 

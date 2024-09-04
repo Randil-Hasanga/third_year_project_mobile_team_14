@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
+import 'package:job_management_system_mobileapp/colors/colors.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
 
 class FeedbackStepper extends StatefulWidget {
@@ -43,6 +44,34 @@ class _FeedbackStepperState extends State<FeedbackStepper> {
   void initState() {
     super.initState();
     firebaseService = GetIt.instance.get<FirebaseService>();
+    _loadFeedbackData();
+  }
+
+  Future<void> _loadFeedbackData() async {
+    try {
+      var document = await firebaseService!.interViewProgressCollection
+          .where('applicantId', isEqualTo: widget.applicantId)
+          .where('vacancyId', isEqualTo: widget.vacancyId)
+          .limit(1)
+          .get();
+
+      if (document.docs.isNotEmpty) {
+        var data = document.docs.first.data() as Map<String, dynamic>;
+        setState(() {
+          applicationReceived = data['application_received'] ?? false;
+          initialInterviewPassed = data['initial_interview_passed'] ?? false;
+          selectStatus = data['select_Status'] ?? false;
+          feedback = data['feedback'] ?? '';
+          currentStep = 3;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading feedback:$e'),
+        ),
+      );
+    }
   }
 
   @override
@@ -59,6 +88,7 @@ class _FeedbackStepperState extends State<FeedbackStepper> {
               fontSize: screenWidth * 0.04,
               fontWeight: FontWeight.bold),
         ),
+        backgroundColor: appBarColor,
       ),
       body: Stepper(
         currentStep: currentStep,
@@ -234,6 +264,15 @@ class _FeedbackStepperState extends State<FeedbackStepper> {
             ),
             isActive: currentStep >= 2,
             state: currentStep >= 2 ? StepState.complete : StepState.indexed,
+          ),
+          Step(
+            title: const Text(
+              'Interview Process Finished',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: const Column(),
+            isActive: currentStep >= 3,
+            state: currentStep >= 3 ? StepState.complete : StepState.indexed,
           ),
         ],
       ),
