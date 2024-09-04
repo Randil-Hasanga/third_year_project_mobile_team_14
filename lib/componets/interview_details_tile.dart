@@ -20,9 +20,14 @@ class InterviewDetailsTile extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
-            Icon(Icons.assignment_outlined),
+            const Icon(Icons.assignment_outlined),
             const SizedBox(width: 20),
-            Text(text),
+            Text(
+              text,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
       ),
