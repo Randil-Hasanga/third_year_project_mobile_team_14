@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens./Help.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVCreation.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVUpload.dart';
+
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/applied_jobs.dart';
@@ -252,16 +253,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              decoration: BoxDecoration(
-                                color: Colors
-                                    .grey.shade200, // Gray background color
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(
-                                      60), // Adjust as per your design
-                                  topRight: Radius.circular(
-                                      60), // Adjust as per your design
-                                ),
-                              ),
+                              
                               padding: EdgeInsets.symmetric(
                                   horizontal: _deviceWidth! * 0.05,
                                   vertical: 20),
@@ -333,34 +325,14 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             _richTextWidget.simpleText(
-                                Localization.of(context)
-                                    .getTranslatedValue('featured_jobs')!,
+                                Localization.of(context).getTranslatedValue(
+                                    'recent_jobs')!, // Change key here
                                 16,
                                 Colors.black,
                                 FontWeight.bold),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          JobMatchingScreen()),
-                                );
-                              },
-                              child: _richTextWidget.simpleText(
-                                  Localization.of(context)
-                                      .getTranslatedValue('see_all')!,
-                                  15,
-                                  const Color.fromARGB(255, 243, 117, 33),
-                                  null),
-                            ),
-                          ],
-                        ),
+                        const SizedBox(height: 20),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: SizedBox(
@@ -535,6 +507,28 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                             ),
                           ),
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          JobMatchingScreen()), // Navigate to JobMatchingScreen
+                                );
+                              },
+                              child: _richTextWidget.simpleText(
+                                  Localization.of(context).getTranslatedValue(
+                                          'matching_jobs') ??
+                                      'Matching Jobs', // Use localization with fallback
+                                  15,
+                                  const Color.fromARGB(255, 243, 117, 33),
+                                  null),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 15),
                         const SizedBox(height: 120),
                       ],
@@ -668,9 +662,10 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CVUpload(
-                            userId: '',
-                          )),
+                    builder: (context) => CVUpload(
+                      userId: '', // Ensure you provide the correct userId
+                    ),
+                  ),
                 );
               },
             ),
