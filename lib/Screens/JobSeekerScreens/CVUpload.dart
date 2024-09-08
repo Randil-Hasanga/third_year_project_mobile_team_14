@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 // ignore: depend_on_referenced_packages
-import 'package:flutter_pdfview/flutter_pdfview.dart'; // Import PDFView
+import 'package:flutter_pdfview/flutter_pdfview.dart'; 
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/seeker_chat_home.dart';
@@ -12,7 +14,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:uuid/uuid.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
-import 'package:path_provider/path_provider.dart'; // Import path_provider
+import 'package:path_provider/path_provider.dart'; 
 
 class CVUpload extends StatefulWidget {
   final String userId;
@@ -87,7 +89,7 @@ class _CVUploadState extends State<CVUpload> {
     }
   }
 
-  // Function to upload the selected file to Firebase Storage
+
   // Function to upload the selected file to Firebase Storage
   Future<void> _uploadFile() async {
     if (_file == null) {
@@ -101,17 +103,24 @@ class _CVUploadState extends State<CVUpload> {
 
     try {
       // Generate a unique filename using UUID
-      String fileName = '${const Uuid().v4()}.pdf';
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      String fileName = '$uid.pdf';
 
       // Create a reference to the file location
       Reference ref =
-          FirebaseStorage.instance.ref('CVs/${widget.userId}/$fileName');
+          FirebaseStorage.instance.ref('CVs/$fileName');
 
       // Start the file upload
       UploadTask uploadTask = ref.putFile(_file!);
 
       // Listen to the upload task events
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) async {
+        if(snapshot.state == TaskState.success){
+          String downloadUrl = await snapshot.ref.getDownloadURL();
+        CollectionReference users = FirebaseFirestore.instance.collection('users');
+        await users.doc(uid).update({'cv':downloadUrl});
+        }
+        
         setState(() {
           _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
         });
@@ -145,7 +154,7 @@ class _CVUploadState extends State<CVUpload> {
   }
 
   // Function to delete the CV from Firebase Storage
-  /*Future<void> _deleteCV(String fileName) async {
+  Future<void> _deleteCV(String fileName) async {
     try {
       // Delete file from Firebase Storage
       await FirebaseStorage.instance
@@ -170,10 +179,10 @@ class _CVUploadState extends State<CVUpload> {
         ),
       );
     }
-  }*/
+  }
 
   // Function to view the uploaded PDF file
-  /*Future<void> _viewPDF(String fileName) async {
+  Future<void> _viewPDF(String fileName) async {
     try {
       // Get the download URL from Firebase Storage
       String downloadURL = await FirebaseStorage.instance
@@ -213,7 +222,7 @@ class _CVUploadState extends State<CVUpload> {
         ),
       );
     }
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
