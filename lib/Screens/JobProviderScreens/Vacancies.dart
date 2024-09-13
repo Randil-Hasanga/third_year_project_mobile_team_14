@@ -1,6 +1,7 @@
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/localization/demo_localization.dart';
@@ -373,8 +374,12 @@ class _VacanciesState extends State<Vacancies> {
                       border: OutlineInputBorder(),
                     ),
                     value: jobType,
-                    items:
-                        <String>['Full Time', 'Part Time'].map((String value) {
+                    items: <String>[
+                      'Full Time',
+                      'Part Time',
+                      'Remote',
+                      'Hybrid'
+                    ].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -566,7 +571,7 @@ class _VacanciesState extends State<Vacancies> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(expiryDate.toString()),
+                      Text(DateFormat('yyyy-MM-dd').format(expiryDate)),
                     ],
                   ),
 

@@ -263,6 +263,7 @@ class FirebaseService {
     String vId,
     String jobPosition,
     String description,
+    String jobType,
     String gender,
     double minimumAge,
     String maxEducation,
@@ -274,6 +275,7 @@ class FirebaseService {
       {
         'job_position': jobPosition,
         'description': description,
+        'job_type': jobType,
         'gender': gender,
         'minimum_age': minimumAge,
         'max_education': maxEducation,
