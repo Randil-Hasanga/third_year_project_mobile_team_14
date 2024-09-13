@@ -1,6 +1,8 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -15,6 +17,7 @@ class VacancyUpdaterUI extends StatefulWidget {
 
 class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
   FirebaseService? _firebaseService;
+  bool isLoading = true;
 
   String? _companyName, _industryType;
 
@@ -36,6 +39,8 @@ class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
   DateTime issuedDate = DateTime.now();
   String _gender = 'Male';
   String _educationLevel = 'O/L';
+  String _jobType = 'Full Time';
+  String _location = 'matara';
   double _minimumAge = 18;
 
   @override
@@ -66,11 +71,14 @@ class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
     setState(() {
       _jobPositionController.text = data['job_position'];
       _descriptionController.text = data['description'];
-      _genderController.text = data['gender'];
+      _jobType = data['job_type'];
+      _gender = data['gender'];
       _ageController.text = data['minimum_age'].toString();
-      _eduLevelController.text = data['education_level'] ?? '';
+      _eduLevelController.text = data['max_education'] ?? '';
+      _educationLevel = data['max_education'];
       _salaryController.text = data['minimum_salary'].toString();
-      _locationController.text = data['location'];
+      _location = data['location'];
+      isLoading = false;
     });
   }
 
@@ -81,11 +89,12 @@ class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
               widget.vacancyId,
               _jobPositionController.text,
               _descriptionController.text,
+              _jobType,
               _gender,
               _minimumAge,
               _educationLevel,
               double.parse(_salaryController.text),
-              _locationController.text,
+              _location,
               issuedDate)
           .then((value) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -97,29 +106,58 @@ class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
     }
   }
 
-  List<String> jobPositions = [
-    'Software Engineer',
-    'Product Manager',
-    'Data Scientist',
-    'UX Designer',
-    'QA Engineer',
-    'Marketing Manager',
-    'Librarian',
-    'Receptionist',
-    'Bookkeeper',
-    'Account Executive',
-    'Branch Manager',
-    'Secretary',
-    'Office Clerk',
-    'Supervisor',
-    'Administrator',
-    'Sales Manager',
-    'Cashier',
-    'Area Sales Manager',
-    'Plumber',
-    'Supervisors',
-    'Marketing Staff',
-    'Customer Service Manager'
+  final List<String> locations = [
+    'Akkaraipattu',
+    'Ampara',
+    'anuradhapura',
+    'Badulla',
+    'Balangoda',
+    'Bandarawela',
+    'Batticaloa',
+    'Beruwala',
+    'Chavakachcheri',
+    'Chilaw',
+    'Colombo',
+    'Dambulla',
+    'Dehiwala-Mount Lavinia',
+    'Eravur',
+    'Galle',
+    'Gampola',
+    'Hambantota',
+    'Happutale',
+    'Homagama',
+    'Jaffna',
+    'Kalmunai',
+    'Kalutara',
+    'Kandy',
+    'Kattankudy',
+    'Kegalle',
+    'Kelaniya',
+    'Kilinochchi',
+    'Kolonnawa',
+    'Kurunegala',
+    'Mannar',
+    'Matale',
+    'Matara',
+    'Minuwangoda',
+    'Monaragala',
+    'Moratuwa',
+    'Mullaitivu',
+    'Negombo',
+    'Nuwara Eliya',
+    'Panadura',
+    'Peliyagoda',
+    'Point Pedro',
+    'Puttalam',
+    'Ratnapura',
+    'Sri Jayawardenepura Kotte',
+    'Tangalle',
+    'Trincomalee',
+    'Valvettithurai',
+    'Vavuniya',
+    'Wattala',
+    'Wattegama',
+    'Weligama',
   ];
 
   @override
@@ -170,93 +208,199 @@ class _VacancyUpdaterUIState extends State<VacancyUpdaterUI> {
               ),
               IconButton(
                 icon: const Icon(Icons.notifications),
-                onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>const ));
-                },
+                onPressed: () {},
               ),
               IconButton(
                 icon: const Icon(Icons.chat),
-                onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>const ));
-                },
+                onPressed: () {},
               ),
             ],
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                  controller: _jobPositionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Job Position',
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                        controller: _jobPositionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Job Position',
+                          labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      TextFormField(
+                        minLines: 3,
+                        maxLines: null,
+                        controller: _descriptionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                          labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            labelText: 'Job Type',
+                            labelStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 18.0),
+                            hintText: _jobType,
+                            border: OutlineInputBorder(),
+                          ),
+                          value: _jobType.isNotEmpty ? _jobType : 'Part Time',
+                          items: <String>[
+                            'Full Time',
+                            'Part Time',
+                            'Remote',
+                            'Hybrid'
+                          ].map((String value) {
+                            return DropdownMenuItem(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _jobType = newValue!;
+                            });
+                          }),
+                      SizedBox(height: screenHeight * 0.02),
+                      DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          labelText: 'Gender',
+                          labelStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0),
+                          hintText: _gender,
+                          border: OutlineInputBorder(),
+                        ),
+                        value: _gender,
+                        items: <String>['Male', 'Female', 'Any']
+                            .map((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _gender = newValue!;
+                          });
+                        },
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      TextFormField(
+                        controller: _ageController,
+                        decoration: const InputDecoration(
+                          labelText: 'Age',
+                          labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          labelText: 'Required Education Level',
+                          labelStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0),
+                          hintText: _educationLevel,
+                          border: OutlineInputBorder(),
+                        ),
+                        value: _educationLevel,
+                        items: <String>[
+                          'Below O/L',
+                          'O/L',
+                          'A/L',
+                          'Undergraduate',
+                          'Graduate',
+                          'PostGraduate'
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _educationLevel = newValue!;
+                          });
+                        },
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      TextFormField(
+                        controller: _salaryController,
+                        decoration: const InputDecoration(
+                          labelText: 'minimum salary',
+                          labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Location',
+                          labelStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0),
+                          hintText: _location,
+                          border: OutlineInputBorder(),
+                        ),
+                        value: locations.contains(_location) ? _location : null,
+                        items: locations.map((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newvalue) {
+                          setState(() {
+                            _location = newvalue!;
+                          });
+                        },
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 143, 255, 120),
+                        ),
+                        onPressed: updateVacancy,
+                        child: const Text(
+                          'Save Changes',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                //_buildJobPositionList(),
-                SizedBox(height: screenHeight * 0.02),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-                TextFormField(
-                  controller: _genderController,
-                  decoration: const InputDecoration(
-                    labelText: 'gender',
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-
-                TextFormField(
-                  controller: _ageController,
-                  decoration: const InputDecoration(
-                    labelText: 'Age',
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-                TextFormField(
-                  controller: _eduLevelController,
-                  decoration: const InputDecoration(
-                    labelText: 'Required Education Level',
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-                TextFormField(
-                  controller: _salaryController,
-                  decoration: const InputDecoration(
-                    labelText: 'minimum salary',
-                  ),
-                ),
-                SizedBox(height: screenHeight * 0.02),
-                TextFormField(
-                  controller: _locationController,
-                  decoration: const InputDecoration(
-                    labelText: 'location',
-                  ),
-                ),
-                SizedBox(height: screenHeight * 0.02),
-
-                ElevatedButton(
-                    onPressed: updateVacancy, child: const Text('Update')),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
