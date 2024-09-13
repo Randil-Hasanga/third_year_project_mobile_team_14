@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/ProfileJobProvider.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/SeekerList.dart';
 import 'package:job_management_system_mobileapp/Screens/JobProviderScreens/Vacancies.dart';
@@ -328,6 +329,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
 
                                 return Container(
                                   margin: const EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(10),
                                   width: 300,
                                   decoration: BoxDecoration(
                                     color: cardBackgroundColorLayer4
@@ -344,8 +346,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           const SizedBox(width: 8),
                                           Text(
                                             companyName,
-                                            style:
-                                                const TextStyle(fontSize: 15),
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700),
                                           ),
                                         ],
                                       ),
@@ -356,8 +359,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           const SizedBox(width: 8),
                                           Text(
                                             jobPosition,
-                                            style:
-                                                const TextStyle(fontSize: 15),
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700),
                                           ),
                                         ],
                                       ),
@@ -368,8 +372,9 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                           const SizedBox(width: 8),
                                           Text(
                                             location,
-                                            style:
-                                                const TextStyle(fontSize: 15),
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700),
                                           ),
                                         ],
                                       ),
@@ -387,14 +392,16 @@ class _JobProviderPageState extends State<JobProviderPage> {
                                                 ),
                                               );
                                             },
-                                            icon: const Icon(Icons.edit),
+                                            icon: const Icon(Icons.edit,
+                                                color: Colors.black),
                                           ),
                                           IconButton(
                                             onPressed: () {
                                               _showDeleteConfirmationDialog(
                                                   context, vacancyID);
                                             },
-                                            icon: const Icon(Icons.delete),
+                                            icon: const Icon(Icons.delete,
+                                                color: Colors.red),
                                           ),
                                         ],
                                       )
@@ -749,13 +756,6 @@ class _JobProviderPageState extends State<JobProviderPage> {
           ),
         ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Add your logic for the floating action button here
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 
@@ -804,6 +804,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
 
     return Container(
       margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
       width: 300,
       decoration: BoxDecoration(
         color: cardBackgroundColorLayer4.withOpacity(0.3),
@@ -847,7 +848,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontSize: fonSize),
+            style: TextStyle(fontSize: fonSize, fontWeight: FontWeight.w700),
           ),
         ),
       ],
