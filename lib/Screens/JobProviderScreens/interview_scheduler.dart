@@ -2,6 +2,7 @@ import "package:board_datetime_picker/board_datetime_picker.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:get_it/get_it.dart";
+import "package:intl/intl.dart";
 import "package:job_management_system_mobileapp/localization/demo_localization.dart";
 import "package:job_management_system_mobileapp/services/firebase_services.dart";
 import "package:quickalert/models/quickalert_type.dart";
@@ -373,9 +374,6 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    /*Text(
-                      _selectedDateTime.toString(),
-                    ),*/
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.02),
@@ -388,7 +386,7 @@ class _InterviewSchedulerState extends State<InterviewScheduler> {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(_selectedDateTime.toString()),
+                    Text(DateFormat('yyyy-MM-dd').format(_selectedDateTime)),
                   ],
                 ),
 
