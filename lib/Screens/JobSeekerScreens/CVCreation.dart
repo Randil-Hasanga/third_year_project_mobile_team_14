@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
+import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/CVUpload.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 import 'package:job_management_system_mobileapp/services/firebase_services.dart';
@@ -381,7 +382,7 @@ class _CVCreationState extends State<CVCreation> {
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.notifications,
+                  icon: const Icon(Icons.event,
                       color: Color.fromARGB(255, 255, 255, 255)),
                   onPressed: () {
                     Navigator.push(
@@ -2531,7 +2532,7 @@ class _CVCreationState extends State<CVCreation> {
                               children: [
                                 Icon(
                                   Icons
-                                      .swap_horizontal_circle, // You can choose any icon you like
+                                      .warning, // You can choose any icon you like
                                   color: Color.fromARGB(
                                       255, 231, 75, 75), // Icon color
                                   size: 20.0, // Icon size
@@ -2539,16 +2540,19 @@ class _CVCreationState extends State<CVCreation> {
                                 SizedBox(
                                     width:
                                         8.0), // Space between the icon and text
-                                Text(
-                                  "Swap to go to Skill Section section",
-                                  style: TextStyle(
-                                    color: Color.fromARGB(
-                                        255, 231, 75, 75), // Text color
-                                    fontSize: 16.0, // Font size
-                                    fontWeight: FontWeight.bold, // Font weight
+                                Flexible(
+                                  child: Text(
+                                    "Kindly review all your details before getting your own CV",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(
+                                          255, 231, 75, 75), // Text color
+                                      fontSize: 16.0, // Font size
+                                      fontWeight:
+                                          FontWeight.bold, // Font weight
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                )
                               ],
                             ),
                             const SizedBox(height: 30),
@@ -2556,6 +2560,7 @@ class _CVCreationState extends State<CVCreation> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                // Combined button that handles form submission and PDF generation
                                 ElevatedButton(
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
@@ -2630,13 +2635,17 @@ class _CVCreationState extends State<CVCreation> {
                                         prefered_industries,
                                         selectPrefferedDistrict!,
                                       );
+
+                                      // Show success message
                                       QuickAlert.show(
                                         context: context,
                                         type: QuickAlertType.success,
                                         title: 'Data confirmation Success',
-                                        text:
-                                            'Press "Create CV" button to download your CV',
+                                        text: 'Now generating your CV PDF...',
                                       );
+
+                                      // Generate the PDF
+                                      generatePdfFromFirebase();
                                     } else {
                                       // If the form is invalid, show an error message
                                       QuickAlert.show(
@@ -2649,46 +2658,49 @@ class _CVCreationState extends State<CVCreation> {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 9, 116, 41), // Background color
-                                    elevation: 4, // Elevation (shadow)
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 9, 116, 41),
+                                    elevation: 4,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          10), // Rounded corners
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 16,
-                                        horizontal: 32), // Button padding
+                                        vertical: 16, horizontal: 32),
                                   ),
                                   child: Text(
                                     Localization.of(context)
-                                            .getTranslatedValue('Submit') ??
-                                        'Submit',
+                                            .getTranslatedValue('Get CV') ??
+                                        'Get CV',
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 19), // Text color
-                                  ), // Background color
+                                  ),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    generatePdfFromFirebase();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CVUpload(
+                                          userId: '',
+                                        ), // Navigate to CVUpload page
+                                      ),
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 9, 116, 41), // Text color
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15,
-                                        horizontal: 20), // Padding
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 9, 116, 41),
+                                    elevation: 4,
                                     shape: RoundedRectangleBorder(
-                                      // Border radius
                                       borderRadius: BorderRadius.circular(10),
                                     ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16, horizontal: 32),
                                   ),
-                                  child: const Text(
-                                    'Get PDF',
-                                    style:
-                                        TextStyle(fontSize: 16), // Text style
+                                  child: Text(
+                                    'Upload CV',
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 19),
                                   ),
                                 ),
                               ],

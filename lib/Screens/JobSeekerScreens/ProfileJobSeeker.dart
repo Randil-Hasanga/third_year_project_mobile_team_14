@@ -169,7 +169,7 @@ class _ProfileJobSeekerState extends State<ProfileJobSeeker> {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,
+                icon: const Icon(Icons.event,
                     color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
