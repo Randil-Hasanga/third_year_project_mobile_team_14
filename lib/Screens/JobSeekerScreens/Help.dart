@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/seeker_chat_home.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-//import 'package:job_management_system_mobileapp/Screens/Chattings.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
 
@@ -13,6 +10,10 @@ class Help extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use MediaQuery to get screen width and height for responsiveness
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade800,
@@ -27,7 +28,9 @@ class Help extends StatelessWidget {
         color: Colors.orange.shade800,
         shape: const CircularNotchedRectangle(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.05, // 5% of screen width for padding
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -43,8 +46,7 @@ class Help extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.settings,
-                    color: Color.fromARGB(
-                        255, 255, 255, 255)), // Change the color here
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -53,7 +55,7 @@ class Help extends StatelessWidget {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,
+                icon: const Icon(Icons.event,
                     color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
@@ -79,81 +81,57 @@ class Help extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Contact Information',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(screenWidth * 0.04), // 4% padding for all sides
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Contact Information',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.06, // Responsive font size
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            _buildContactTile(
-              context,
-              icon: Icons.phone,
-              title: 'Contact Number',
-              subtitle: '0714587892',
-              onTap: () {
-                _callNumber(context, '0714587892');
-              },
-              onLongPress: () {
-                _copyToClipboard(context, '0714587892');
-              },
-            ),
-            _buildContactTile(
-              context,
-              icon: Icons.email,
-              title: 'Email',
-              subtitle: 'defnir@gmail.com',
-              onTap: () {
-                _launchEmail(context, 'defnir@gmail.com');
-              },
-              onLongPress: () {
-                _copyToClipboard(context, 'defnir@gmail.com');
-              },
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              'Social Media',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
+              SizedBox(height: screenHeight * 0.02), // 2% of screen height
+              _buildContactTile(
+                context,
+                icon: Icons.phone,
+                title: 'Contact Number',
+                subtitle: '0714587892',
               ),
-            ),
-            const SizedBox(height: 20),
-            _buildContactTile(
-              context,
-              icon: Icons.facebook,
-              title: 'Facebook',
-              subtitle: 'Dept of Employment and Manpower',
-              onTap: () {
-                _launchURL(context,
-                    'https://www.facebook.com/share/G99Wj1gb3AEcZfuD/?mibextid=qi2Omg');
-              },
-              onLongPress: () {
-                _copyToClipboard(context,
-                    'https://www.facebook.com/share/G99Wj1gb3AEcZfuD/?mibextid=qi2Omg');
-              },
-            ),
-            _buildContactTile(
-              context,
-              icon: Icons.call,
-              title: 'WhatsApp',
-              subtitle: '+1234567890',
-              onTap: () {
-                _launchURL(context, 'https://wa.me/+1234567890');
-              },
-              onLongPress: () {
-                _copyToClipboard(context, 'https://wa.me/+1234567890');
-              },
-            ),
-          ],
+              _buildContactTile(
+                context,
+                icon: Icons.email,
+                title: 'Email',
+                subtitle: 'deshanibandarawas@gmail.com',
+              ),
+              SizedBox(height: screenHeight * 0.04), // 4% of screen height
+              Text(
+                'Social Media',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.06, // Responsive font size
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              _buildContactTile(
+                context,
+                icon: Icons.facebook,
+                title: 'Facebook',
+                subtitle: 'Dept of Employment and Manpower',
+              ),
+              _buildContactTile(
+                context,
+                icon: Icons.call,
+                title: 'WhatsApp',
+                subtitle: '+1234567890',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -164,91 +142,35 @@ class Help extends StatelessWidget {
     required IconData icon,
     required String title,
     required String subtitle,
-    required void Function() onTap,
-    required void Function() onLongPress,
   }) {
     return ListTile(
       leading: Icon(icon, color: Colors.orange.shade800),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black87,
+          fontSize: MediaQuery.of(context).size.width * 0.045, // Responsive font size
         ),
       ),
-      subtitle: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Row(
-          children: [
-            Text(
-              subtitle,
-              style: const TextStyle(color: Colors.black54),
+      subtitle: GestureDetector(
+        onLongPress: () {
+          Clipboard.setData(ClipboardData(text: subtitle)); // Copy to clipboard
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Copied'),
             ),
-            const SizedBox(width: 5),
-            Icon(Icons.copy, size: 16, color: Colors.orange.shade800),
-          ],
+          );
+        },
+        child: Text(
+          subtitle,
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: MediaQuery.of(context).size.width * 0.04, // Responsive font size
+          ),
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
-  }
-
-  void _copyToClipboard(BuildContext context, String data) {
-    Clipboard.setData(ClipboardData(text: data));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Copied to clipboard'),
-      ),
-    );
-  }
-
-  void _callNumber(BuildContext context, String number) async {
-    try {
-      final bool? result = await FlutterPhoneDirectCaller.callNumber(number);
-      if (result != null && result) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Calling...'),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error while calling'),
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-        ),
-      );
-    }
-  }
-
-  void _launchEmail(BuildContext context, String email) async {
-    final String uri = 'mailto:$email';
-    if (await canLaunch(uri)) {
-      await launch(uri);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Could not launch email'),
-        ),
-      );
-    }
-  }
-
-  void _launchURL(BuildContext context, String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Could not launch URL'),
-        ),
-      );
-    }
   }
 }

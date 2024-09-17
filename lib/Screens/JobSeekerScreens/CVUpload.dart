@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 // ignore: depend_on_referenced_packages
-import 'package:flutter_pdfview/flutter_pdfview.dart'; 
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerPage.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/NotificationsJobSeeker.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/seeker_chat_home.dart';
@@ -14,7 +14,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:uuid/uuid.dart';
 import 'package:job_management_system_mobileapp/Screens/JobSeekerScreens/ProfileJobSeeker.dart';
-import 'package:path_provider/path_provider.dart'; 
+import 'package:path_provider/path_provider.dart';
 
 class CVUpload extends StatefulWidget {
   final String userId;
@@ -29,6 +29,7 @@ class _CVUploadState extends State<CVUpload> {
   File? _file; // Variable to hold the selected file
   List<String> _uploadedCVs = []; // List to hold the names of uploaded CVs
   double _uploadProgress = 0.0; // Variable to track the upload progress
+  bool _isUploadComplete = false; // Variable to track upload completion
 
   @override
   void initState() {
@@ -89,7 +90,6 @@ class _CVUploadState extends State<CVUpload> {
     }
   }
 
-
   // Function to upload the selected file to Firebase Storage
   Future<void> _uploadFile() async {
     if (_file == null) {
@@ -107,20 +107,20 @@ class _CVUploadState extends State<CVUpload> {
       String fileName = '$uid.pdf';
 
       // Create a reference to the file location
-      Reference ref =
-          FirebaseStorage.instance.ref('CVs/$fileName');
+      Reference ref = FirebaseStorage.instance.ref('CVs/$fileName');
 
       // Start the file upload
       UploadTask uploadTask = ref.putFile(_file!);
 
       // Listen to the upload task events
       uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) async {
-        if(snapshot.state == TaskState.success){
+        if (snapshot.state == TaskState.success) {
           String downloadUrl = await snapshot.ref.getDownloadURL();
-        CollectionReference users = FirebaseFirestore.instance.collection('users');
-        await users.doc(uid).update({'cv':downloadUrl});
+          CollectionReference users =
+              FirebaseFirestore.instance.collection('users');
+          await users.doc(uid).update({'cv': downloadUrl});
         }
-        
+
         setState(() {
           _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
         });
@@ -129,16 +129,19 @@ class _CVUploadState extends State<CVUpload> {
       // Wait for the upload to complete
       await uploadTask;
 
+      // Update state to show upload completion message
+      setState(() {
+        _uploadProgress = 0.0; // Reset the progress indicator
+        _isUploadComplete = true;
+      });
+
       // Show success alert
       QuickAlert.show(
         context: context,
         type: QuickAlertType.success,
-        title: 'CV uploaded successfully',
-        text: 'Your CV has been uploaded successfully.',
+        title: 'Success',
+        text: 'Your CV is successfully uploaded.',
       );
-
-      // Refresh the list of uploaded CVs
-      _fetchUploadedCVs();
     } catch (e) {
       print('Error uploading CV: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -146,10 +149,6 @@ class _CVUploadState extends State<CVUpload> {
           content: Text('Failed to upload CV.'),
         ),
       );
-    } finally {
-      setState(() {
-        _uploadProgress = 0.0; // Reset the progress indicator
-      });
     }
   }
 
@@ -229,13 +228,13 @@ class _CVUploadState extends State<CVUpload> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Upload your CV'),
-        backgroundColor:
-            Colors.orange.shade800, // Set the background color to orange
-        elevation: 0, // Optional: Removes the shadow below the app bar
-        centerTitle: true, // Optional: Centers the title horizontally
+        backgroundColor: Colors.orange.shade800,
+        elevation: 0,
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // Center the content
           children: <Widget>[
             Container(
               padding: const EdgeInsets.all(20),
@@ -243,7 +242,7 @@ class _CVUploadState extends State<CVUpload> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    height: 200, // Adjust the height as needed
+                    height: 200,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -253,8 +252,7 @@ class _CVUploadState extends State<CVUpload> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 3,
                           blurRadius: 7,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -263,13 +261,13 @@ class _CVUploadState extends State<CVUpload> {
                         onPressed: _selectFile,
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue, // Text color
+                          backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 30),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          elevation: 5, // Shadow elevation
+                          elevation: 5,
                         ),
                         child: const Text(
                           'Select File',
@@ -283,13 +281,13 @@ class _CVUploadState extends State<CVUpload> {
                     onPressed: _uploadFile,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.green, // Text color
+                      backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(
                           vertical: 15, horizontal: 30),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      elevation: 5, // Shadow elevation
+                      elevation: 5,
                     ),
                     child: const Text(
                       'Upload CV',
@@ -297,7 +295,7 @@ class _CVUploadState extends State<CVUpload> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _uploadProgress > 0
+                  _uploadProgress > 0 && _uploadProgress < 1
                       ? Column(
                           children: [
                             Text(
@@ -306,104 +304,45 @@ class _CVUploadState extends State<CVUpload> {
                             LinearProgressIndicator(value: _uploadProgress),
                           ],
                         )
-                      : Container(),
+                      : _isUploadComplete
+                          ? const Text(
+                              'CV upload Successfully',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color.fromARGB(255, 224, 147, 31)),
+                            )
+                          : Container(),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            // Container(
-            //   padding: const EdgeInsets.all(20),
-            //   color: Color.fromARGB(255, 240, 175, 149),
-            //   child: Column(
-            //     children: <Widget>[
-            //       const Text(
-            //         'Uploaded Files:',
-            //         style: TextStyle(
-            //           fontSize: 18,
-            //           fontWeight: FontWeight.bold,
-            //           color: Colors.black87,
-            //         ),
-            //       ),
-            //       const SizedBox(height: 10),
-            //       _uploadedCVs.isEmpty
-            //           ? Container(
-            //               height: 200, // Adjust height as needed
-            //               child: const Center(
-            //                 child: Text(
-            //                   'No files uploaded.',
-            //                   style: TextStyle(
-            //                     fontSize: 16,
-            //                     color: Color.fromARGB(255, 255, 255, 255),
-            //                   ),
-            //                 ),
-            //               ),
-            //             )
-            //           : Container(
-            //               height: 200, // Fixed height for the list
-            //               child: GridView.builder(
-            //                 gridDelegate:
-            //                     const SliverGridDelegateWithFixedCrossAxisCount(
-            //                   crossAxisCount: 2, // Number of columns in the grid
-            //                   crossAxisSpacing: 10, // Spacing between columns
-            //                   mainAxisSpacing: 10, // Spacing between rows
-            //                 ),
-            //                 itemCount: _uploadedCVs.length,
-            //                 itemBuilder: (context, index) {
-            //                   return Card(
-            //                     elevation: 3,
-            //                     child: Padding(
-            //                       padding: const EdgeInsets.all(10),
-            //                       child: Column(
-            //                         mainAxisAlignment: MainAxisAlignment.center,
-            //                         crossAxisAlignment: CrossAxisAlignment.center,
-            //                         children: [
-            //                           Icon(
-            //                             Icons.picture_as_pdf, // PDF icon
-            //                             size: 50, // Adjust the size as needed
-            //                             color: Colors.red, // Icon color
-            //                           ),
-            //                           SizedBox(height: 10),
-            //                           Expanded(
-            //                             child: Text(
-            //                               _uploadedCVs[index],
-            //                               style: const TextStyle(
-            //                                 fontSize: 16,
-            //                                 color: Colors.black,
-            //                               ),
-            //                               textAlign: TextAlign.center,
-            //                               maxLines:
-            //                                   2, // Limit to 2 lines for text
-            //                               overflow: TextOverflow
-            //                                   .ellipsis, // Handle text overflow
-            //                             ),
-            //                           ),
-            //                           SizedBox(height: 5),
-            //                           Row(
-            //                             mainAxisAlignment:
-            //                                 MainAxisAlignment.center,
-            //                             children: [
-            //                               IconButton(
-            //                                 icon: const Icon(Icons.visibility),
-            //                                 onPressed: () =>
-            //                                     _viewPDF(_uploadedCVs[index]),
-            //                               ),
-            //                               IconButton(
-            //                                 icon: const Icon(Icons.delete),
-            //                                 onPressed: () =>
-            //                                     _deleteCV(_uploadedCVs[index]),
-            //                               ),
-            //                             ],
-            //                           ),
-            //                         ],
-            //                       ),
-            //                     ),
-            //                   );
-            //                 },
-            //               ),
-            //             ),
-            //     ],
-            //   ),
-            // )
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width *
+                      0.9, // Constrain width to avoid overflow
+                ),
+                child: const Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8, // Space between icon and text
+                  children: <Widget>[
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.orange,
+                      size: 24, // Adjust the size of the icon as needed
+                    ),
+                    Text(
+                      'Please note that this uploaded CV is applied to the vacancies.',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.orange,
+                      ),
+                      softWrap: true, // Allows the text to wrap if necessary
+                    ),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -427,8 +366,7 @@ class _CVUploadState extends State<CVUpload> {
               ),
               IconButton(
                 icon: const Icon(Icons.settings,
-                    color: Color.fromARGB(
-                        255, 255, 255, 255)), // Change the color here
+                    color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -437,7 +375,7 @@ class _CVUploadState extends State<CVUpload> {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,
+                icon: const Icon(Icons.event,
                     color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(

@@ -253,7 +253,6 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              
                               padding: EdgeInsets.symmetric(
                                   horizontal: _deviceWidth! * 0.05,
                                   vertical: 20),
@@ -670,14 +669,17 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.notifications,
+              leading: const Icon(Icons.event,
                   color:
-                      Color.fromARGB(255, 255, 137, 2)), // Icon for creating CV
-              title: _richTextWidget.simpleText(
-                  Localization.of(context).getTranslatedValue('notifications')!,
-                  16,
-                  Colors.black,
-                  FontWeight.bold),
+                      Color.fromARGB(255, 255, 137, 2)), // Icon for Interview
+              title: Text(
+                'Interview Details',
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               onTap: () {
                 Navigator.push(
                   context,
@@ -786,7 +788,7 @@ class _JobSeekerPageState extends State<JobSeekerPage> {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.notifications,
+                icon: const Icon(Icons.event,
                     color: Color.fromARGB(255, 255, 255, 255)),
                 onPressed: () {
                   Navigator.push(
