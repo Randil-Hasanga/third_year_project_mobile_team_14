@@ -45,8 +45,9 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
       print("Interview Details: $interviewDetails");
       setState(() {
         _interviewDetails = interviewDetails;
-        _newInterviewCount = interviewDetails.length;  // Set when fetching new details
- // Update the interview count
+        _newInterviewCount =
+            interviewDetails.length; // Set when fetching new details
+        // Update the interview count
       });
     } else {
       print("No interview details found.");
@@ -138,70 +139,72 @@ class _NotificationsJobSeekerState extends State<NotificationsJobSeeker> {
       return null;
     }
   }
-void _handleInfoIconClick(Map<String, dynamic> interview) async {
-  String? notificationId = interview['notificationId'];
 
-  if (notificationId != null) {
-    await _markNotificationAsRead(notificationId);
+  void _handleInfoIconClick(Map<String, dynamic> interview) async {
+    String? notificationId = interview['notificationId'];
 
-    // Update the UI after marking the notification as read
-    setState(() {
-      if (_newInterviewCount > 0) {
-        _newInterviewCount--;
-      }
-      _interviewDetails?.removeWhere((i) => i['notificationId'] == notificationId);
-      _unreadNotificationCount--;
-    });
-  }
+    if (notificationId != null) {
+      await _markNotificationAsRead(notificationId);
 
-  // Display the interview details to the user
-  QuickAlert.show(
-    context: context,
-    type: QuickAlertType.info,
-    title: 'Interview Details',
-    text: '📅 Company: ${interview['companyName']}\n'
-        '🕒 Date & Time: ${interview['dateTime']}\n'
-        '📋 Topic: ${interview['topic']}\n'
-        '📝 Description: ${interview['description']}\n'
-        '📍 Type: ${interview['type']}\n'
-        '📅 Submitted Date: ${interview['submitted_date'] is Timestamp ? DateFormat.yMMMd().add_jm().format((interview['submitted_date'] as Timestamp).toDate()) : 'Not found'}',
-    confirmBtnText: 'OK',
-    confirmBtnColor: Colors.orange.shade800,
-    widget: Column(
-      children: [
-        const SizedBox(height: 10),
-        GestureDetector(
-          onLongPress: () {
-            Clipboard.setData(ClipboardData(text: interview['link'])).then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Link copied to clipboard')),
-              );
-            });
-          },
-          child: Row(
-            children: [
-              const Icon(Icons.link, color: Colors.orange),
-              const SizedBox(width: 5),
-              Expanded(
-                child: SelectableText(
-                  interview['link'] ?? 'No link available',
-                  style: const TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+      // Update the UI after marking the notification as read
+      setState(() {
+        if (_newInterviewCount > 0) {
+          _newInterviewCount--;
+        }
+        _interviewDetails
+            ?.removeWhere((i) => i['notificationId'] == notificationId);
+        _unreadNotificationCount--;
+      });
+    }
+
+    // Display the interview details to the user
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.info,
+      title: 'Interview Details',
+      text: '📅 Company: ${interview['companyName']}\n'
+          '🕒 Date & Time: ${interview['dateTime']}\n'
+          '📋 Topic: ${interview['topic']}\n'
+          '📝 Description: ${interview['description']}\n'
+          '📍 Type: ${interview['type']}\n'
+          '📅 Submitted Date: ${interview['submitted_date'] is Timestamp ? DateFormat.yMMMd().add_jm().format((interview['submitted_date'] as Timestamp).toDate()) : 'Not found'}',
+      confirmBtnText: 'OK',
+      confirmBtnColor: Colors.orange.shade800,
+      widget: Column(
+        children: [
+          const SizedBox(height: 10),
+          GestureDetector(
+            onLongPress: () {
+              Clipboard.setData(ClipboardData(text: interview['link']))
+                  .then((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Link copied to clipboard')),
+                );
+              });
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.link, color: Colors.orange),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: SelectableText(
+                    interview['link'] ?? 'No link available',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                    onTap: () {
+                      // Optionally, handle tap to open the link if desired
+                    },
                   ),
-                  onTap: () {
-                    // Optionally, handle tap to open the link if desired
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
