@@ -3464,12 +3464,12 @@ Future<void> generatePdfFromFirebase() async {
 
     // Save the PDF file
     final output = await getTemporaryDirectory();
-    final file = File('${output.path}/cv_from_firebase.pdf');
+    final file = File('${output.path}/cv.pdf');
     await file.writeAsBytes(await pdf.save());
 
     // Print the PDF
     final bytes = await file.readAsBytes();
-    await Printing.sharePdf(bytes: bytes, filename: 'cv_from_firebase.pdf');
+    await Printing.sharePdf(bytes: bytes, filename: 'cv.pdf');
   } else {
     print('User details not found');
   }
