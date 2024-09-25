@@ -100,25 +100,25 @@ class Help extends StatelessWidget {
                 context,
                 icon: Icons.phone,
                 title: 'Contact Number',
-                subtitle: '0714587892',
+                subtitle: '0771132872',
               ),
               _buildContactTile(
                 context,
                 icon: Icons.email,
                 title: 'Email',
-                subtitle: 'deshanibandarawas@gmail.com',
+                subtitle: 'pesmatara.dme@gmail.com',
               ),
               SizedBox(height: screenHeight * 0.04), // 4% of screen height
-              Text(
+             /* Text(
                 'Social Media',
                 style: TextStyle(
                   fontSize: screenWidth * 0.06, // Responsive font size
                   fontWeight: FontWeight.bold,
                   color: Colors.orange,
                 ),
-              ),
+              ),*/
               SizedBox(height: screenHeight * 0.02),
-              _buildContactTile(
+             /* _buildContactTile(
                 context,
                 icon: Icons.facebook,
                 title: 'Facebook',
@@ -129,7 +129,7 @@ class Help extends StatelessWidget {
                 icon: Icons.call,
                 title: 'WhatsApp',
                 subtitle: '+1234567890',
-              ),
+              ),*/
             ],
           ),
         ),
