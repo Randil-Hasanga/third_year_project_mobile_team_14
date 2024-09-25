@@ -31,6 +31,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
   FirebaseService? _firebaseService;
   String? uid;
   SharedPreferences? _sharedPreferences;
+  String? logo, _userName, _comName;
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _JobProviderPageState extends State<JobProviderPage> {
     uid = _firebaseService!.getCurrentUserUid();
     _initSharedPreferences();
     updateExpiredVacancies();
+    _getProvider();
   }
 
   Future<void> _initSharedPreferences() async {
@@ -108,6 +110,20 @@ class _JobProviderPageState extends State<JobProviderPage> {
     }
     MyApp.setLocale(context, _temp);
   }
+
+  void _getProvider() async {
+    await _firebaseService!.getCurrentProviderData().then((data) {
+      if (mounted) {
+        if (data != null) {
+          setState(() {
+            logo = data['logo'];
+            _userName = data['repName'];
+            _comName = data['company_name'];
+          });
+        }
+      }
+    });
+  }
   // DemoLocalization.of(context)
   //                               .getTranslatedValue('my_vacancies')!,
 
@@ -159,30 +175,63 @@ class _JobProviderPageState extends State<JobProviderPage> {
               const SizedBox(
                 height: 2,
               ),
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/Default.png'),
-                    ),
-                    SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("Dashboard",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 30)),
-                        Text("Job Provider",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
+              if (logo != null) ...{
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 64,
+                          backgroundImage: NetworkImage(logo!),
+                        ),
+                        const SizedBox(height: 10),
+                        if (_comName != null) ...{
+                          Text(
+                            _comName!, // Assuming _userName holds the user's name
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        } else ...{
+                          Text(
+                            _userName!, // Assuming _userName holds the user's name
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        }, // Adding some space between the profile image and the username
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              } else ...{
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 64,
+                            backgroundImage: NetworkImage(
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpmMLA8odEi8CaMK39yvrOg-EGJP6127PmCjqURn_ssg&s'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              },
               const SizedBox(height: 20),
               Container(
                 decoration: const BoxDecoration(
@@ -819,22 +868,6 @@ class _JobProviderPageState extends State<JobProviderPage> {
           ),
           _bulidInterviewDetailsRow(Icons.calendar_month, interviewDate, 15),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 143, 255, 120),
-                ),
-                onPressed: () {},
-                child: const Text(
-                  'set reminder',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
